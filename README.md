@@ -30,9 +30,9 @@ Thank you for the wonderful writeup, link is here (http://diftdisk.blogspot.com/
     *  Username: cdqr
     *  Password: Changemen0w!
 *  Access Kibana instance: 
-    *  http://<CCF-VM IP address or localhost>:5601
+    *  http://\<CCF-VM IP address or localhost\>:5601
 *  Access Elasticsearch-kopf management instance: 
-    *  http://<CCF-VM IP address or localhost>:9200/_plugin/kopf/#!/cluster
+    *  http://\<CCF-VM IP address or localhost\>:9200/_plugin/kopf/#!/cluster
 
 ## Analyzing Data in Three Easy Steps
 1.	Collect information from host
