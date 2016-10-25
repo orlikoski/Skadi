@@ -199,8 +199,6 @@ Six pre-built Dashboards in the CCF-VM.  Table contains the list of the built in
 | IR_06 Persistence / Prefetch       | Persistence / Prefetch        |
 
 ## Using Indices Intelligently
-The ability to intelligently use indices in searches provides the ability to search for individual sets of data or all data at once.
-
 By default, CCF-VM has an index of “case_cdqr-*” and this allows for searching all data uploaded by CDQR.
  
 ##  Search one host from all the data from CDQR
