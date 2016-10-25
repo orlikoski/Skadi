@@ -44,7 +44,8 @@ The CyLR tool can assist with collecting data from Windows hosts.  Any tool can 
 
 
 ## CyLR Collection Example
-On Windows host with .NET 4.0 (or greater) installed CyLR can be used:  
+On Windows host with .NET 4.0 (or greater) installed CyLR can be used.  
+  
 To execute CyLR on the host to SFTP the data directly to the CCF-VM use the following command:  
 ```
 CyLR.exe -u cdqr -p Changemen0w! -s <CCF-VM IP address> -m
