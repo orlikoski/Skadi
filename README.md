@@ -92,11 +92,11 @@ cdqr.py example_hostname.zip -p win --max_cpu -z --elk example_index
 ```
 If the data is from a windows host, in a directory, “example_hostname”, then use the following command
 ```
-cdqr.py example_hostname -p win --max_cpu -z --elk example_index
+cdqr.py example_hostname -p win --max_cpu --elk example_index
 ```
 If the data from a windows host, is a forensic image file(s) then use the following command
 ```
-cdqr.py example_hostname/example_hostname.E01 -p win --max_cpu -z --elk example_index
+cdqr.py example_hostname/example_hostname.E01 -p win --max_cpu --elk example_index
 ```
 
 ## Successful example output from CDQR
