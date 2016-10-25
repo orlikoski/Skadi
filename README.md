@@ -212,4 +212,8 @@ To view data from just one host/collection of artifacts a new index is required.
 Next, the white box under the “Time-field name” entry must have “datetime” populated in it and the “Create” button turned green.  If that does not happen then check the index name to ensure it is accurate.
 
 ## Data Cleanup
-To remove the index go to the Elasticsearch-KOPF cluster management interface: http://<CCF-VM IP address or localhost>:9200/_plugin/kopf/#!/cluster# CCF-VM
+To remove the index go to the Elasticsearch-KOPF cluster management interface: http://<CCF-VM IP address or localhost>:9200/_plugin/kopf/#!/cluster
+
+## AUTHOR
+
+* [Alan Orlikoski](https://github.com/rough007)
