@@ -5,8 +5,10 @@ CyLR CDQR Forensics Virtual Machine (CCF-VM) by Alan Orlikoski
 The CCF-VM was designed to provide an all-in-one solution to parsing collected data, making it easily searchable with built-in common searches, enable searching of single and multiple hosts simultaneously (stacking).  It was very important that this was done with open source solutions.
 
 ## Download locations
-*  CCF-VM Zip: https://drive.google.com/open?id=0B5z7g7P2BWJAZ2RPa291Mzgwems
+*  CCF-VM archive: https://drive.google.com/open?id=0B5z7g7P2BWJAZ2RPa291Mzgwems
+    *  MD5: fe7f32392cc1d242d64e2ee053f8a48d
 *  CCF-VM User Guide: https://drive.google.com/open?id=0B5z7g7P2BWJAWTM2d0NQZjV6MHc
+    *  MD5: 1e9c7cfe535cc2ba5fe9ffe3b8442575
 
 ## Open source solutions installed
 *  Ubuntu 16.04: https://www.ubuntu.com/
