@@ -202,7 +202,7 @@ Six pre-built Dashboards in the CCF-VM.  Table contains the list of the built in
 By default, CCF-VM has an index of “case_cdqr-*” and this allows for searching all data uploaded by CDQR.
  
 ##  Search one host from all the data from CDQR
-To search for one host a new index is required.  To create a new index replace the “logstash-*” in the upper white box with “case_cdqr-<index_name>*”.  This must match what was used in the CDQR command line.   In this example, “case_cdqr-test*” is used.
+To search for one host a new index is required.  To create a new index replace the “logstash-\*” in the upper white box with “case_cdqr-<index_name>\*”.  This must match what was used in the CDQR command line.   In this example, “case_cdqr-test*” is used.
 
 Next, the white box under the “Time-field name” entry must have “datetime” populated in it and the 
 “Create” button turn green.  If that does not happen then check the index name to ensure it is accurate.
