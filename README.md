@@ -36,16 +36,14 @@ Thank you for the wonderful writeup, link is here (http://diftdisk.blogspot.com/
 
 ## Analyzing Data in Three Easy Steps
 1.	Collect information from host
-2.	Process / parse collected dat
+2.	Process / parse collected data
 3.	Start reviewing data
 
 ## Collect information from host
-The CyLR tool can assist with collecting data from Windows hosts.  Any tool can be used to collect the forensic image or collect the artifacts.  SFTP can be used to transfer the files securely to the CCF-VM.
+The CyLR tool can assist with collecting data from Windows hosts but any tool can be used to collect the forensic image or collect the artifacts.  SFTP can be used to transfer the files securely to the CCF-VM.
 
 
 ## CyLR Collection Example
-On Windows host with .NET 4.0 (or greater) installed CyLR can be used.  
-  
 To execute CyLR on the host to SFTP the data directly to the CCF-VM use the following command:  
 ```
 CyLR.exe -u cdqr -p Changemen0w! -s <CCF-VM IP address> -m
@@ -83,7 +81,7 @@ NOTE:
  
 
 ## Process / parse collected data
-The CCF-FM has a customized version of CDQR (Linux 2.02 with Elasticsearch) that cannot be found anywhere else.  This write up makes the assumption that the source is a .zip file with artifacts, a directory with artifacts in it, or a directory with forensic system image files in it (example collect.E01).   The CCF-VM uses the Cold Disk Quick Response (CDQR) tool to process individual artifacts or entire system images.
+The CCF-FM has a customized version of CDQR (Linux 2.02 with Elasticsearch).  This write up makes the assumption that the source is either a .zip file with artifacts, a directory with artifacts in it, or a directory with forensic system image files in it (example collect.E01).   The CCF-VM uses the Cold Disk Quick Response (CDQR) tool to process individual artifacts or entire system images.
 
 The best practice is to put all of the artifacts into one folder (or zip file).
  
@@ -93,13 +91,13 @@ If the data is from a windows host, in a .zip file, “example_hostname.zip”, 
 ```
 cdqr.py example_hostname.zip -p win --max_cpu -z --elk example_index
 ```
-If the data is from a windows host, in a directory, “example_hostname”, then use the following command
+If the data is from a windows host, in a directory, “example_dirname”, then use the following command
 ```
-cdqr.py example_hostname -p win --max_cpu --elk example_index
+cdqr.py example_dirname -p win --max_cpu --elk example_index
 ```
-If the data from a windows host, is a forensic image file(s) then use the following command
+If the data is from a mac host, is a forensic image file(s) then use the following command
 ```
-cdqr.py example_hostname/example_hostname.E01 -p win --max_cpu --elk example_index
+cdqr.py example_dirname/example_hostname.E01 -p mac --max_cpu --elk example_index
 ```
 
 ## Successful example output from CDQR
@@ -140,8 +138,8 @@ Total  duration was: 0:05:21.421863
 ##  MORE SECTIONS IN THE USER GUIDE
 The following sections are in the User Guide and have more detailed information there
 
-## KOPF Cluster Management
-KOPF cluster management interface: http://<CCF-VM IP Address or localhost>:9200/_plugin/kopf/#!/cluster
+## Elasticsearch-KOPF Cluster Management
+Elasticsearch-KOPF cluster management interface: http://<CCF-VM IP Address or localhost>:9200/_plugin/kopf/#!/cluster
  
 ## Kibana Interface
 Kibana interface: http://<CCF-VM IP address or localhost>:5601
@@ -152,7 +150,7 @@ There are multiple ways to interface with the data and this document will show t
 They were made to be hierarchical so that Searches are used to make Visualizations which are then used to make Dashboards.  This means that changes to the saved searches will be automatically updated in the Visualizations and Dashboards that use them.
 
 ## Searches
-16 pre-built searches in the CCF-VM.  Table contains the list of the built in Kibana Searches in CCF-VM.
+16 pre-built searches in the CCF-VM.  Table below contains the list of the built in Kibana Searches in CCF-VM.
 
 | Name               | Search String                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 |--------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -173,7 +171,7 @@ They were made to be hierarchical so that Searches are used to make Visualizatio
 | USNJRNL            | parser:usnjrnl                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 
 ## Visualizations
-15 pre-built Visualizations in the CCF-VM.  Table 2 contains the list of the built in Kibana Visualizations in CCF-VM.
+15 pre-built Visualizations in the CCF-VM.  Table below contains the list of the built in Kibana Visualizations in CCF-VM.
 
 | Name             | Saved Search Used                    |
 |------------------|--------------------------------------|
@@ -194,7 +192,7 @@ They were made to be hierarchical so that Searches are used to make Visualizatio
 
 
 ## Dashboards
-Six pre-built Dashboards in the CCF-VM.  Table contains the list of the built in Kibana Dashboards in CCF-VM.
+Six pre-built Dashboards in the CCF-VM.  Table below contains the list of the built in Kibana Dashboards in CCF-VM.
 
 | Name                               | Saved Visualization(s) Used   |
 |------------------------------------|-------------------------------|
@@ -208,11 +206,10 @@ Six pre-built Dashboards in the CCF-VM.  Table contains the list of the built in
 ## Using Indices Intelligently
 By default, CCF-VM has an index of “case_cdqr-*” and this allows for searching all data uploaded by CDQR.
  
-##  Search one host from all the data from CDQR
-To view data from just one host/collection of artifacts a new index is required.  To create a new index replace the “logstash-\*” in the upper white box with “case_cdqr-<index_name>\*”.  This must match what was used in the CDQR command line.   In this example, “case_cdqr-test*” is used.
+##  Search just one host or collection of artifacts
+To view data from just one host/collection of artifacts a new index is required.  To create a new index replace the “logstash-\*” in the upper white box with “case_cdqr-\<index_name\>\*”.  This must match what was used in the CDQR command line.   In this example, “case_cdqr-test*” is used.
 
-Next, the white box under the “Time-field name” entry must have “datetime” populated in it and the 
-“Create” button turn green.  If that does not happen then check the index name to ensure it is accurate.
+Next, the white box under the “Time-field name” entry must have “datetime” populated in it and the “Create” button turned green.  If that does not happen then check the index name to ensure it is accurate.
 
 ## Data Cleanup
 To remove the index go to the KOPF Elasticsearch management page: http://<CCF-VM IP address or localhost>:9200/_plugin/kopf/#!/cluster# CCF-VM
