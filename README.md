@@ -19,7 +19,7 @@ The CCF-VM was designed to provide an all-in-one solution to parsing collected d
 *  CyLR: https://github.com/rough007/CyLR
 
 ## Credits
-Thank you for the wonderful writeup, link is here, by Michael Maurer that gave me the knowledge to put many of the pieces together. 
+Thank you for the wonderful writeup, link is here (http://diftdisk.blogspot.com/2016/06/viewing-log2timeline-output-with-kibana.html), by Michael Maurer that gave me the knowledge to put many of the pieces together. 
 
 ## CCF-VM Useful information
 *  IP Address:
@@ -145,7 +145,7 @@ There are multiple ways to interface with the data and this document will show t
 They were made to be hierarchical so that Searches are used to make Visualizations which are then used to make Dashboards.  This means that changes to the saved searches will be automatically updated in the Visualizations and Dashboards that use them.
 
 ## Searches
-There are 16 pre-built searches in the CCF-VM.  Table contains the list of the built in Kibana Searches in CCF-VM.
+16 pre-built searches in the CCF-VM.  Table contains the list of the built in Kibana Searches in CCF-VM.
 
 | Name               | Search String                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 |--------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -166,7 +166,7 @@ There are 16 pre-built searches in the CCF-VM.  Table contains the list of the b
 | USNJRNL            | parser:usnjrnl                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 
 ## Visualizations
-There are 15 pre-built Visualizations in the CCF-VM.  Table 2 contains the list of the built in Kibana Visualizations in CCF-VM.
+15 pre-built Visualizations in the CCF-VM.  Table 2 contains the list of the built in Kibana Visualizations in CCF-VM.
 
 | Name             | Saved Search Used                    |
 |------------------|--------------------------------------|
@@ -187,7 +187,8 @@ There are 15 pre-built Visualizations in the CCF-VM.  Table 2 contains the list 
 
 
 ## Dashboards
-There are six pre-built Dashboards in the CCF-VM.  Table contains the list of the built in Kibana Dashboards in CCF-VM.
+Six pre-built Dashboards in the CCF-VM.  Table contains the list of the built in Kibana Dashboards in CCF-VM.
+
 | Name                               | Saved Visualization(s) Used   |
 |------------------------------------|-------------------------------|
 | IR_01 Parser Details               | Parser Results                |
@@ -209,6 +210,4 @@ Next, the white box under the “Time-field name” entry must have “datetime�
 “Create” button turn green.  If that does not happen then check the index name to ensure it is accurate.
 
 ## Data Cleanup
-It is important to know how to clean up indexes out of the Elasticsearch database.  This section shows how to do that.
-
 To remove the index go to the KOPF Elasticsearch management page: http://<CCF-VM IP address or localhost>:9200/_plugin/kopf/#!/cluster# CCF-VM
