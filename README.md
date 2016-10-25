@@ -40,10 +40,10 @@ Thank you for the wonderful writeup, link is here (http://diftdisk.blogspot.com/
 3.	Start reviewing data
 
 ## Collect information from host
+The CyLR tool can assist with collecting data from Windows hosts.  Any tool can be used to collect the forensic image or collect the artifacts.  SFTP can be used to transfer the files securely to the CCF-VM.
 
-The CCF-VM uses the Cold Disk Quick Response (CDQR) tool to process individual artifacts or entire system images.   The CyLR tool can assist with collecting data from Windows hosts.  The best practice is to put all of the artifacts into one folder (or zip file).  
 
-## Example
+## CyLR Collection Example
 On Windows host with .NET 4.0 (or greater) installed CyLR can be used:
 To execute CyLR on the host to SFTP the data directly to the CCF-VM use the following command:
 CyLR.exe -u cdqr -p Changemen0w! -s <CCF-VM IP address> -m
@@ -80,7 +80,9 @@ NOTE:
  
 
 ## Process / parse collected data
-The CCF-FM has a customized version of CDQR (Linux 2.02 with Elasticsearch)  that cannot be found anywhere else.  This write up makes the assumption that the source is a .zip file with artifacts, a directory with artifacts in it, or a directory with forensic system image files in it (example collect.E01).   
+The CCF-FM has a customized version of CDQR (Linux 2.02 with Elasticsearch) that cannot be found anywhere else.  This write up makes the assumption that the source is a .zip file with artifacts, a directory with artifacts in it, or a directory with forensic system image files in it (example collect.E01).   The CCF-VM uses the Cold Disk Quick Response (CDQR) tool to process individual artifacts or entire system images.
+
+The best practice is to put all of the artifacts into one folder (or zip file).
  
 
 ## Examples of using CDQR to process the data and output to into Elasticsearch
@@ -204,7 +206,7 @@ Six pre-built Dashboards in the CCF-VM.  Table contains the list of the built in
 By default, CCF-VM has an index of “case_cdqr-*” and this allows for searching all data uploaded by CDQR.
  
 ##  Search one host from all the data from CDQR
-To search for one host a new index is required.  To create a new index replace the “logstash-\*” in the upper white box with “case_cdqr-<index_name>\*”.  This must match what was used in the CDQR command line.   In this example, “case_cdqr-test*” is used.
+To view data from just one host/collection of artifacts a new index is required.  To create a new index replace the “logstash-\*” in the upper white box with “case_cdqr-<index_name>\*”.  This must match what was used in the CDQR command line.   In this example, “case_cdqr-test*” is used.
 
 Next, the white box under the “Time-field name” entry must have “datetime” populated in it and the 
 “Create” button turn green.  If that does not happen then check the index name to ensure it is accurate.
