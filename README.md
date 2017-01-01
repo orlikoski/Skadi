@@ -6,14 +6,13 @@ The CCF-VM was designed to provide an all-in-one solution to parsing collected d
 
 ## Download locations
 *  CCF-VM archive: https://drive.google.com/open?id=0B5z7g7P2BWJAZ2RPa291Mzgwems
-    *  MD5: fe7f32392cc1d242d64e2ee053f8a48d
+    *  MD5: 58235fa7051d00dc8caabae063494c17
 *  CCF-VM User Guide: https://drive.google.com/open?id=0B5z7g7P2BWJAWTM2d0NQZjV6MHc
     *  MD5: 1e9c7cfe535cc2ba5fe9ffe3b8442575
 
 ## Open source solutions installed
 *  Ubuntu 16.04: https://www.ubuntu.com/
 *  Plaso: https://github.com/log2timeline/plaso
-*  Efetch Elasticsearch output module: https://github.com/maurermj08/efetch
 *  Elasticsearch: https://www.elastic.co/
 *  Elasticsearch-kopf: https://github.com/lmenezes/elasticsearch-kopf
 *  Kibana: https://www.elastic.co/products/kibana
@@ -89,50 +88,45 @@ The best practice is to put all of the artifacts into one folder (or zip file).
 ## Examples of using CDQR to process the data and output to into Elasticsearch
 If the data is from a windows host, in a .zip file, “example_hostname.zip”, then use the following command
 ```
-cdqr.py example_hostname.zip -p win --max_cpu -z --elk example_index
+cdqr.py example_hostname.zip -p win --max_cpu -z --es example_index
 ```
 If the data is from a windows host, in a directory, “example_dirname”, then use the following command
 ```
-cdqr.py example_dirname -p win --max_cpu --elk example_index
+cdqr.py example_dirname -p win --max_cpu --es example_index
 ```
 If the data is from a mac host, is a forensic image file(s) then use the following command
 ```
-cdqr.py example_dirname/example_hostname.E01 -p mac --max_cpu --elk example_index
+cdqr.py example_dirname/example_hostname.E01 -p mac --max_cpu --es example_index
 ```
 
 ## Successful example output from CDQR
 ```
-cdqr@ForensicVM:~$ cdqr.py  example_hostname.zip -p win --max_cpu -z --elk test
-CDQR Version: Linux 2.02 with Elasticsearch
-Plaso Version: 1.4
+CDQR Version: 3.0
+Plaso Version: 1.5
 Using parser: win
 Number of cpu cores to use: 8
-Attempting to extract .zip file source file:  example_hostname.zip
-All files extracted to folder:  example_hostname
-Source data:  example_hostname
+Source data: Sample_data
 Destination Folder: Results
-Database File: Results/ example_hostname.db
-SuperTimeline CSV File: Results/ example_hostname.SuperTimeline.csv
+Database File: Results/Sample_data.db
+SuperTimeline CSV File: Results/Sample_data.SuperTimeline.csv
 
 
-Results/ example_hostname.log
-Processing started at: 2016-10-22 16:05:43.122780
+Results/Sample_data.log
+Processing started at: 2001-01-01 17:40:58.322694
 Parsing image
-"log2timeline.py" "-p" "--partition" "all" "--vss_stores" "all" "--parsers" "appcompatcache,bagmru,binary_cookies,ccleaner,chrome_cache,chrome_cookies,chrome_extension_activity,chrome_history,chrome_preferences,explorer_mountpoints2,explorer_programscache,filestat,firefox_cache,firefox_cache2,firefox_cookies,firefox_downloads,firefox_history,google_drive,java_idx,mcafee_protection,mft,mrulist_shell_item_list,mrulist_string,mrulistex_shell_item_list,mrulistex_string,mrulistex_string_and_shell_item,mrulistex_string_and_shell_item_list,msie_zone,msiecf,mstsc_rdp,mstsc_rdp_mru,opera_global,opera_typed_history,prefetch,recycle_bin,recycle_bin_info2,rplog,safari_history,symantec_scanlog,userassist,usnjrnl,windows_boot_execute,windows_boot_verify,windows_run,windows_sam_users,windows_services,windows_shutdown,windows_task_cache,windows_timezone,windows_typed_urls,windows_usb_devices,windows_usbstor_devices,windows_version,winevt,winevtx,winfirewall,winjob,winrar_mru,winreg,winreg_default" "--hashers" "md5" "--workers" "8" "Results/ example_hostname.db" " example_hostname"
-Parsing ended at: 2016-10-22 16:08:27.212356
-Parsing duration was: 0:02:44.089576
+"log2timeline.py" "-p" "--partition" "all" "--vss_stores" "all" "--parsers" "appcompatcache,bagmru,binary_cookies,ccleaner,chrome_cache,chrome_cookies,chrome_extension_activity,chrome_history,chrome_preferences,explorer_mountpoints2,explorer_programscache,filestat,firefox_cache,firefox_cache2,firefox_cookies,firefox_downloads,firefox_history,google_drive,java_idx,mcafee_protection,mft,mrulist_shell_item_list,mrulist_string,mrulistex_shell_item_list,mrulistex_string,mrulistex_string_and_shell_item,mrulistex_string_and_shell_item_list,msie_zone,msiecf,mstsc_rdp,mstsc_rdp_mru,network_drives,opera_global,opera_typed_history,prefetch,recycle_bin,recycle_bin_info2,rplog,safari_history,symantec_scanlog,userassist,usnjrnl,windows_boot_execute,windows_boot_verify,windows_run,windows_sam_users,windows_services,windows_shutdown,windows_task_cache,windows_timezone,windows_typed_urls,windows_usb_devices,windows_usbstor_devices,windows_version,winevt,winevtx,winfirewall,winjob,winlogon,winrar_mru,winreg,winreg_default" "--hashers" "md5" "--workers" "8" "Results/Sample_data.db" "Sample_data"
+Parsing ended at: 2001-01-01 17:44:24.899715
+Parsing duration was: 0:03:26.577021
 
-Process to export to ELK started
-Exporting results to the ELK server
-"psort.py" "-o" "elastic" "Results/ example_hostname.db" "--case_name" "cdqr-test"
-All entries have been inserted into database with case: cdqr-test
+Process to export to ElasticSearch started
+Exporting results to the ElasticSearch server
+"psort.py" "-o" "elastic" "--raw_fields" "--index_name" "case_cdqr-Sample_data" "Results/Sample_data.db"
+All entries have been inserted into database with case: case_cdqr-Sample_data
 
-Process to export to ELK completed
-ELK export process duration was: 0:02:37.332287
+Process to export to ElasticSearch completed
+ElasticSearch export process duration was: 0:03:24.242369
 
-Removing uncompressed files in directory:  example_hostname
-
-Total  duration was: 0:05:21.421863 
+Total  duration was: 0:06:50.819390
 ```
 
 ##  MORE SECTIONS IN THE USER GUIDE
