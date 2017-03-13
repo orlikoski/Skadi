@@ -208,6 +208,13 @@ Next, the white box under the “Time-field name” entry must have “datetime�
 ## Data Cleanup
 To remove the index go to the Elasticsearch-KOPF cluster management interface: http://<CCF-VM IP address or localhost>:9200/_plugin/kopf/#!/cluster
 
+## VirtualBox Notes
+To enable Bridged Networking use the following:
+*  "ifconfig -a" to get interface name
+*  "sudo ifconfig \<interface name\> up" to bring up the interface
+*  "sudo dhclient" to get an IP address
+
+
 ## AUTHOR
 
 * [Alan Orlikoski](https://github.com/rough007)
