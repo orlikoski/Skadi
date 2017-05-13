@@ -6,7 +6,7 @@ The CCF-VM was designed to provide an all-in-one solution to parsing collected d
 
 ## Download locations
 *  CCF-VM archive: https://drive.google.com/open?id=0B5z7g7P2BWJAZ2RPa291Mzgwems
-    *  MD5: 58235fa7051d00dc8caabae063494c17
+    *  MD5: 31a68f54bf27080e5ac110e42c72af4e
 *  CCF-VM User Guide: https://drive.google.com/open?id=0B5z7g7P2BWJAWTM2d0NQZjV6MHc
     *  MD5: 1e9c7cfe535cc2ba5fe9ffe3b8442575
 
