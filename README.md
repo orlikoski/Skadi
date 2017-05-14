@@ -10,6 +10,10 @@ The CCF-VM was designed to provide an all-in-one solution to parsing collected d
 *  CCF-VM User Guide: https://drive.google.com/open?id=0B5z7g7P2BWJAWTM2d0NQZjV6MHc
     *  MD5: 1e9c7cfe535cc2ba5fe9ffe3b8442575
 
+## What's New
+*  Added "update.sh" script that updates the OS, CDQR and CyLR
+    *  https://github.com/rough007/CCF-VM/blob/master/update.sh
+
 ## Open source solutions installed
 *  Ubuntu 16.04: https://www.ubuntu.com/
 *  Plaso: https://github.com/log2timeline/plaso
