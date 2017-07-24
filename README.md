@@ -5,23 +5,33 @@ CyLR CDQR Forensics Virtual Machine (CCF-VM) by Alan Orlikoski
 The CCF-VM was designed to provide an all-in-one solution to parsing collected data, making it easily searchable with built-in common searches, enable searching of single and multiple hosts simultaneously (stacking).  It was very important that this was done with open source solutions.
 
 ## Download locations
-*  CCF-VM archive: https://drive.google.com/open?id=0B5z7g7P2BWJAZ2RPa291Mzgwems
-    *  MD5: 31a68f54bf27080e5ac110e42c72af4e
+*  CCF-VM 2.0 OVF: https://drive.google.com/file/d/0B5z7g7P2BWJAbmlNa1pRSEVTX1U
+    *  MD5: f144d7a55db6b0ee995ec1de793f8ab6
 *  CCF-VM User Guide: https://drive.google.com/open?id=0B5z7g7P2BWJAWTM2d0NQZjV6MHc
     *  MD5: 1e9c7cfe535cc2ba5fe9ffe3b8442575
 
 ## What's New
-*  Added "update.sh" script that updates the OS, CDQR and CyLR
+*  Added TimeSketch!!!!
+  *  Includes Redis & MySQL as well
+*  Updated CDQR 4.0.0
+*  Replaced kopf with Cerebro for ElasticSearch DB
+*  Updated ElasticSearch
+*  Updated Kibana
+*  Changed to .zip archive format for the OVF for maximum compatibility
+*  Updated "update.sh" script that updates the OS, CDQR, CyLR in one click
     *  https://github.com/rough007/CCF-VM/blob/master/update.sh
+*  Added Default Dashboards, Searches, and Visualizations for importing / recovery purposes
+    *  https://github.com/rough007/CCF-VM/blob/master/Default_Objects.json
 
 ## Open source solutions installed
-*  Ubuntu 16.04: https://www.ubuntu.com/
-*  Plaso: https://github.com/log2timeline/plaso
-*  Elasticsearch: https://www.elastic.co/
-*  Elasticsearch-kopf: https://github.com/lmenezes/elasticsearch-kopf
-*  Kibana: https://www.elastic.co/products/kibana
 *  Cold Disk Quick Response (CDQR): https://github.com/rough007/CDQR
 *  CyLR: https://github.com/rough007/CyLR
+*  Plaso: https://github.com/log2timeline/plaso
+*  Elasticsearch: https://www.elastic.co/
+*  Kibana: https://www.elastic.co/products/kibana
+*  TimeSketch: https://github.com/google/timesketch
+*  Cerebro: https://github.com/lmenezes/cerebro
+*  Ubuntu 16.04: https://www.ubuntu.com/
 
 ## Credits
 Thank you for the wonderful writeup, link is here (http://diftdisk.blogspot.com/2016/06/viewing-log2timeline-output-with-kibana.html), by Michael Maurer that gave me the knowledge to put many of the pieces together. 
@@ -29,13 +39,15 @@ Thank you for the wonderful writeup, link is here (http://diftdisk.blogspot.com/
 ## CCF-VM Useful information
 *  IP Address:
     * Set to DHCP
-*  Credentials:
+*  Credentials (for anything that requires them):
     *  Username: cdqr
     *  Password: Changemen0w!
 *  Access Kibana instance: 
     *  http://\<CCF-VM IP address or localhost\>:5601
-*  Access Elasticsearch-kopf management instance: 
-    *  http://\<CCF-VM IP address or localhost\>:9200/_plugin/kopf/#!/cluster
+*  Access TimeSketch instance: 
+    *  http://\<CCF-VM IP address or localhost\>:5000
+*  Access Cerebro (ElasticSearch management instance): 
+    *  http://\<CCF-VM IP address or localhost\>:9000
 
 ## Analyzing Data in Three Easy Steps
 1.	Collect information from host
