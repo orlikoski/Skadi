@@ -5,7 +5,7 @@ CyLR CDQR Forensics Virtual Machine (CCF-VM) by Alan Orlikoski
 The CCF-VM was designed to provide an all-in-one solution to parsing collected data, making it easily searchable with built-in common searches, enable searching of single and multiple hosts simultaneously (stacking).  It was very important that this was done with open source solutions.
 
 ## Download locations
-*  CCF-VM 2.0 OVF: https://drive.google.com/file/d/0B5z7g7P2BWJAbmlNa1pRSEVTX1U
+*  CCF-VM 2.1 OVF: https://drive.google.com/file/d/0B5z7g7P2BWJAbmlNa1pRSEVTX1U
     *  MD5: 55101028d4a7dddf1f044a004585fb0c
 *  CCF-VM User Guide: https://drive.google.com/open?id=0B5z7g7P2BWJAWTM2d0NQZjV6MHc
     *  MD5: 1e9c7cfe535cc2ba5fe9ffe3b8442575
