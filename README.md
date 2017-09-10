@@ -13,16 +13,6 @@ The CCF-VM was designed to provide an all-in-one solution to parsing collected d
 *  CCF-VM User Guide: https://drive.google.com/open?id=0B5z7g7P2BWJAWTM2d0NQZjV6MHc
     *  MD5: 1e9c7cfe535cc2ba5fe9ffe3b8442575
 
-## What's New
-*  Updated CDQR to 4.0.1
-*  Updated CyLR to 1.3.3 
-*  Created System Services and logging for:
-  *  Cerebro
-  *  TimeSketch
-  *  Celery
-*  Updated "update.sh" script that updates the OS, CDQR, CyLR with one command
-*  Uploading portion of TimeSketch now works! (NOTE: Must change .db to .plaso for the database file to be recognized by TimeSketch)
-
 ## Open source solutions installed
 *  Cold Disk Quick Response (CDQR): https://github.com/rough007/CDQR
 *  CyLR: https://github.com/rough007/CyLR
