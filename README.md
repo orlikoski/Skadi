@@ -1,27 +1,27 @@
 ## NAME
 CyLR CDQR Forensics Virtual Machine (CCF-VM) by Alan Orlikoski
 
+## Open Source DFIR Made Easy
+*  SANS DFIR Summit 2017 talk about using CCF-VM for Digital Forensics and Incident Response (DFIR) is found [here](https://www.youtube.com/watch?v=f5B4bngftP8)
+
 ## Purpose
 The CCF-VM was designed to provide an all-in-one solution to parsing collected data, making it easily searchable with built-in common searches, enable searching of single and multiple hosts simultaneously (stacking).  It was very important that this was done with open source solutions.
 
 ## Download locations
-*  CCF-VM 2.1 OVF: https://drive.google.com/file/d/0B5z7g7P2BWJAbmlNa1pRSEVTX1U
-    *  MD5: 55101028d4a7dddf1f044a004585fb0c
+*  CCF-VM 2.2 OVF: https://drive.google.com/file/d/0B5z7g7P2BWJAQ0Q4cnM5SkdPMkU
+    *  MD5: 7fc5676e628ba99fdbb865e56e18b23b
 *  CCF-VM User Guide: https://drive.google.com/open?id=0B5z7g7P2BWJAWTM2d0NQZjV6MHc
     *  MD5: 1e9c7cfe535cc2ba5fe9ffe3b8442575
 
 ## What's New
-*  Added TimeSketch!!!!
-  *  Includes Redis & MySQL as well
-*  Updated CDQR 4.0.0
-*  Replaced kopf with Cerebro for ElasticSearch DB
-*  Updated ElasticSearch
-*  Updated Kibana
-*  Changed to .zip archive format for the OVF for maximum compatibility
-*  Updated "update.sh" script that updates the OS, CDQR, CyLR in one click
-    *  https://github.com/rough007/CCF-VM/blob/master/update.sh
-*  Added Default Dashboards, Searches, and Visualizations for importing / recovery purposes
-    *  https://github.com/rough007/CCF-VM/blob/master/Default_Objects.json
+*  Updated CDQR to 4.0.1
+*  Updated CyLR to 1.3.3 
+*  Created System Services and logging for:
+  *  Cerebro
+  *  TimeSketch
+  *  Celery
+*  Updated "update.sh" script that updates the OS, CDQR, CyLR with one command
+*  Uploading portion of TimeSketch now works! (NOTE: Must change .db to .plaso for the database file to be recognized by TimeSketch)
 
 ## Open source solutions installed
 *  Cold Disk Quick Response (CDQR): https://github.com/rough007/CDQR
