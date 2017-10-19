@@ -2,8 +2,8 @@
 CyLR CDQR Forensics Virtual Machine (CCF-VM) by Alan Orlikoski
 
 ## Videos and Media
-*  SANS DFIR Summit 2017 talk about using CCF-VM for Digital Forensics and Incident Response (DFIR) is found [here](https://www.youtube.com/watch?v=f5B4bngftP8)
-*  DEFCON 25 4-hour Workshop Slides: Free and Easy DFIR Triage for Everyone [here](https://media.defcon.org/DEF%20CON%2025/DEF%20CON%2025%20workshops/DEFCON-25-Workshop-Alan-Orlikoski-and-Dan-M-Free-and-Easy-DFIR-Triage-for-Everyone.pdf) 
+*  [SANS DFIR Summit 2017 talk](https://www.youtube.com/watch?v=f5B4bngftP8) about using CCF-VM for Digital Forensics and Incident Response (DFIR) is found 
+*  [DEFCON 25 4-hour Workshop](https://media.defcon.org/DEF%20CON%2025/DEF%20CON%2025%20workshops/DEFCON-25-Workshop-Alan-Orlikoski-and-Dan-M-Free-and-Easy-DFIR-Triage-for-Everyone.pdf) Slides: Free and Easy DFIR Triage for Everyone  
 
 ## Purpose
 The CCF-VM was designed to provide an all-in-one solution to parsing collected data, making it easily searchable with built-in common searches, enable searching of single and multiple hosts simultaneously (stacking).  It was very important that this was done with open source solutions.
