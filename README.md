@@ -7,7 +7,7 @@ CyLR CDQR Forensics Virtual Machine (CCF-VM) by Alan Orlikoski
 
 ## Google Cloud Platform (GCP) / Amazon Cloud (EC2) Support
 *  Pre-made raw disk image to aid in GCP and EC2 importing (see **Download Locations** for link)  
-    *  [GCP instructions](https://cloud.google.com/compute/docs/images/import-existing-image) **Start from: Import the image to your custom images list**  
+    *  [GCP instructions](https://cloud.google.com/compute/docs/images/import-existing-image) **Start from 'Import the image to your custom images list'**  
     *  [EC2 instructions](https://aws.amazon.com/ec2/vm-import/) **Allows for either VMWare integration and raw disk image conversion to EC2**  
 
 ## Purpose
