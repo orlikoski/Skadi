@@ -5,12 +5,19 @@ CyLR CDQR Forensics Virtual Machine (CCF-VM) by Alan Orlikoski
 *  [SANS DFIR Summit 2017 talk](https://www.youtube.com/watch?v=f5B4bngftP8) about using CCF-VM for Digital Forensics and Incident Response (DFIR) is found 
 *  [DEFCON 25 4-hour Workshop](https://media.defcon.org/DEF%20CON%2025/DEF%20CON%2025%20workshops/DEFCON-25-Workshop-Alan-Orlikoski-and-Dan-M-Free-and-Easy-DFIR-Triage-for-Everyone.pdf) Slides: Free and Easy DFIR Triage for Everyone  
 
+## Google Cloud Platform (GCP) / Amazon Cloud (EC2) Support
+*  Pre-made raw disk image to aid in GCP and EC2 importing (see **Download Locations** for link)  
+    *  [GCP Version Click here](https://cloud.google.com/compute/docs/images/import-existing-image) and then start on the **Import the image to your custom images list** section to import custom image.  
+    *  [EC2 Version Click here](https://aws.amazon.com/ec2/vm-import/) and follow the instructions **Allows for either VMWare integration and raw disk image conversion to EC2**  
+
 ## Purpose
 The CCF-VM was designed to provide an all-in-one solution to parsing collected data, making it easily searchable with built-in common searches, enable searching of single and multiple hosts simultaneously (stacking).  It was very important that this was done with open source solutions.
 
 ## Download locations
-*  CCF-VM 2.2 OVF: https://drive.google.com/file/d/0B5z7g7P2BWJAQ0Q4cnM5SkdPMkU
-    *  MD5: 7fc5676e628ba99fdbb865e56e18b23b
+*  CCF-VM 3.0 OVF: https://drive.google.com/open?id=1taEOJA1iY9jgtGiZ7JRNpokUagYIv2J2
+    *  MD5: a320c27d60bad2939bd57c4350453476
+*  CCF-VM 3.0 GCP Custom Image Raw Disk (ready for importing): 
+    *  MD5: 
 *  CCF-VM User Guide: https://drive.google.com/open?id=0B5z7g7P2BWJAWTM2d0NQZjV6MHc
     *  MD5: 1e9c7cfe535cc2ba5fe9ffe3b8442575
 
