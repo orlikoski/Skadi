@@ -5,10 +5,17 @@ CyLR CDQR Forensics Virtual Machine (CCF-VM) by Alan Orlikoski
 *  [SANS DFIR Summit 2017 talk](https://www.youtube.com/watch?v=f5B4bngftP8) about using CCF-VM for Digital Forensics and Incident Response (DFIR) is found 
 *  [DEFCON 25 4-hour Workshop](https://media.defcon.org/DEF%20CON%2025/DEF%20CON%2025%20workshops/DEFCON-25-Workshop-Alan-Orlikoski-and-Dan-M-Free-and-Easy-DFIR-Triage-for-Everyone.pdf) Slides: Free and Easy DFIR Triage for Everyone  
 
-## Google Cloud Platform (GCP) / Amazon Cloud (EC2) Support
+## Google Cloud Platform (GCP) Support
 *  Pre-made raw disk image to aid in GCP and EC2 importing (see **Download Locations** for link)  
     *  [GCP instructions](https://cloud.google.com/compute/docs/images/import-existing-image) **Start from 'Import the image to your custom images list'**  
-    *  [EC2 instructions](https://aws.amazon.com/ec2/vm-import/) **Allows for either VMWare integration and raw disk image conversion to EC2**  
+        *  [Fantastic video showing exactly howto build GCP instance starting from the raw disk image](https://youtu.be/YlcR6ZLebTM?t=827)
+        *  Signup for GCP and create a project [Start Here](https://cloud.google.com/) 
+        *  Install [Google Cloud SDK](https://cloud.google.com/sdk/) on host used to control GCP (laptop/desktop with Windows, MacOS or Linux that supports the GCP SDK)
+        *  Run the following commands (Requires Google Cloud SDK and wget )
+            ```wget https://drive.google.com/open?id=1v9j0W0zXC3eEXws_pVaXzWgcI_8swT3W```
+            ```gsutil cp CCF-VM_3.0.tar.gz gs://<GCP Storage Bucket Name>/CCF-VM_3.0.tar.gz```
+            ```gcloud compute images create ccf-vm-image --source-uri gs://<GCP Storage Bucket Name>/CCF-VM_3.0.tar.gz```
+            ```gcloud compute instances create ccf-vm --image ccf-vm-imageg --machine-type n1-standard-4 --zone <Zone of Choice>```  
 
 ## Purpose
 The CCF-VM was designed to provide an all-in-one solution to parsing collected data, making it easily searchable with built-in common searches, enable searching of single and multiple hosts simultaneously (stacking).  It was very important that this was done with open source solutions.
@@ -16,8 +23,8 @@ The CCF-VM was designed to provide an all-in-one solution to parsing collected d
 ## Download locations
 *  CCF-VM 3.0 OVF: https://drive.google.com/open?id=1taEOJA1iY9jgtGiZ7JRNpokUagYIv2J2
     *  MD5: a320c27d60bad2939bd57c4350453476
-*  CCF-VM 3.0 GCP Custom Image Raw Disk (ready for importing): 
-    *  MD5: 
+*  CCF-VM 3.0 GCP Custom Image Raw Disk (ready for importing): https://drive.google.com/open?id=1v9j0W0zXC3eEXws_pVaXzWgcI_8swT3WI t
+    *  MD5: 12229cc444daa58c837c77b222be6a24
 *  CCF-VM User Guide: https://drive.google.com/open?id=0B5z7g7P2BWJAWTM2d0NQZjV6MHc
     *  MD5: 1e9c7cfe535cc2ba5fe9ffe3b8442575
 
