@@ -8,18 +8,18 @@ CyLR CDQR Forensics Virtual Machine (CCF-VM) by Alan Orlikoski
 ## Google Cloud Platform (GCP) Support
 *  Install [Google Cloud SDK](https://cloud.google.com/sdk/) on host used to control GCP (laptop/desktop with Windows, MacOS or Linux that supports the GCP SDK)  
 *  Download the CCF-VM Cloud image [CCF-VM_3.0.tar.gz](https://drive.google.com/file/d/1v9j0W0zXC3eEXws_pVaXzWgcI_8swT3W)
-*  Run the following 4 commands (Requires Google Cloud SDK and wget )  
+*  Run the following commands to install and log into CCF-VM Cloud (Requires Google Cloud SDK and wget )  
     ```gsutil mb gs://<GCP Storage Bucket Name>/```
     ```gsutil cp CCF-VM_3.0.tar.gz gs://<GCP Storage Bucket Name>/CCF-VM_3.0.tar.gz```  
     ```gcloud compute images create ccf-vm-image --source-uri gs://<GCP Storage Bucket Name>/CCF-VM_3.0.tar.gz```  
-    ```gcloud compute instances create ccf-vm --image ccf-vm-imageg --machine-type n1-standard-4 --zone <zone of choice>```  
-*  SSH into CCF-VM
-    ```gcloud compute ssh ccf-vm --zone <zone of choice>```
+    ```gcloud compute instances create ccf-vm --image ccf-vm-imageg --machine-type n1-standard-4 --zone <GCP zone>```  
+    ```gcloud compute ssh ccf-vm --zone <GCP zone>```  
+*  GCP can be confusing so have some [helpful cloud links](2)
 
 ## Purpose
 The CCF-VM was designed to provide an all-in-one solution to parsing collected data, making it easily searchable with built-in common searches, enable searching of single and multiple hosts simultaneously (stacking).  It was very important that this was done with open source solutions.
 
-## Download locations
+## [1]Download locations
 *  CCF-VM 3.0 OVF: https://drive.google.com/open?id=1taEOJA1iY9jgtGiZ7JRNpokUagYIv2J2
     *  MD5: a320c27d60bad2939bd57c4350453476
 *  CCF-VM 3.0 GCP Custom Image Raw Disk (ready for importing): https://drive.google.com/open?id=1v9j0W0zXC3eEXws_pVaXzWgcI_8swT3WI t
@@ -234,7 +234,7 @@ To enable Bridged Networking use the following:
 *  "sudo ifconfig \<interface name\> up" to bring up the interface
 *  "sudo dhclient" to get an IP address
 
-## Google Cloud Project (GCP) Notes
+## [2]Helpful Google Cloud Project (GCP) Links
 *  Signup for GCP and create a project [Start Here](https://cloud.google.com/) free $300 to sign as of Jan 16, 2018
     *  Google Project Creation: https://cloud.google.com/resource-manager/docs/creating-managing-projects
 *  [GCP instructions](https://cloud.google.com/compute/docs/images/import-existing-image) **Start from 'Import the image to your custom images list'**  
