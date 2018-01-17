@@ -23,7 +23,7 @@ CyLR CDQR Forensics Virtual Machine (CCF-VM) by Alan Orlikoski
     gcloud compute instances create ccf-vm --image ccf-vm-image --machine-type n1-standard-4 --zone <GCP zone>
     gcloud compute ssh ccf-vm --zone <GCP zone>
     ```
-*  GCP can be confusing to start so there are helpful links at the bottom of this page
+*  GCP can be confusing to start so there are helpful links at the bottom of this page  
 **HIGHLY RECOMMEND PLACING CCF-VM BEHIND A STRONG FIREWALL OR BASION HOST**
 
 ## Purpose
