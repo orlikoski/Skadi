@@ -5,13 +5,36 @@ CyLR CDQR Forensics Virtual Machine (CCF-VM) by Alan Orlikoski
 *  [SANS DFIR Summit 2017 talk](https://www.youtube.com/watch?v=f5B4bngftP8) about using CCF-VM for Digital Forensics and Incident Response (DFIR) is found 
 *  [DEFCON 25 4-hour Workshop](https://media.defcon.org/DEF%20CON%2025/DEF%20CON%2025%20workshops/DEFCON-25-Workshop-Alan-Orlikoski-and-Dan-M-Free-and-Easy-DFIR-Triage-for-Everyone.pdf) Slides: Free and Easy DFIR Triage for Everyone  
 
+## What's New
+*  Google Cloud Platform (GCP) Support!!!!
+*  CyLR 1.4.0
+*  CDQR 4.1.1
+*  Plaso 20171231
+*  OS Updates
+
+## Google Cloud Platform (GCP) Information
+*  Install [Google Cloud SDK](https://cloud.google.com/sdk/) on host used to control GCP (laptop/desktop with Windows, MacOS or Linux that supports the GCP SDK)  
+*  Download the CCF-VM Cloud image [CCF-VM_3.0.tar.gz](https://drive.google.com/file/d/1v9j0W0zXC3eEXws_pVaXzWgcI_8swT3W)
+*  Run the following commands to install and log into CCF-VM Cloud  
+    ```bash
+    gsutil mb gs://<GCP Storage Bucket Name>/
+    gsutil cp CCF-VM_3.0.tar.gz gs://<GCP Storage Bucket Name>/CCF-VM_3.0.tar.gz
+    gcloud compute images create ccf-vm-image --source-uri gs://<GCP Storage Bucket Name>/CCF-VM_3.0.tar.gz
+    gcloud compute instances create ccf-vm --image ccf-vm-image --machine-type n1-standard-4 --zone <GCP zone>
+    gcloud compute ssh ccf-vm --zone <GCP zone>
+    ```
+*  GCP can be confusing to start so there are helpful links at the bottom of this page  
+**HIGHLY RECOMMEND PLACING CCF-VM BEHIND A STRONG FIREWALL OR BASTION HOST**
+
 ## Purpose
 The CCF-VM was designed to provide an all-in-one solution to parsing collected data, making it easily searchable with built-in common searches, enable searching of single and multiple hosts simultaneously (stacking).  It was very important that this was done with open source solutions.
 
 ## Download locations
-*  CCF-VM 2.2 OVF: https://drive.google.com/file/d/0B5z7g7P2BWJAQ0Q4cnM5SkdPMkU
-    *  MD5: 7fc5676e628ba99fdbb865e56e18b23b
-*  CCF-VM User Guide: https://drive.google.com/open?id=0B5z7g7P2BWJAWTM2d0NQZjV6MHc
+*  **CCF-VM 3.0 OVF:** https://drive.google.com/open?id=1taEOJA1iY9jgtGiZ7JRNpokUagYIv2J2
+    *  MD5: a320c27d60bad2939bd57c4350453476
+*  **CCF-VM 3.0 GCP Cloud Image:** https://drive.google.com/file/d/1v9j0W0zXC3eEXws_pVaXzWgcI_8swT3W
+    *  MD5: 12229cc444daa58c837c77b222be6a24
+*  **CCF-VM User Guide:** https://drive.google.com/open?id=0B5z7g7P2BWJAWTM2d0NQZjV6MHc
     *  MD5: 1e9c7cfe535cc2ba5fe9ffe3b8442575
 
 ## Open source solutions installed
@@ -221,6 +244,11 @@ To enable Bridged Networking use the following:
 *  "sudo ifconfig \<interface name\> up" to bring up the interface
 *  "sudo dhclient" to get an IP address
 
+## Helpful Google Cloud Project (GCP) Links
+*  Signup for GCP and create a project [Start Here](https://cloud.google.com/) free $300 to sign as of Jan 16, 2018
+    *  Google Project Creation: https://cloud.google.com/resource-manager/docs/creating-managing-projects
+*  [GCP instructions](https://cloud.google.com/compute/docs/images/import-existing-image) **Start from 'Import the image to your custom images list'**  
+*  [Fantastic video showing exactly howto build GCP instance starting from the raw disk image](https://youtu.be/YlcR6ZLebTM?t=827)  
 
 ## AUTHOR
 

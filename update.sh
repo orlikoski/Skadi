@@ -1,9 +1,9 @@
 #!/bin/bash
 
 echo "Updating OS"
-sudo apt-get -y update
-sudo apt-get -y dist-upgrade
-sudo apt-get -y autoremove
+sudo apt -y update
+sudo apt -y dist-upgrade
+sudo apt -y autoremove
 
 echo "Updating CDQR"
 wget https://raw.githubusercontent.com/rough007/CDQR/master/src/cdqr.py
