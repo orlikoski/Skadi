@@ -6,12 +6,11 @@ CyLR CDQR Forensics Virtual Machine (CCF-VM) by Alan Orlikoski
 *  [DEFCON 25 4-hour Workshop](https://media.defcon.org/DEF%20CON%2025/DEF%20CON%2025%20workshops/DEFCON-25-Workshop-Alan-Orlikoski-and-Dan-M-Free-and-Easy-DFIR-Triage-for-Everyone.pdf) Slides: Free and Easy DFIR Triage for Everyone  
 
 ## What's New
-*  Updates
-    *  Google Cloud Platform (GCP) Support!!!!
-    *  CyLR 1.4.0
-    *  CDQR 4.1.1
-    *  Plaso 20171231
-    *  OS Updates
+*  Google Cloud Platform (GCP) Support!!!!
+*  CyLR 1.4.0
+*  CDQR 4.1.1
+*  Plaso 20171231
+*  OS Updates
 
 ## Google Cloud Platform (GCP) Information
 *  Install [Google Cloud SDK](https://cloud.google.com/sdk/) on host used to control GCP (laptop/desktop with Windows, MacOS or Linux that supports the GCP SDK)  
