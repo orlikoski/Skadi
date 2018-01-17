@@ -6,14 +6,17 @@ CyLR CDQR Forensics Virtual Machine (CCF-VM) by Alan Orlikoski
 *  [DEFCON 25 4-hour Workshop](https://media.defcon.org/DEF%20CON%2025/DEF%20CON%2025%20workshops/DEFCON-25-Workshop-Alan-Orlikoski-and-Dan-M-Free-and-Easy-DFIR-Triage-for-Everyone.pdf) Slides: Free and Easy DFIR Triage for Everyone  
 
 ## Google Cloud Platform (GCP) Support
-*  Signup for GCP and create a project [Start Here](https://cloud.google.com/) 
+*  Signup for GCP and create a project [Start Here](https://cloud.google.com/) free $300 to sign as of Jan 16, 2018
+    *  Google Project Creation: https://cloud.google.com/resource-manager/docs/creating-managing-projects
 *  Install [Google Cloud SDK](https://cloud.google.com/sdk/) on host used to control GCP (laptop/desktop with Windows, MacOS or Linux that supports the GCP SDK)  
+*  Download the CCF-VM Cloud image [CCF-VM_3.0.tar.gz](https://drive.google.com/file/d/1v9j0W0zXC3eEXws_pVaXzWgcI_8swT3W)
 *  Run the following 4 commands (Requires Google Cloud SDK and wget )  
-    ```wget https://drive.google.com/open?id=1v9j0W0zXC3eEXws_pVaXzWgcI_8swT3W```  
+    ```gsutil mb gs://<GCP Storage Bucket Name>/```
     ```gsutil cp CCF-VM_3.0.tar.gz gs://<GCP Storage Bucket Name>/CCF-VM_3.0.tar.gz```  
     ```gcloud compute images create ccf-vm-image --source-uri gs://<GCP Storage Bucket Name>/CCF-VM_3.0.tar.gz```  
-    ```gcloud compute instances create ccf-vm --image ccf-vm-imageg --machine-type n1-standard-4 --zone <Zone of Choice>```  
-    
+    ```gcloud compute instances create ccf-vm --image ccf-vm-imageg --machine-type n1-standard-4 --zone <zone of choice>```  
+*  SSH into CCF-VM
+    ```gcloud compute ssh ccf-vm --zone <zone of choice>```
 *  Helpful Links  
     *  [GCP instructions](https://cloud.google.com/compute/docs/images/import-existing-image) **Start from 'Import the image to your custom images list'**  
     *  [Fantastic video showing exactly howto build GCP instance starting from the raw disk image](https://youtu.be/YlcR6ZLebTM?t=827)  
