@@ -22,12 +22,12 @@ CyLR CDQR Forensics Virtual Machine (CCF-VM) by Alan Orlikoski
 The CCF-VM was designed to provide an all-in-one solution to parsing collected data, making it easily searchable with built-in common searches, enable searching of single and multiple hosts simultaneously (stacking).  It was very important that this was done with open source solutions.
 
 ## Download locations
-*  CCF-VM 3.0 OVF: https://drive.google.com/open?id=1taEOJA1iY9jgtGiZ7JRNpokUagYIv2J2
-    *  MD5: a320c27d60bad2939bd57c4350453476
-*  CCF-VM 3.0 GCP Cloud Image: https://drive.google.com/file/d/1v9j0W0zXC3eEXws_pVaXzWgcI_8swT3W
-    *  MD5: 12229cc444daa58c837c77b222be6a24
-*  CCF-VM User Guide: https://drive.google.com/open?id=0B5z7g7P2BWJAWTM2d0NQZjV6MHc
-    *  MD5: 1e9c7cfe535cc2ba5fe9ffe3b8442575
+*  **CCF-VM 3.0 OVF:** https://drive.google.com/open?id=1taEOJA1iY9jgtGiZ7JRNpokUagYIv2J2
+    *  **MD5:** a320c27d60bad2939bd57c4350453476
+*  **CCF-VM 3.0 GCP Cloud Image:** https://drive.google.com/file/d/1v9j0W0zXC3eEXws_pVaXzWgcI_8swT3W
+    *  **MD5:** 12229cc444daa58c837c77b222be6a24
+*  **CCF-VM User Guide:** https://drive.google.com/open?id=0B5z7g7P2BWJAWTM2d0NQZjV6MHc
+    *  **MD5:** 1e9c7cfe535cc2ba5fe9ffe3b8442575
 
 ## Open source solutions installed
 *  Cold Disk Quick Response (CDQR): https://github.com/rough007/CDQR
