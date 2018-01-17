@@ -9,11 +9,13 @@ CyLR CDQR Forensics Virtual Machine (CCF-VM) by Alan Orlikoski
 *  Install [Google Cloud SDK](https://cloud.google.com/sdk/) on host used to control GCP (laptop/desktop with Windows, MacOS or Linux that supports the GCP SDK)  
 *  Download the CCF-VM Cloud image [CCF-VM_3.0.tar.gz](https://drive.google.com/file/d/1v9j0W0zXC3eEXws_pVaXzWgcI_8swT3W)
 *  Run the following commands to install and log into CCF-VM Cloud (Requires Google Cloud SDK and wget )  
-    ```gsutil mb gs://<GCP Storage Bucket Name>/```
-    ```gsutil cp CCF-VM_3.0.tar.gz gs://<GCP Storage Bucket Name>/CCF-VM_3.0.tar.gz```  
-    ```gcloud compute images create ccf-vm-image --source-uri gs://<GCP Storage Bucket Name>/CCF-VM_3.0.tar.gz```  
-    ```gcloud compute instances create ccf-vm --image ccf-vm-imageg --machine-type n1-standard-4 --zone <GCP zone>```  
-    ```gcloud compute ssh ccf-vm --zone <GCP zone>```  
+    ```
+    gsutil mb gs://<GCP Storage Bucket Name>/
+    gsutil cp CCF-VM_3.0.tar.gz gs://<GCP Storage Bucket Name>/CCF-VM_3.0.tar.gz
+    gcloud compute images create ccf-vm-image --source-uri gs://<GCP Storage Bucket Name>/CCF-VM_3.0.tar.gz
+    gcloud compute instances create ccf-vm --image ccf-vm-imageg --machine-type n1-standard-4 --zone <GCP zone>
+    gcloud compute ssh ccf-vm --zone <GCP zone>
+    ```
 *  GCP can be confusing to start so there are helpful links at the bottom of this page
 
 ## Purpose
