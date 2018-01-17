@@ -14,12 +14,12 @@ CyLR CDQR Forensics Virtual Machine (CCF-VM) by Alan Orlikoski
     ```gcloud compute images create ccf-vm-image --source-uri gs://<GCP Storage Bucket Name>/CCF-VM_3.0.tar.gz```  
     ```gcloud compute instances create ccf-vm --image ccf-vm-imageg --machine-type n1-standard-4 --zone <GCP zone>```  
     ```gcloud compute ssh ccf-vm --zone <GCP zone>```  
-*  GCP can be confusing so have some [helpful cloud links](2)
+*  GCP can be confusing to start so there are helpful links at the bottom of this page
 
 ## Purpose
 The CCF-VM was designed to provide an all-in-one solution to parsing collected data, making it easily searchable with built-in common searches, enable searching of single and multiple hosts simultaneously (stacking).  It was very important that this was done with open source solutions.
 
-## [1]: Download locations
+## Download locations
 *  CCF-VM 3.0 OVF: https://drive.google.com/open?id=1taEOJA1iY9jgtGiZ7JRNpokUagYIv2J2
     *  MD5: a320c27d60bad2939bd57c4350453476
 *  CCF-VM 3.0 GCP Custom Image Raw Disk (ready for importing): https://drive.google.com/open?id=1v9j0W0zXC3eEXws_pVaXzWgcI_8swT3WI t
@@ -234,7 +234,7 @@ To enable Bridged Networking use the following:
 *  "sudo ifconfig \<interface name\> up" to bring up the interface
 *  "sudo dhclient" to get an IP address
 
-## [2]: Helpful Google Cloud Project (GCP) Links
+## Helpful Google Cloud Project (GCP) Links
 *  Signup for GCP and create a project [Start Here](https://cloud.google.com/) free $300 to sign as of Jan 16, 2018
     *  Google Project Creation: https://cloud.google.com/resource-manager/docs/creating-managing-projects
 *  [GCP instructions](https://cloud.google.com/compute/docs/images/import-existing-image) **Start from 'Import the image to your custom images list'**  
