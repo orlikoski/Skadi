@@ -8,7 +8,7 @@ CyLR CDQR Forensics Virtual Machine (CCF-VM) by Alan Orlikoski
 ## Google Cloud Platform (GCP) Support
 *  Install [Google Cloud SDK](https://cloud.google.com/sdk/) on host used to control GCP (laptop/desktop with Windows, MacOS or Linux that supports the GCP SDK)  
 *  Download the CCF-VM Cloud image [CCF-VM_3.0.tar.gz](https://drive.google.com/file/d/1v9j0W0zXC3eEXws_pVaXzWgcI_8swT3W)
-*  Run the following commands to install and log into CCF-VM Cloud (Requires Google Cloud SDK and wget )  
+*  Run the following commands to install and log into CCF-VM Cloud ([Google Cloud SDK](https://cloud.google.com/sdk/))  
     ```bash
     gsutil mb gs://<GCP Storage Bucket Name>/
     gsutil cp CCF-VM_3.0.tar.gz gs://<GCP Storage Bucket Name>/CCF-VM_3.0.tar.gz
