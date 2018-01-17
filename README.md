@@ -6,8 +6,6 @@ CyLR CDQR Forensics Virtual Machine (CCF-VM) by Alan Orlikoski
 *  [DEFCON 25 4-hour Workshop](https://media.defcon.org/DEF%20CON%2025/DEF%20CON%2025%20workshops/DEFCON-25-Workshop-Alan-Orlikoski-and-Dan-M-Free-and-Easy-DFIR-Triage-for-Everyone.pdf) Slides: Free and Easy DFIR Triage for Everyone  
 
 ## Google Cloud Platform (GCP) Support
-*  Signup for GCP and create a project [Start Here](https://cloud.google.com/) free $300 to sign as of Jan 16, 2018
-    *  Google Project Creation: https://cloud.google.com/resource-manager/docs/creating-managing-projects
 *  Install [Google Cloud SDK](https://cloud.google.com/sdk/) on host used to control GCP (laptop/desktop with Windows, MacOS or Linux that supports the GCP SDK)  
 *  Download the CCF-VM Cloud image [CCF-VM_3.0.tar.gz](https://drive.google.com/file/d/1v9j0W0zXC3eEXws_pVaXzWgcI_8swT3W)
 *  Run the following 4 commands (Requires Google Cloud SDK and wget )  
@@ -17,10 +15,6 @@ CyLR CDQR Forensics Virtual Machine (CCF-VM) by Alan Orlikoski
     ```gcloud compute instances create ccf-vm --image ccf-vm-imageg --machine-type n1-standard-4 --zone <zone of choice>```  
 *  SSH into CCF-VM
     ```gcloud compute ssh ccf-vm --zone <zone of choice>```
-*  Helpful Links  
-    *  [GCP instructions](https://cloud.google.com/compute/docs/images/import-existing-image) **Start from 'Import the image to your custom images list'**  
-    *  [Fantastic video showing exactly howto build GCP instance starting from the raw disk image](https://youtu.be/YlcR6ZLebTM?t=827)  
-
 
 ## Purpose
 The CCF-VM was designed to provide an all-in-one solution to parsing collected data, making it easily searchable with built-in common searches, enable searching of single and multiple hosts simultaneously (stacking).  It was very important that this was done with open source solutions.
@@ -240,6 +234,11 @@ To enable Bridged Networking use the following:
 *  "sudo ifconfig \<interface name\> up" to bring up the interface
 *  "sudo dhclient" to get an IP address
 
+## Google Cloud Project (GCP) Notes
+*  Signup for GCP and create a project [Start Here](https://cloud.google.com/) free $300 to sign as of Jan 16, 2018
+    *  Google Project Creation: https://cloud.google.com/resource-manager/docs/creating-managing-projects
+*  [GCP instructions](https://cloud.google.com/compute/docs/images/import-existing-image) **Start from 'Import the image to your custom images list'**  
+*  [Fantastic video showing exactly howto build GCP instance starting from the raw disk image](https://youtu.be/YlcR6ZLebTM?t=827)  
 
 ## AUTHOR
 
