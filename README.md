@@ -24,7 +24,7 @@ CyLR CDQR Forensics Virtual Machine (CCF-VM) by Alan Orlikoski
     gcloud compute ssh ccf-vm --zone <GCP zone>
     ```
 *  GCP can be confusing to start so there are helpful links at the bottom of this page  
-**HIGHLY RECOMMEND PLACING CCF-VM BEHIND A STRONG FIREWALL OR BASION HOST**
+**HIGHLY RECOMMEND PLACING CCF-VM BEHIND A STRONG FIREWALL OR BASTION HOST**
 
 ## Purpose
 The CCF-VM was designed to provide an all-in-one solution to parsing collected data, making it easily searchable with built-in common searches, enable searching of single and multiple hosts simultaneously (stacking).  It was very important that this was done with open source solutions.
