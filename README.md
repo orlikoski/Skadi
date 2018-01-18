@@ -118,33 +118,36 @@ The best practice is to put all of the artifacts into one folder (or zip file).
 ## Examples of using CDQR to process the data and output to into Elasticsearch
 If the data is from a windows host, in a .zip file, “example_hostname.zip”, then use the following command
 ```
-cdqr.py example_hostname.zip -p win --max_cpu -z --es example_index
+cdqr.py example_hostname.zip --parser win --max_cpu -z --es_kb example_index
 ```
 If the data is from a windows host, in a directory, “example_dirname”, then use the following command
 ```
-cdqr.py example_dirname -p win --max_cpu --es example_index
+cdqr.py example_dirname --parser win --max_cpu -z --es_kb example_index
 ```
 If the data is from a mac host, is a forensic image file(s) then use the following command
 ```
-cdqr.py example_dirname/example_hostname.E01 -p mac --max_cpu --es example_index
+cdqr.py example_dirname/example_hostname.E01 --parser mac --max_cpu -z --es_kb example_index
 ```
 
 ## Successful example output from CDQR
 ```
-CDQR Version: 3.0
-Plaso Version: 1.5
+CDQR Version: 4.1.1
+Plaso Version: 20171231
 Using parser: win
-Number of cpu cores to use: 8
-Source data: Sample_data
+Number of cpu cores to use: 4
 Destination Folder: Results
-Database File: Results/Sample_data.db
-SuperTimeline CSV File: Results/Sample_data.SuperTimeline.csv
+Attempting to extract source file: example.zip
+All files extracted to folder: Results/artifacts/example
+Source data: Results/artifacts/example
+Log File: Results/example.log
+Database File: Results/example.plaso
+SuperTimeline CSV File: Results/example.SuperTimeline.csv
 
-
-Results/Sample_data.log
-Processing started at: 2001-01-01 17:40:58.322694
+Total start time was: 2018-01-18 06:48:05.350500
+Processing started at: 2018-01-18 06:48:05.350704
 Parsing image
-"log2timeline.py" "-p" "--partition" "all" "--vss_stores" "all" "--parsers" "appcompatcache,bagmru,binary_cookies,ccleaner,chrome_cache,chrome_cookies,chrome_extension_activity,chrome_history,chrome_preferences,explorer_mountpoints2,explorer_programscache,filestat,firefox_cache,firefox_cache2,firefox_cookies,firefox_downloads,firefox_history,google_drive,java_idx,mcafee_protection,mft,mrulist_shell_item_list,mrulist_string,mrulistex_shell_item_list,mrulistex_string,mrulistex_string_and_shell_item,mrulistex_string_and_shell_item_list,msie_zone,msiecf,mstsc_rdp,mstsc_rdp_mru,network_drives,opera_global,opera_typed_history,prefetch,recycle_bin,recycle_bin_info2,rplog,safari_history,symantec_scanlog,userassist,usnjrnl,windows_boot_execute,windows_boot_verify,windows_run,windows_sam_users,windows_services,windows_shutdown,windows_task_cache,windows_timezone,windows_typed_urls,windows_usb_devices,windows_usbstor_devices,windows_version,winevt,winevtx,winfirewall,winjob,winlogon,winrar_mru,winreg,winreg_default" "--hashers" "md5" "--workers" "8" "Results/Sample_data.db" "Sample_data"
+
+"log2timeline.py" "--partition" "all" "--vss_stores" "all" "--status_view" "linear" "--parsers" "sqlite,appcompatcache,bagmru,binary_cookies,ccleaner,chrome_cache,chrome_cookies,chrome_extension_activity,chrome_history,chrome_preferences,explorer_mountpoints2,explorer_programscache,filestat,firefox_cache,firefox_cache2,firefox_cookies,firefox_downloads,firefox_history,google_drive,java_idx,mcafee_protection,mft,mrulist_shell_item_list,mrulist_string,mrulistex_shell_item_list,mrulistex_string,mrulistex_string_and_shell_item,mrulistex_string_and_shell_item_list,msie_zone,msiecf,mstsc_rdp,mstsc_rdp_mru,network_drives,opera_global,opera_typed_history,prefetch,recycle_bin,recycle_bin_info2,rplog,safari_history,symantec_scanlog,userassist,usnjrnl,windows_boot_execute,windows_boot_verify,windows_run,windows_sam_users,windows_services,windows_shutdown,windows_task_cache,windows_timezone,windows_typed_urls,windows_usb_devices,windows_usbstor_devices,windows_version,winevt,winevtx,winfirewall,winjob,winlogon,winrar_mru,winreg,winreg_default" "--hashers" "md5" "--workers" "4" "Results/example.plaso" "Results/artifacts/example"
 Parsing ended at: 2001-01-01 17:44:24.899715
 Parsing duration was: 0:03:26.577021
 
