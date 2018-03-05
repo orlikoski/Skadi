@@ -58,18 +58,29 @@ sudo systemctl daemon-reload
 sudo systemctl restart neo4j
 sudo systemctl enable neo4j
 
-# sudo mkdir /var/run/neo4j/
-# sudo chmod 666  /var/run/neo4j/
-# neo4j-admin set-initial-password cdqr
-# sudo neo4j start
 
 # Install and Configure Kibana
 sudo apt install kibana -y
-sudo sed -i 's/#server.host\:/server.host\:/g' /etc/kibana/kibana.yml
+#sudo sed -i 's/#server.host\:/server.host\:/g' /etc/kibana/kibana.yml
 sudo systemctl daemon-reload
 sudo systemctl restart kibana
 sudo systemctl enable kibana
 
+# Configure Celery
+celery_service="W1VuaXRdCkRlc2NyaXB0aW9uPUNlbGVyeSBTZXJ2aWNlCkFmdGVyPW5ldHdvcmsudGFyZ2V0CgpbU2VydmljZV0KVHlwZT1mb3JraW5nClVzZXI9Y2VsZXJ5Ckdyb3VwPWNlbGVyeQpQSURGaWxlPS9vcHQvY2VsZXJ5L2NlbGVyeS5waWRsb2NrCgpFeGVjU3RhcnQ9L3Vzci9sb2NhbC9iaW4vY2VsZXJ5IG11bHRpIHN0YXJ0IHNpbmdsZS13b3JrZXIgLUEgdGltZXNrZXRjaC5saWIudGFza3Mgd29ya2VyIC0tbG9nbGV2ZWw9aW5mbyAtLWxvZ2ZpbGU9L3Zhci9sb2cvY2VsZXJ5X3dvcmtlciAtLXBpZGZpbGU9L29wdC9jZWxlcnkvY2VsZXJ5LnBpZGxvY2sKRXhlY1N0b3A9L3Vzci9sb2NhbC9iaW4vY2VsZXJ5IG11bHRpIHN0b3B3YWl0IHNpbmdsZS13b3JrZXIgLS1waWRmaWxlPS9vcHQvY2VsZXJ5L2NlbGVyeS5waWRsb2NrIC0tbG9nZmlsZT0vdmFyL2xvZy9jZWxlcnlfd29ya2VyCkV4ZWNSZWxvYWQ9L3Vzci9sb2NhbC9iaW4vY2VsZXJ5IG11bHRpIHJlc3RhcnQgc2luZ2xlLXdvcmtlciAtLXBpZGZpbGU9L29wdC9jZWxlcnkvY2VsZXJ5LnBpZGxvY2sgLS1sb2dmaWxlPS92YXIvbG9nL2NlbGVyeV93b3JrZXIKCgpbSW5zdGFsbF0KV2FudGVkQnk9bXVsdGktdXNlci50YXJnZXQK"
+sudo useradd -r -s /bin/false celery
+sudo mkdir /opt/celery
+sudo touch /var/log/celery_worker
+sudo touch /opt/celery/celery.pidlock
+sudo chown -R celery:celery /opt/celery
+sudo chown -R celery:celery /opt/celery/celery.pidlock
+
+sudo chown -R celery:celery /var/log/celery_worker
+echo $celery_service |base64 -d | sudo tee /etc/systemd/system/celery.service
+sudo chmod g+w /etc/systemd/system/celery.service
+sudo systemctl daemon-reload
+sudo systemctl restart celery
+sudo systemctl enable celery
 
 # Install and Configure TimeSketch
 SECRET_KEY=$(openssl rand -base64 32 | sha256sum)
@@ -101,7 +112,7 @@ sudo sed -i "s/GRAPH_BACKEND_ENABLED = False/GRAPH_BACKEND_ENABLED = True/g" /et
 
 tsctl add_user -u cdqr -p Changemen0w\!
 
-timesketch_service="W1VuaXRdCkRlc2NyaXB0aW9uPVRpbWVTa2V0Y2ggU2VydmljZQpBZnRlcj1uZXR3b3JrLnRhcmdldAoKW1NlcnZpY2VdCkV4ZWNTdGFydD0vdXNyL2xvY2FsL2Jpbi90c2N0bCBydW5zZXJ2ZXIgLWggMC4wLjAuMCAtcCA1MDAwIC0tdGhyZWFkZWQgLS1wYXNzdGhyb3VnaC1lcnJvcnMKCltJbnN0YWxsXQpXYW50ZWRCeT1tdWx0aS11c2VyLnRhcmdldAo="
+timesketch_service="W1VuaXRdCkRlc2NyaXB0aW9uPVRpbWVTa2V0Y2ggU2VydmljZQpBZnRlcj1uZXR3b3JrLnRhcmdldAoKW1NlcnZpY2VdClVzZXI9dGltZXNrZXRjaApHcm91cD10aW1lc2tldGNoCkV4ZWNTdGFydD0vdXNyL2xvY2FsL2Jpbi90c2N0bCBydW5zZXJ2ZXIgLWggMC4wLjAuMCAtcCA1MDAwIC0tdGhyZWFkZWQgLS1wYXNzdGhyb3VnaC1lcnJvcnMgCgpbSW5zdGFsbF0KV2FudGVkQnk9bXVsdGktdXNlci50YXJnZXQK"
 
 sudo useradd -r -s /bin/false timesketch
 
@@ -111,7 +122,29 @@ sudo systemctl daemon-reload
 sudo systemctl restart timesketch.service
 sudo systemctl enable timesketch.service
 
+# Install and Configure Cerebro
+cerebro_service="W1VuaXRdCkRlc2NyaXB0aW9uPUNlcmVicm8gU2VydmljZQpBZnRlcj1uZXR3b3JrLnRhcmdldAoKW1NlcnZpY2VdClVzZXI9Y2VyZWJybwpHcm91cD1jZXJlYnJvCkV4ZWNTdGFydD0vb3B0L2NlcmVicm8vY2VyZWJyby0wLjcuMi9iaW4vY2VyZWJybwoKW0luc3RhbGxdCldhbnRlZEJ5PW11bHRpLXVzZXIudGFyZ2V0Cg=="
+cerebro_secret=$(openssl rand -base64 32 | sha256sum)
+sudo useradd -r -s /bin/false cerebro
+sudo mkdir /opt/cerebro
 
+cerebro_version="0.7.2"
+sudo wget -O "/opt/cerebro/cerebro-$cerebro_version.tgz" "https://github.com/lmenezes/cerebro/releases/download/v$cerebro_version/cerebro-$cerebro_version.tgz"
+sudo tar xzf "/opt/cerebro/cerebro-$cerebro_version.tgz" -C "/opt/cerebro/"
+sudo rm -rf "/opt/cerebro/cerebro-$cerebro_version.tgz"
+sudo chown -R cerebro:cerebro /opt/cerebro
+sudo chmod +w /opt/cerebro
+sudo sed -i "s@./cerebro.db@/opt/cerebro/cerebro-$cerebro_version/cerebro.db@g" "/opt/cerebro/cerebro-$cerebro_version/conf/application.conf"
+sudo sed -i "s/secret = .*/secret = \"$cerebro_secret\"/g"  "/opt/cerebro/cerebro-$cerebro_version/conf/application.conf"
+sudo sed -i "s@hosts = \[@hosts = \[\\n\  {\\n    host = \"http\://localhost\:9200\"\\n    name = \"CCF-VM\"\\n  \}@g" "/opt/cerebro/cerebro-$cerebro_version/conf/application.conf"
+#sudo sed -i "s@basePath = \"/\"@basePath = \"/opt/cerebro/cerebro-$cerebro_version\"@g" "/opt/cerebro/cerebro-$cerebro_version/conf/application.conf"
+
+cerebro_config="aG9zdHMgPSBbCiAgewogICAgaG9zdCA9ICJodHRwOi8vbG9jYWxob3N0OjkyMDAiCiAgICBuYW1lID0gIkNDRi1WTSIKICB9Cg=="
+echo $cerebro_service |base64 -d | sudo tee /etc/systemd/system/cerebro.service
+sudo chmod g+w /etc/systemd/system/cerebro.service
+sudo systemctl daemon-reload
+sudo systemctl restart cerebro.service
+sudo systemctl enable cerebro.service
 
 curl -sSL https://raw.githubusercontent.com/rough007/CCF-VM/master/scripts/update.sh |bash
 echo ""
@@ -122,17 +155,17 @@ declare -a services=('elasticsearch' 'postgresql' 'celery' 'neo4j' 'redis' 'kiba
 # Ensure all Services are started
 for item in "${services[@]}"
 do
-	echo "  Bringing up $item"
-		sudo systemctl restart $item
-			sleep 1
-			done
+    echo "  Bringing up $item"
+    sudo systemctl restart $item
+    sleep 1
+done
 
-			echo ""
+echo ""
 
-			for item in "${services[@]}"
-			do
-				echo "  $item service is: $(systemctl is-active $item)"
-			done
+for item in "${services[@]}"
+do
+    echo "  $item service is: $(systemctl is-active $item)"
+done
 
 echo ""
 echo "Verifying versions of Plaso and CDQR"
