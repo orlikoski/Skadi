@@ -61,7 +61,7 @@ sudo systemctl enable neo4j
 
 # Install and Configure Kibana
 sudo apt install kibana -y
-#sudo sed -i 's/#server.host\:/server.host\:/g' /etc/kibana/kibana.yml
+sudo sed -i 's@#server.host\: \"localhost\"@server.host\: \"0.0.0.0\"@g' /etc/kibana/kibana.yml
 sudo systemctl daemon-reload
 sudo systemctl restart kibana
 sudo systemctl enable kibana
