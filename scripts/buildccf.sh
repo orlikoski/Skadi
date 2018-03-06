@@ -121,7 +121,9 @@ sudo sed -i "s@NEO4J_USERNAME = u''@NEO4J_USERNAME = u'$neo4juser'@g" /etc/times
 sudo sed -i "s@NEO4J_PASSWORD = u''@NEO4J_PASSWORD = u'$neo4jpassword'@g" /etc/timesketch.conf
 sudo sed -i "s/GRAPH_BACKEND_ENABLED = False/GRAPH_BACKEND_ENABLED = True/g" /etc/timesketch.conf
 
-tsctl add_user -u cdqr -p Changemen0w\!
+
+timesketchpassword=$(openssl rand -base64 32)
+tsctl add_user -u cdqr -p "$timesketchpassword"
 
 timesketch_service="W1VuaXRdCkRlc2NyaXB0aW9uPVRpbWVTa2V0Y2ggU2VydmljZQpBZnRlcj1uZXR3b3JrLnRhcmdldAoKW1NlcnZpY2VdClVzZXI9dGltZXNrZXRjaApHcm91cD10aW1lc2tldGNoCkV4ZWNTdGFydD0vdXNyL2xvY2FsL2Jpbi90c2N0bCBydW5zZXJ2ZXIgLWggMC4wLjAuMCAtcCA1MDAwIC0tdGhyZWFkZWQgLS1wYXNzdGhyb3VnaC1lcnJvcnMgCgpbSW5zdGFsbF0KV2FudGVkQnk9bXVsdGktdXNlci50YXJnZXQK"
 
@@ -184,5 +186,11 @@ echo ""
 echo "Verifying versions of Plaso and CDQR"
 /usr/bin/log2timeline.py --version
 /usr/local/bin/cdqr.py --version
+
+echo ""
+echo ""
+echo "TimeSketch Initial User Information (reset with 'tsctl add_user -u cdqr -p <password>')"
+echo "Username: cdqr"
+echo "Password: $timesketchpassword"
 exec bash
 
