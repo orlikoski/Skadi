@@ -19,7 +19,10 @@ CyLR CDQR Forensics Virtual Machine (CCF-VM) by Alan Orlikoski
 The CCF-VM was designed to provide an all-in-one solution to parsing collected data, making it easily searchable with built-in common searches, enable searching of single and multiple hosts simultaneously (stacking).  It was very important that this was done with open source solutions.
 
 ## System Spec Recommendations
-Minimum: 4-8 threads/cores, 8+GB RAM, 100+GB Disk space
+Minimum (more is better): 
+  * CPU: 4-8 threads/cores
+  * Memory: 8GB+
+  * Disk Size: 100GB+
 
 ## NEW CCF-VM Curl-to-Bash Installation!
 ## AKA Scripted installation that is fantastic for Cloud build scripts
