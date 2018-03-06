@@ -183,9 +183,8 @@ do
 done
 
 echo ""
-echo "Verifying versions of Plaso and CDQR"
+echo "Verifying version of Plaso"
 /usr/bin/log2timeline.py --version
-/usr/local/bin/cdqr.py --version
 
 echo ""
 echo ""
