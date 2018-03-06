@@ -21,17 +21,17 @@ The CCF-VM was designed to provide an all-in-one solution to parsing collected d
 ## Curl-to-Bash Installation
 This type of installation is for users with some experience with linux administration. It is ideal for those that are required to build upon a baseline (gold disk) image. It also works very well for cloud based instances as a build script. It ensures that the most recent versions of the software are used and that it is configured the same way every time.  Also note that all ciphers and keys are generated at run time and therefore are as unique as any script can make them.
 
-This is a script that installs and configures, including the creation of systemd services if not included otherwise, the following items onto a base image of Ubuntu/Debian (need apt to work).
-    *  CDQR 4.1.3 (pulls most recent from Git repo)
-    #  CyLR 1.4.0 (pulls most recent from Git repo)
-    *  ElasticSearch 6.x
-    *  Logstash 6.x
-    *  Kibana 6.x
-    *  TimeSketch 20170721
-    *  Neo4j 3.3.3
-    *  Celery 4.1.0
-    *  Redis 4.0.8
-    *  PostgreSQL 9.5.11
+This is a script that installs and configures, including the creation of systemd services if not included otherwise, the following items onto a base image of Ubuntu/Debian (need apt to work).  
+ *  CDQR 4.1.3 (pulls most recent from Git repo)
+ *  CyLR 1.4.0 (pulls most recent from Git repo)
+ *  ElasticSearch 6.x
+ *  Logstash 6.x
+ *  Kibana 6.x
+ *  TimeSketch 20170721
+ *  Neo4j 3.3.3
+ *  Celery 4.1.0
+ *  Redis 4.0.8
+ *  PostgreSQL 9.5.11
 
 Installation instructions
 *  Start with Ubuntu 16.04 LTS or equivalent Debian base installation
