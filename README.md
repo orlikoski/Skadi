@@ -18,7 +18,7 @@ CyLR CDQR Forensics Virtual Machine (CCF-VM) by Alan Orlikoski
 ## Purpose
 The CCF-VM was designed to provide an all-in-one solution to parsing collected data, making it easily searchable with built-in common searches, enable searching of single and multiple hosts simultaneously (stacking).  It was very important that this was done with open source solutions.
 
-## Curl-to-Bash Installation
+## NEW CCF-VM Curl-to-Bash Installation!
 This type of installation is for users with some experience with linux administration. It is ideal for those that are required to build upon a baseline (gold disk) image. It also works very well for cloud based instances as a build script. It ensures that the most recent versions of the software are used and that it is configured the same way every time.  Also note that all ciphers and keys are generated at run time and therefore are as unique as any script can make them.
 
 This is a script that installs and configures, including the creation of systemd services if not included otherwise, the following items onto a base image of Ubuntu/Debian (need apt to work).  
