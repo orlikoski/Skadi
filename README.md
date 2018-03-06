@@ -18,6 +18,77 @@ CyLR CDQR Forensics Virtual Machine (CCF-VM) by Alan Orlikoski
 ## Purpose
 The CCF-VM was designed to provide an all-in-one solution to parsing collected data, making it easily searchable with built-in common searches, enable searching of single and multiple hosts simultaneously (stacking).  It was very important that this was done with open source solutions.
 
+## Curl-to-Bash Installation
+This type of installation is for users with some experience with linux administration. It is ideal for those that are required to build upon a baseline (gold disk) image. It also works very well for cloud based instances as a build script. It ensures that the most recent versions of the software are used and that it is configured the same way every time.  Also note that all ciphers and keys are generated at run time and therefore are as unique as any script can make them.
+
+This is a script that installs and configures, including the creation of systemd services if not included otherwise, the following items onto a base image of Ubuntu/Debian (need apt to work).
+    *  CDQR 4.1.3 (pulls most recent from Git repo)
+    #  CyLR 1.4.0 (pulls most recent from Git repo)
+    *  ElasticSearch 6.x
+    *  Logstash 6.x
+    *  Kibana 6.x
+    *  TimeSketch 20170721
+    *  Neo4j 3.3.3
+    *  Celery 4.1.0
+    *  Redis 4.0.8
+    *  PostgreSQL 9.5.11
+
+Installation instructions
+*  Start with Ubuntu 16.04 LTS or equivalent Debian base installation
+*  Login to system with an account that has sudo privledges (The name doesn't have be `cdqr` but it is nostalgic)
+*  Start the script with either of these two options (No-Proxy or Behind a Proxy)
+
+No-proxy
+```
+sudo apt install curl -y # Ensure curl is installed
+curl -sSL https://raw.githubusercontent.com/rough007/CCF-VM/master/scripts/buildccf.sh |bash # 
+```
+
+Behind a Proxy
+```
+sudo apt install curl -y # Ensure curl is installed
+curl -sSL https://raw.githubusercontent.com/rough007/CCF-VM/master/scripts/buildccf_behind_proxy.sh |bash # 
+```
+
+*  Now wait, this could take anywhere from 5 - 60+ minutes depending on the speed of the internet connection
+
+The final completion will look something like this (version numbers may change over time):
+```
+System Health Checks
+  Bringing up elasticsearch
+  Bringing up postgresql
+  Bringing up celery
+  Bringing up neo4j
+  Bringing up redis
+  Bringing up logstash
+  Bringing up kibana
+  Bringing up timesketch
+
+  elasticsearch service is: active
+  postgresql service is: active
+  celery service is: active
+  neo4j service is: active
+  redis service is: active
+  logstash service is: active
+  kibana service is: active
+  timesketch service is: active
+
+Verifying versions of Plaso and CDQR
+plaso - log2timeline version 20180127
+CDQR Version: 4.1.3
+
+```
+
+Not 100% complete, but very close. The reason this is for advanced users is that the remaining items require loading sample data into the ElasticSearch in order to create the default index in Kibana as well as load the pre-made Dashboards, Visualizations, and Searches into Kibana (requires the correct indexes to work).
+
+Simple steps to complete the remaining steps:
+*  Run sample data through CDQR into the ElasticSearch database (sample Virtual Machines can be found at the [DFIR Training](https://www.dfir.training/tools/virtualization-and-forensics/virtual-machines-downloads) site or by using CyLR to collect from a sample host (much faster).
+  *  Sample Command: `~/cdqr.py -p win <disk image or CyLR resulting .zip file> --es_kb testing`  
+*  The first time logged into Kibana it asks to create a default index.  Use `case_cdqr-*` for the index and ensure that the data is fully loaded from previous step
+*  In Kibana click Management -> Saved Objects -> Import and use the file that has all of the CCF-VM specific Dashboards/Visualizations/Searches [kibana_6.x.json](https://raw.githubusercontent.com/rough007/CCF-VM/master/objects/kibana_6.x.json)
+
+That's it. The setup is complete.
+
 ## Google Cloud Platform (GCP) Information
 *  Signup for GCP and create a project [Start Here](https://cloud.google.com/) free $300 to sign as of Jan 16, 2018
     *  Google Project Creation: https://cloud.google.com/resource-manager/docs/creating-managing-projects

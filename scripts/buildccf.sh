@@ -23,15 +23,23 @@ sudo apt dist-upgrade -y
 sudo apt install -y python-software-properties python-plaso plaso-tools
 sudo apt autoremove -y
 
+# Install Mono
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+echo "deb http://download.mono-project.com/repo/ubuntu stable-xenial main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
+sudo apt update -y
+sudo apt dist-upgrade -y
+sudo apt install mono-devel -y
+
 #Install and Configure Elasticsearch
 wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
 sudo apt install apt-transport-https -y
 echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-6.x.list
 sudo add-apt-repository ppa:webupd8team/java -y
-sudo apt-get update -y
+sudo apt update -y
+sudo apt dist-upgrade -y
 echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
 echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections
-sudo apt-get install elasticsearch oracle-java8-installer -y
+sudo apt install elasticsearch oracle-java8-installer -y
 
 sudo sed -i 's/#network.host\: 192.168.0.1/network.host\: localhost/g' /etc/elasticsearch/elasticsearch.yml
 sudo systemctl daemon-reload
@@ -41,6 +49,7 @@ sudo systemctl enable elasticsearch
 # Install Redis
 sudo add-apt-repository ppa:chris-lea/redis-server -y
 sudo apt update -y
+sudo apt dist-upgrade -y
 sudo apt install redis-server -y
 sudo systemctl daemon-reload
 sudo systemctl restart redis-server
@@ -52,8 +61,10 @@ neo4jpassword=$(openssl rand -base64 32)
 wget -O - https://debian.neo4j.org/neotechnology.gpg.key | sudo apt-key add -
 echo 'deb http://debian.neo4j.org/repo stable/' | sudo tee -a /etc/apt/sources.list.d/neo4j.list
 sudo apt update -y
+sudo apt dist-upgrade -y
 sudo apt install neo4j -y
 sudo /usr/bin/neo4j-admin set-initial-password $neo4jpassword
+sudo chown -R neo4j:neo4j /var/lib/neo4j/
 sudo systemctl daemon-reload
 sudo systemctl restart neo4j
 sudo systemctl enable neo4j
@@ -89,8 +100,8 @@ psql_pw=$(openssl rand -base64 32 | sha256sum)
 sudo mkdir -p /etc/elasticsearch/scripts
 sudo wget -O /etc/elasticsearch/scripts/add_label.groovy https://raw.githubusercontent.com/google/timesketch/master/contrib/add_label.groovy
 sudo wget -O /etc/elasticsearch/scripts/toggle_label.groovy https://raw.githubusercontent.com/google/timesketch/master/contrib/toggle_label.groovy
-sudo apt-get install postgresql -y
-sudo apt-get install python-psycopg2 -y
+sudo apt install postgresql -y
+sudo apt install python-psycopg2 -y
 
 echo "local all timesketch md5"|sudo tee -a /etc/postgresql/9.5/main/pg_hba.conf
 sudo systemctl restart postgresql.service
@@ -146,7 +157,9 @@ sudo systemctl daemon-reload
 sudo systemctl restart cerebro.service
 sudo systemctl enable cerebro.service
 
+# Installs and Configures CDQR and CyLR
 curl -sSL https://raw.githubusercontent.com/rough007/CCF-VM/master/scripts/update.sh |bash
+
 echo ""
 echo ""
 echo "System Health Checks"
