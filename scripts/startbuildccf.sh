@@ -5,6 +5,7 @@ pubkey="LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUlJQ0lqQU5CZ2txaGtpRzl3MEJBUUVGQUFP
 buildccf_pem="$tempdir/buildccf.pem"
 buildccf_sig="$tempdir/buildccf.sig"
 buildccf_sh="$tempdir/buildccf.sh"
+update_sh="$tempdir/update.sh"
 
 wget -O $buildccf_tgz https://raw.githubusercontent.com/rough007/CCF-VM/master/scripts/buildccf.tgz
 wget -O $buildccf_sig https://raw.githubusercontent.com/rough007/CCF-VM/master/scripts/buildccf.sig
@@ -20,6 +21,15 @@ fi
 echo "Installer verified, installation starting"
 echo ""
 tar xzf $buildccf_tgz -C $tempdir
-source $buildccf_sh
 
+# Installs and Configures CDQR and CyLR
+echo "Installing CDQR and CyLR"
+$update
+
+echo ""
+echo "Verifying version of CDQR"
+/usr/local/bin/cdqr.py --version
+
+
+$buildccf_sh
 rm -rf $tempdir
