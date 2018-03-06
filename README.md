@@ -35,19 +35,19 @@ This is a script that installs and configures, including the creation of systemd
 
 Installation instructions
 *  Start with Ubuntu 16.04 LTS or equivalent Debian base installation
-*  Login to system with an account that has sudo privledges (The name doesn't have be `cdqr` but it is nostalgic)
-*  Start the script with either of these two options (No-Proxy or Behind a Proxy)
+*  Log into system with an account that has sudo privledges (The name doesn't have be `cdqr` but it is nostalgic)
+*  Start the script from a terminal with either of these two options (No-Proxy or Behind a Proxy)
 
 No-proxy
 ```
 sudo apt install curl -y # Ensure curl is installed
-curl -sSL https://raw.githubusercontent.com/rough007/CCF-VM/master/scripts/buildccf.sh |bash # 
+curl -sSL https://raw.githubusercontent.com/rough007/CCF-VM/master/scripts/buildccf.sh |bash  
 ```
 
 Behind a Proxy
 ```
 sudo apt install curl -y # Ensure curl is installed
-curl -sSL https://raw.githubusercontent.com/rough007/CCF-VM/master/scripts/buildccf_behind_proxy.sh |bash # 
+curl -sSL https://raw.githubusercontent.com/rough007/CCF-VM/master/scripts/buildccf_behind_proxy.sh |bash  
 ```
 
 *  Now wait, this could take anywhere from 5 - 60+ minutes depending on the speed of the internet connection
