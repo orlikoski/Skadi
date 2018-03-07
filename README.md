@@ -16,7 +16,7 @@ CyLR CDQR Forensics Virtual Machine (CCF-VM) by Alan Orlikoski
 *  OS Updates
 
 ## Purpose
-The CCF-VM was designed to provide an all-in-one solution to parsing collected data, making it easily searchable with built-in common searches, enable searching of single and multiple hosts simultaneously (stacking).  It was very important that this was done with open source solutions.
+The CCF-VM is a free, open source collection of tools that enables the collection, processing and advanced analysis of forensic artifacts and images.  It will operate on laptops, on-prem servers, the Cloud, and can be installed on top of hardened / gold disk images. This provides the everyone the ability to collect data and convert the bits and bytes to words and numbers. All of this enables the ability to rapidly answer, "Have I been hacked? Do I need to call for help?"
 
 ## System Spec Recommendations
 Minimum (more is better): 
