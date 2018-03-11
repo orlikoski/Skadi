@@ -51,13 +51,7 @@ sudo apt install curl -y # Ensure curl is installed
 curl -sSL https://raw.githubusercontent.com/rough007/CCF-VM/master/scripts/buildccf.sh |bash  
 ```
 
-Behind a Proxy
-```
-sudo apt install curl -y # Ensure curl is installed
-curl -sSL https://raw.githubusercontent.com/rough007/CCF-VM/master/scripts/buildccf_behind_proxy.sh |bash  
-```
-
-*  Now wait, this could take anywhere from 5 - 60+ minutes depending on the speed of the internet connection
+*  This could take anywhere from 5 - 60+ minutes depending on the speed of the internet connection
 
 The final completion will look something like this (version numbers may change over time):
 ```
