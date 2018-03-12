@@ -59,7 +59,7 @@ sudo systemctl enable nginx
 # Install and Configure Letsencrypt
 sudo apt update -y
 sudo apt install software-properties-common -y
-sudo add-apt-repository ppa:certbot/certbot
+sudo add-apt-repository ppa:certbot/certbot -y
 sudo apt update -y
 sudo apt install python-certbot-nginx -y
 
