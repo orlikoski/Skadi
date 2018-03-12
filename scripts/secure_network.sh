@@ -35,7 +35,7 @@ sudo ufw allow 'Nginx Full'
 sudo ufw allow 'OpenSSH'
 sudo ufw --force enable
 
-# Configure Ngix for Kibana, Cerebro, and TimeSketch
+# Configure Nginx for Kibana, Cerebro, and TimeSketch
 old_domain="localdomain.com"
 
 cerebro_conf="c2VydmVyIHsKICBsaXN0ZW4gODA7CiAgICBzZXJ2ZXJfbmFtZSBjZXJlYnJvLmxvY2FsZG9tYWluLmNvbSB3d3cuY2VyZWJyby5sb2NhbGRvbWFpbi5jb207CgogIGVycm9yX2xvZyAgIC92YXIvbG9nL25naW54L2NlcmVicm8uZXJyb3IubG9nOwogIGFjY2Vzc19sb2cgIC92YXIvbG9nL25naW54L2NlcmVicm8uYWNjZXNzLmxvZzsKCiAgbG9jYXRpb24gLyB7CiAgICBwcm94eV9wYXNzIGh0dHA6Ly9sb2NhbGhvc3Q6OTAwMDsKICB9Cn0K"
