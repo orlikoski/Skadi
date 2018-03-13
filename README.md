@@ -42,7 +42,7 @@ This is a script that installs and configures, including the creation of systemd
 Installation instructions
 *  Start with Ubuntu 16.04 LTS or equivalent Debian base installation
 *  Log into system with an account that has sudo privledges (The name doesn't have be `cdqr` but it is nostalgic)
-*  Start the script from a terminal with either of these two options (No-Proxy or Behind a Proxy)
+*  Start the script from a terminal using the commands below
 
 
 ```
