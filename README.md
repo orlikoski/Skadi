@@ -47,7 +47,6 @@ Installation instructions
 
 
 ```
-sudo apt install curl -y # Ensure curl is installed
 wget -O /tmp/buildccf.sh https://raw.githubusercontent.com/rough007/CCF-VM/master/scripts/buildccf.sh
 chmod +x /tmp/buildccf.sh
 /tmp/buildccf.sh
