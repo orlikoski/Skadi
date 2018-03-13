@@ -42,7 +42,7 @@ This is a script that installs and configures, including the creation of systemd
 Installation instructions
 *  Start with Ubuntu 16.04 LTS or equivalent Debian base installation
 *  Log into system with an account that has sudo privledges (The name doesn't have be `cdqr` but it is nostalgic)
-* The `build.ccf.sh` script downloads the signed [buildccf.tgz](https://github.com/rough007/CCF-VM/blob/master/scripts/buildccf.tgz) file and verifies the signature using openssl. If anything interrupts the download or if the signature doesn't match then the installation exits with an error message.
+* The [build.ccf.sh](https://github.com/rough007/CCF-VM/blob/master/scripts/buildccf.sh) script downloads the signed [buildccf.tgz](https://github.com/rough007/CCF-VM/blob/master/scripts/buildccf.tgz) file and verifies the signature using openssl. If anything interrupts the download or if the signature doesn't match then the installation exits with an error message.
 *  Start the script from a terminal using the commands below
 
 
