@@ -12,7 +12,7 @@ def add_es_parsers(subparsers):
                         help="Base64 encoded index name to delete")
     group.add_argument('--list',
                         action='store_true',
-                        help="Lists names of the current ES indexes")
+                        help="Lists the current ES indexes and their status")
 
 # Add all TimeSketch Parser Options
 def add_ts_parsers(subparsers):
