@@ -124,8 +124,61 @@ def ts_main(args):
         exit(1)
 
 ############ Operating System Functions ######################
+def os_server(args):
+    print("WARNING!! There will not be any acknowledgment if this worked due to stopping the server")
+    print("WARNING!! This requires sudo privledges and the process will hang if a password is required")
+    print("WARNING!! It is advised to only use this function with key-pair authentication")
+    if args[0].lower() == "stop":
+        print("Attempging to shut the server down")
+        print("sudo shutdown -h now")
+        cmd = subprocess.Popen("sudo shutdown -h now", shell=True).wait()
+    elif args[0].lower() == "restart":
+        print("Attempging to restart the server")
+        print("sudo shutdown -r now")
+        cmd = subprocess.Popen("sudo shutdown -r now", shell=True).wait()
+    else:
+        print("Arguments passed: ", args)
+        print("ERROR: Unable to parse Operating System command. Exiting")
+        exit(1)
+
+def os_service(args):
+    print("WARNING!! This requires sudo privledges and the process will hang if a password is required")
+    print("WARNING!! It is advised to only use this function with key-pair authentication")
+    command = args[0].lower()
+    accepted_commands = ["start","stop","restart"]
+    if command not in accepted_commands:
+        print("ERROR: Command " + command + " does not match accepted commands")
+        print("ERROR: Accepted commands are: 'start' 'stop' 'restart'")
+        exit(1)
+
+    service_list_array = myb64decode(args[1]).split()
+
+    if command == "stop":
+        for service in service_list_array:
+            print("Stoping:",service)
+            cmd = subprocess.Popen("sudo systemctl stop " + service, shell=True).wait()
+    elif command == "restart" or command == "start":
+        for service in service_list_array:
+            print("Starting / Restarting:",service)
+            cmd = subprocess.Popen("sudo systemctl restart " + service, shell=True).wait()
+    else:
+        print("Arguments passed: ", args)
+        print("ERROR: Unable to parse Operating System command. Exiting")
+        exit(1)
+
 def os_main(args):
-    exit(1)
+    print("Executing Operating System command")
+    # Create TimeSketch user with the provided base64 encoded username and password
+    if args.server:
+        print("Attempting to stop or restart the server")
+        os_server(args.server)
+    elif args.service:
+        print("Attempting to stop/start/restart a service")
+        os_service(args.service)
+    else:
+        print("Arguments passed: ", args)
+        print("ERROR: Unable to parse TimeSketch command. Exiting")
+        exit(1)
 
 ############ Data Processing Functions ######################
 def dp_main(args):
