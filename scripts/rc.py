@@ -128,13 +128,21 @@ def os_main(args):
     exit(1)
 
 ############ Data Processing Functions ######################
+def process_cdqr(cdqr,args):
+    parsed_args = myb64decode(args[0])
+    print("Executing CDQR command")
+    cmd = subProcess.Popen(cdqr + " " + parsed_args, shell=True).wait()
+
 def dp_main(args):
+    cdqr_exec = "/usr/local/bin/cdqr.py"
+    if args.cdqr:
+        print("Attempting to process data with CDQR")
+        process_cdqr(cdqr_exec, args.cdqr)
     exit(1)
 
 # Main Program
 def main():
     version = "CCF-VM Automation Engine 0.0.1"
-    cdqr_exec = "/usr/local/bin/cdqr.py"
 
     # Build Parser Options
     parser = argparse.ArgumentParser(description='CCF-VM Automation Engine')
