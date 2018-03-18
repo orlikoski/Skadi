@@ -53,7 +53,7 @@ def main():
 
     # Build Parser Options
     parser = argparse.ArgumentParser(description='CCF-VM Automation Engine')
-    subparsers = parser.add_subparsers(help='OS Commands', dest='os_commands')
+    subparsers = parser.add_subparsers(help='Automation Options', dest='auto_type')
     add_es_parsers(subparsers)
     add_ts_parsers(subparsers)
     add_os_parsers(subparsers)
