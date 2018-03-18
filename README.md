@@ -11,12 +11,6 @@ A lot of common questions and good information are now stored in the Wiki.  This
 *  [DEFCON 25 4-hour Workshop 2017](https://media.defcon.org/DEF%20CON%2025/DEF%20CON%2025%20workshops/DEFCON-25-Workshop-Alan-Orlikoski-and-Dan-M-Free-and-Easy-DFIR-Triage-for-Everyone.pdf) Slides: Free and Easy DFIR Triage for Everyone 
 *  [OSDFCON 2017](http://www.osdfcon.org/presentations/2017/Asif-Matadar_Rapid-Incident-Response.pdf) Slides: Walk-through different techniques that are required to provide forensics results for Windows and *nix environments (Including CyLR and CDQR)
 
-## System Spec Recommendations
-Minimum (more is better): 
-  * CPU: 4-8 threads/cores
-  * Memory: 8GB+
-  * Disk Size: 100GB+
-
 ## Credits
 Thank you for the wonderful writeup, link is here (http://diftdisk.blogspot.com/2016/06/viewing-log2timeline-output-with-kibana.html), by Michael Maurer that gave me the knowledge to put many of the pieces together. 
 
