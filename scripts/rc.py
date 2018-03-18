@@ -39,8 +39,8 @@ def add_os_parsers(subparsers):
                         help="Restart or Stop Server")
     group.add_argument('--service',
                         nargs=2,
-                        metavar=("action","service_name"),
-                        help="Controle System Services. Actions: 'start' 'stop' 'restart'. The service name must be Base64 encoded")
+                        metavar=("action","service_names"),
+                        help="Control System Services. Actions: 'start' 'stop' 'restart'. The service name(s) must be space delimited, if more than one, and Base64 encoded")
 
 # Add all Data Processing Parser Options
 def add_dp_parsers(subparsers):
