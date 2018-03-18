@@ -72,7 +72,7 @@ def es_del_index(server, indexname):
 
 # List all ElasticSearch indices
 def es_list_index(server):
-    print("List all ElasticSearch indices: " + " from " + server)
+    print("List all ElasticSearch indices from " + server)
     #curl -XGET 'localhost:9200/_cat/indices?v&pretty'
     url = "http://" + server + ":9200/_cat/indices?v&pretty"
     web_results(requests.get(url))
