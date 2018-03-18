@@ -57,24 +57,25 @@ def myb64decode(encoded_string):
     decoded_string = base64.b64decode(encoded_string).decode('utf-8').strip()
     return decoded_string
 
+############ Web Request Output Handling ######################
+def web_results(r):
+    print(r)
+    print(r.text)
+
 ############ ElasticSearch Functions ######################
 # Delete an ElasticSearch index by name
 def es_del_index(server, indexname):
     decoded_index = myb64decode(indexname[0])
     print("Deleting ElasticSearch index: " + decoded_index + " from " + server)
     url = "http://" + server + ":9200/" + decoded_index + "?pretty"
-    r = requests.delete(url)
-    print(r)
-    print(r.text)
+    web_results(requests.delete(url))
 
 # List all ElasticSearch indices
 def es_list_index(server):
     print("List all ElasticSearch indices: " + " from " + server)
     #curl -XGET 'localhost:9200/_cat/indices?v&pretty'
     url = "http://" + server + ":9200/_cat/indices?v&pretty"
-    r = requests.get(url)
-    print(r)
-    print(r.text)
+    web_results(requests.get(url))
 
 def es_main(args):
     es_server='localhost'
