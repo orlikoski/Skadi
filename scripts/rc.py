@@ -1,10 +1,10 @@
 #!/usr/bin/python3
-import os, sys, argparse
+import os, sys, argparse, requests, base64
 
 # Add all ElasticSearch Parser Options
 def add_es_parsers(subparsers):
     es_parsers = subparsers.add_parser('es',
-                                        help='ElasticSearch Commands')
+                                        help="ElasticSearch Commands. Use 'rc.py es -h' to see all options")
     group = es_parsers.add_mutually_exclusive_group(required=False)
     group.add_argument('--delete',
                         nargs=1,
@@ -17,7 +17,7 @@ def add_es_parsers(subparsers):
 # Add all TimeSketch Parser Options
 def add_ts_parsers(subparsers):
     ts_parsers = subparsers.add_parser('ts',
-                                        help='TimeSketch Commands')
+                                        help="TimeSketch Commands. Use 'rc.py ts -h' to see all options")
     group = ts_parsers.add_mutually_exclusive_group(required=False)
     group.add_argument('--delete',
                         nargs=1,
@@ -31,7 +31,7 @@ def add_ts_parsers(subparsers):
 def add_os_parsers(subparsers):
     server_commands = ["restart","stop"]
     os_parsers = subparsers.add_parser('os',
-                                        help='Operating System Commands')
+                                        help="'Operating System Commands. Use 'rc.py os -h' to see all options")
     group = os_parsers.add_mutually_exclusive_group(required=False)
     group.add_argument('--server',
                         nargs=1,
@@ -45,16 +45,64 @@ def add_os_parsers(subparsers):
 # Add all Data Processing Parser Options
 def add_dp_parsers(subparsers):
     dp_parsers = subparsers.add_parser('dp',
-                                        help='Data Processing Commands')
+                                        help="Data Processing Commands. Use 'rc.py dp -h' to see all options")
     group = dp_parsers.add_mutually_exclusive_group(required=False)
     group.add_argument('--cdqr',
                         nargs=1,
                         metavar="cdqr_args",
                         help="Execute CDQR with the base64 encoded arguments provided")
 
+############ Base64 Functions ######################
+def myb64decode(encoded_string):
+    decoded_string = base64.b64decode(encoded_string).decode('utf-8').strip()
+    return decoded_string
+
+############ ElasticSearch Functions ######################
+# Delete an ElasticSearch index by name
+def es_del_index(server, indexname):
+    decoded_index = myb64decode(indexname[0])
+    print("Deleting ElasticSearch index: " + decoded_index + " from " + server)
+    url = "http://" + server + ":9200/" + decoded_index + "?pretty"
+    r = requests.delete(url)
+    print(r)
+    print(r.text)
+
+# List all ElasticSearch indices
+def es_list_index(server):
+    print("List all ElasticSearch indices: " + " from " + server)
+    #curl -XGET 'localhost:9200/_cat/indices?v&pretty'
+    url = "http://" + server + ":9200/_cat/indices?v&pretty"
+    r = requests.get(url)
+    print(r)
+    print(r.text)
+
+def es_main(args):
+    es_server='localhost'
+    # Delete an ElasticSearch index by name
+    if args.delete:
+        es_del_index(es_server, args.delete)
+    elif args.list:
+        es_list_index(es_server)
+    else:
+        print(args)
+    exit(1)
+############ TimeSketch Functions ######################
+def ts_main(args):
+    exit(1)
+
+############ Operating System Functions ######################
+def os_main(args):
+    exit(1)
+
+############ Data Processing Functions ######################
+def dp_main(args):
+    exit(1)
+
 # Main Program
 def main():
     version = "CCF-VM Automation Engine 0.0.1"
+    cdqr_exec = "/usr/local/bin/cdqr.py"
+    ts_exec = "/usr/local/bin/tsctl"
 
     # Build Parser Options
     parser = argparse.ArgumentParser(description='CCF-VM Automation Engine')
@@ -68,8 +116,18 @@ def main():
                         version=version)
     args=parser.parse_args()
 
-
-
+    # Parse arguments and call appropriate function based on auto_type
+    if args.auto_type == 'es':
+        es_main(args)
+    elif args.auto_type == 'ts':
+        ts_main(args)
+    elif args.auto_type == 'os':
+        os_main(args)
+    elif args.auto_type == 'dp':
+        dp_main(args)
+    else:
+        print("ERROR: Invalid command type. Exiting")
+        exit(1)
 
 if __name__ == "__main__":
     main()
