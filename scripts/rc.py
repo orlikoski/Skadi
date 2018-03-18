@@ -46,6 +46,11 @@ def add_os_parsers(subparsers):
 def add_dp_parsers(subparsers):
     dp_parsers = subparsers.add_parser('dp',
                                         help='Data Processing Commands')
+    group = dp_parsers.add_mutually_exclusive_group(required=False)
+    group.add_argument('--cdqr',
+                        nargs=1,
+                        metavar="cdqr_args",
+                        help="Execute CDQR with the base64 encoded arguments provided")
 
 # Main Program
 def main():
