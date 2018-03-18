@@ -1,10 +1,3 @@
-## What's New
-*  Google Cloud Platform (GCP) Support!!!!
-*  CyLR 1.4.0
-*  CDQR 4.1.1
-*  Plaso 20171231
-*  OS Updates
-
 ## Purpose
 The CCF-VM is a free, open source collection of tools that enables the collection, processing and advanced analysis of forensic artifacts and images.  It will operate on laptops, on-prem servers, the Cloud, and can be installed on top of hardened / gold disk images. This provides the everyone the ability to collect data and convert the bits and bytes to words and numbers. All of this enables the ability to rapidly answer, "Have I been hacked? Do I need to call for help?"
 
