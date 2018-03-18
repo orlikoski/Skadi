@@ -1,5 +1,9 @@
 #!/usr/bin/python3
+<<<<<<< 4d57449efdcb8abcd810b11a1231b14400fcf45c
 import os, sys, argparse, requests, base64
+=======
+import os, sys, argparse, requests, base64, subprocess
+>>>>>>> TimeSketch functions are complete
 
 # Add all ElasticSearch Parser Options
 def add_es_parsers(subparsers):
@@ -12,20 +16,35 @@ def add_es_parsers(subparsers):
                         help="Base64 encoded index name to delete")
     group.add_argument('--list',
                         action='store_true',
+<<<<<<< 4d57449efdcb8abcd810b11a1231b14400fcf45c
                         help="Lists the current ES indexes and their status")
+=======
+                        help="Lists the current ES indices and their status")
+>>>>>>> TimeSketch functions are complete
 
 # Add all TimeSketch Parser Options
 def add_ts_parsers(subparsers):
     ts_parsers = subparsers.add_parser('ts',
                                         help="TimeSketch Commands. Use 'rc.py ts -h' to see all options")
     group = ts_parsers.add_mutually_exclusive_group(required=False)
+<<<<<<< 4d57449efdcb8abcd810b11a1231b14400fcf45c
+=======
+    group.add_argument('--useradd',
+                        nargs=2,
+                        metavar=("b64_username","b64_password"),
+                        help="Create a TimeSketch user with the base64 encoded username and  password provided")
+
+>>>>>>> TimeSketch functions are complete
     group.add_argument('--delete',
                         nargs=1,
                         metavar="timesketch_name",
                         help="Delete the Base64 encoded timesketch name provided")
+<<<<<<< 4d57449efdcb8abcd810b11a1231b14400fcf45c
     group.add_argument('--deleteall',
                         action='store_true',
                         help="Delete all databases in TimeSketch. WARNING!!!! ****** THIS ALSO DELETS ALL USER ACCOUNTS ******")
+=======
+>>>>>>> TimeSketch functions are complete
 
 # Add all Operating System Parser Options
 def add_os_parsers(subparsers):
@@ -78,6 +97,7 @@ def es_list_index(server):
     web_results(requests.get(url))
 
 def es_main(args):
+<<<<<<< 4d57449efdcb8abcd810b11a1231b14400fcf45c
     es_server='localhost'
     # Delete an ElasticSearch index by name
     if args.delete:
@@ -90,6 +110,50 @@ def es_main(args):
 ############ TimeSketch Functions ######################
 def ts_main(args):
     exit(1)
+=======
+    print("Executing ElasticSearch command")
+    es_server='localhost'
+    # Delete an ElasticSearch index by name
+    if args.delete:
+        print("Attempting to delete an index")
+        es_del_index(es_server, args.delete)
+    elif args.list:
+        print("Attempting to list all indices")
+        es_list_index(es_server)
+    else:
+        print("Arguments passed: ", args)
+        print("ERROR: Unable to parse ElasticSearch command. Exiting")
+        exit(1)
+
+############ TimeSketch Functions ######################
+def create_ts_user(ts,userinfo):
+    username = myb64decode(userinfo[0])
+    password = myb64decode(userinfo[1])
+    print("Creating TimeSketch user:", username)
+    margs = " add_user -u " + username + " -p " + password
+    cmd = subprocess.Popen(ts + " " + margs, shell=True).wait()
+
+def delete_ts(ts,enc_name):
+    ts_name = myb64decode(enc_name[0])
+    print("Deleting TimeSketch Index named:", ts_name)
+    margs = "purge -i " + ts_name
+    cmd = subprocess.Popen("echo y|" + ts + " " + margs, shell=True).wait()
+
+def ts_main(args):
+    ts_exec = "/usr/local/bin/tsctl"
+    print("Executing TimeSketch command")
+    # Create TimeSketch user with the provided base64 encoded username and password
+    if args.useradd:
+        print("Attempting to create TimeSketch user")
+        create_ts_user(ts_exec, args.useradd)
+    elif args.delete:
+        print("Attempting to delete TimeSketch index")
+        delete_ts(ts_exec, args.delete)
+    else:
+        print("Arguments passed: ", args)
+        print("ERROR: Unable to parse TimeSketch command. Exiting")
+        exit(1)
+>>>>>>> TimeSketch functions are complete
 
 ############ Operating System Functions ######################
 def os_main(args):
@@ -103,7 +167,10 @@ def dp_main(args):
 def main():
     version = "CCF-VM Automation Engine 0.0.1"
     cdqr_exec = "/usr/local/bin/cdqr.py"
+<<<<<<< 4d57449efdcb8abcd810b11a1231b14400fcf45c
     ts_exec = "/usr/local/bin/tsctl"
+=======
+>>>>>>> TimeSketch functions are complete
 
     # Build Parser Options
     parser = argparse.ArgumentParser(description='CCF-VM Automation Engine')
@@ -130,5 +197,11 @@ def main():
         print("ERROR: Invalid command type. Exiting")
         exit(1)
 
+<<<<<<< 4d57449efdcb8abcd810b11a1231b14400fcf45c
+=======
+    print("SUCCESS: CCF-VM Automation Engine Completed")
+
+
+>>>>>>> TimeSketch functions are complete
 if __name__ == "__main__":
     main()
