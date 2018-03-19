@@ -131,11 +131,11 @@ def os_server(args):
     if args[0].lower() == "stop":
         print("Attempging to shut the server down")
         print("sudo shutdown -h now")
-        cmd = subprocess.Popen("sudo shutdown -h now", shell=True).wait()
+        cmd = subprocess.Popen("sudo /sbin/shutdown -h now", shell=True).wait()
     elif args[0].lower() == "restart":
         print("Attempging to restart the server")
         print("sudo shutdown -r now")
-        cmd = subprocess.Popen("sudo shutdown -r now", shell=True).wait()
+        cmd = subprocess.Popen("sudo /sbin/shutdown -r now", shell=True).wait()
     else:
         print("Arguments passed: ", args)
         print("ERROR: Unable to parse Operating System command. Exiting")
@@ -156,11 +156,11 @@ def os_service(args):
     if command == "stop":
         for service in service_list_array:
             print("Stoping:",service)
-            cmd = subprocess.Popen("sudo systemctl stop " + service, shell=True).wait()
+            cmd = subprocess.Popen("sudo /bin/systemctl stop " + service, shell=True).wait()
     elif command == "restart" or command == "start":
         for service in service_list_array:
             print("Starting / Restarting:",service)
-            cmd = subprocess.Popen("sudo systemctl restart " + service, shell=True).wait()
+            cmd = subprocess.Popen("sudo /bin/systemctl restart " + service, shell=True).wait()
     else:
         print("Arguments passed: ", args)
         print("ERROR: Unable to parse Operating System command. Exiting")
