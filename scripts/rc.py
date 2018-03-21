@@ -1,10 +1,6 @@
 #!/usr/bin/python3
 import  argparse, base64,  os, requests, subprocess, sys
 
-import cloudstorage as gcs
-from google.appengine.api import app_identity
-
-
 # Add all ElasticSearch Parser Options
 def add_es_parsers(subparsers):
     es_parsers = subparsers.add_parser('es',
