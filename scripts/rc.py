@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-import os, sys, argparse, requests, base64, subprocess
+import  argparse, base64,  os, requests, subprocess, sys
 
 # Add all ElasticSearch Parser Options
 def add_es_parsers(subparsers):
@@ -53,6 +53,10 @@ def add_dp_parsers(subparsers):
                         nargs=1,
                         metavar="cdqr_args",
                         help="Execute CDQR with the base64 encoded arguments provided")
+    group.add_argument('--mv_local',
+                        nargs=2,
+                        metavar=("src_local","dest_local"),
+                        help="Move data on locally mounted partitions")
 
 ############ Base64 Functions ######################
 def myb64decode(encoded_string):
@@ -186,13 +190,25 @@ def process_cdqr(cdqr,args):
     print("Executing CDQR command")
     cmd = subprocess.Popen(cdqr + " " + parsed_args, shell=True).wait()
 
+def mv_local(args):
+    src = myb64decode(args[0])
+    dest = myb64decode(args[1])
+    print("Locally moving file at " + src + " to " + dest)
+    cmd = subprocess.Popen("mv " + src + " " + dest, shell=True).wait()
+
 def dp_main(args):
     cdqr_exec = "/usr/local/bin/cdqr.py"
     if args.cdqr:
         print("Attempting to process data with CDQR")
         process_cdqr(cdqr_exec, args.cdqr)
-    exit(1)
-
+    elif args.mv_local:
+        print("Attempting to move files locally")
+        mv_local(args.mv_local)
+    else:  
+        print("Arguments passed: ", args)
+        print("ERROR: Unable to parse Data Processing command. Exiting")
+        exit(1)
+ 
 # Main Program
 def main():
     version = "CCF-VM Automation Engine 0.0.1"
