@@ -184,7 +184,7 @@ def os_main(args):
 def process_cdqr(cdqr,args):
     parsed_args = myb64decode(args[0])
     print("Executing CDQR command")
-    cmd = subProcess.Popen(cdqr + " " + parsed_args, shell=True).wait()
+    cmd = subprocess.Popen(cdqr + " " + parsed_args, shell=True).wait()
 
 def dp_main(args):
     cdqr_exec = "/usr/local/bin/cdqr.py"
