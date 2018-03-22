@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-import  argparse, base64,  os, requests, subprocess, sys, boto3, os
+import  argparse, base64,  os, requests, subprocess, sys, boto3
 
 
 # Add all ElasticSearch Parser Options
