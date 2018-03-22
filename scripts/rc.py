@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-import  argparse, base64,  os, requests, subprocess, sys, boto3, os
+import  argparse, base64,  os, requests, subprocess, sys, boto3
 
 
 # Add all ElasticSearch Parser Options
@@ -236,10 +236,10 @@ def dp_main(args):
         print("Attempting to process data with CDQR")
         process_cdqr(cdqr_exec, args.cdqr)
     elif args.mv_local:
-        print("Attempting to move files to/from AWS bucket")
+        print("Attempting to move files locally")
         mv_local(args.mv_local)
     elif args.mv_aws:
-        print("Attempting to move files AWS")
+        print("Attempting to move files to/from AWS bucket")
         mv_aws(args.mv_aws)
     else:  
         print("Arguments passed: ", args)
