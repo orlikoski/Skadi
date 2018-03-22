@@ -232,7 +232,7 @@ def dp_main(args):
         print("Attempting to process data with CDQR")
         process_cdqr(cdqr_exec, args.cdqr)
     elif args.mv_local:
-        print("Attempting to move files locally")
+        print("Attempting to move files to/from AWS bucket")
         mv_local(args.mv_local)
     elif args.mv_aws:
         print("Attempting to move files AWS")
