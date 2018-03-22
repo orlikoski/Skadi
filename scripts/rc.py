@@ -190,7 +190,7 @@ def os_main(args):
         exit(1)
 
 ############ Data Processing Functions ######################
-def dp(cdqr,args):
+def process_cdqr(cdqr,args):
     parsed_args = myb64decode(args[0])
     print("Executing CDQR command")
     cmd = subprocess.Popen(cdqr + " " + parsed_args, shell=True).wait()
