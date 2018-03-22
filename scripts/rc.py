@@ -58,6 +58,10 @@ def add_dp_parsers(subparsers):
                         nargs=2,
                         metavar=("src_local","dest_local"),
                         help="Move data on locally mounted partitions")
+    group.add_argument('--mv_aws',
+                    nargs=4,
+                    metavar=("src","dest","bucket","prefix"),
+                    help="Transfers data between AWS and local mounted partitions")
 
 ############ Base64 Functions ######################
 def myb64decode(encoded_string):
