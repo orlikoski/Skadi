@@ -67,5 +67,3 @@ $buildccf_sh
 # Remove all files associated with build
 rm -rf $tempdir
 exec bash
-
-echo "Getting Python dependencies"
