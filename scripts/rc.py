@@ -59,7 +59,7 @@ def add_dp_parsers(subparsers):
                         metavar=("src_local","dest_local"),
                         help="Move data on locally mounted partitions")
     group.add_argument('--mv_aws',
-                    nargs=4,
+                    nargs=*,
                     metavar=("src","dest","bucket","prefix"),
                     help="Transfers data between AWS and local mounted partitions")
 
@@ -190,7 +190,7 @@ def os_main(args):
         exit(1)
 
 ############ Data Processing Functions ######################
-def process_cdqr(cdqr,args):
+def dp(cdqr,args):
     parsed_args = myb64decode(args[0])
     print("Executing CDQR command")
     cmd = subprocess.Popen(cdqr + " " + parsed_args, shell=True).wait()
@@ -202,6 +202,9 @@ def mv_local(args):
     cmd = subprocess.Popen("mv " + src + " " + dest, shell=True).wait()
 
 def mv_aws(args):
+    if len(args) < 3:
+        print("Must provide at least 3 arguments!")
+        return
     src = myb64decode(args[0])
     dest = myb64decode(args[1])
     bucket = myb64decode(args[2])
