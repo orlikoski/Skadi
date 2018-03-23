@@ -9,9 +9,7 @@ service RC {
 
 // The request message containing the requested command and arguments.
 message RCRequest {
-  string service = 1;
-  string flag = 2;
-  repeated string arg = 3;
+  repeated string service = 1;
 }
 
 // The response message containing any error messages
