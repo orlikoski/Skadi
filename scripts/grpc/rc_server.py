@@ -22,8 +22,8 @@ class RC(rc_pb2_grpc.RCServicer):
         args = ' '.join(request.arg)
         #command = "python3 " + rcpy + " " + request.service + " --" + request.flag + " " + args
         command = "python3 " + rcpy + " " + request.service
-        cmd = subprocess.Popen(command, shell=True).wait()
-        return rc_pb2.RCReply(message=cmd.stdout + " " + cmd.sterror)      
+        cmd = subprocess.Popen(command, stdout=runout, stderror=errorout, shell=True).wait()
+        return rc_pb2.RCReply(message=runout + " " + errorout)      
 
 
 def serve():
