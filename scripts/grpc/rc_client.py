@@ -12,6 +12,7 @@ def run():
     i = 1
     if sys.argv[1] == "python":
         i = 2
+    print(','.join(sys.argv))
 
 
     if sys.argv[i]:

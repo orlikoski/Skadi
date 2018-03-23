@@ -12,12 +12,11 @@ class RC(rc_pb2_grpc.RCServicer):
     def ExecuteRC(self, request, context):
         #args = ' '.join(request.arg)
         #input_args = request.service.split(' ')
-        input_args = [request.service, request.flag, request.arg1]
-        if request.arg2:
-            input_args.append(request.arg2)
+        input_args = [request.service, request.flag, request.arg1, request.arg2]
+
         command = ["/usr/bin/python3",rcpy]
-        # for item in input_args:
-        #     command.append(item)
+        for item in input_args:
+            command.append(item)
 
         #cmd = subprocess.Popen(command,stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         cmd = subprocess.Popen(command)
