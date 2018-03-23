@@ -9,15 +9,17 @@ def run():
     stub = rc_pb2_grpc.RCStub(channel)
     #response = stub.ExecuteRC(rc_pb2.RCRequest(service=service_arg, flag=flag_arg,arg=arg_arg))
 
+    count = sys.argv.length()
     print(','.join(sys.argv))
+    print(count)
 
-    if sys.argv[2]:
+    if count == 2:
         response = stub.ExecuteRC(rc_pb2.RCRequest(service=sys.argv[2]))
-    elif sys.argv[3]:
+    elif if count == 3:
         response = stub.ExecuteRC(rc_pb2.RCRequest(service=sys.argv[2],flag=sys.argv[3]))
-    elif sys.argv[4]:
+    elif if count == 4:
         response = stub.ExecuteRC(rc_pb2.RCRequest(service=sys.argv[2],flag=sys.argv[3],arg1=sys.argv[4]))
-    elif sys.argv[5]:
+    elif if count == 5:
         response = stub.ExecuteRC(rc_pb2.RCRequest(service=sys.argv[2],flag=sys.argv[3],arg1=sys.argv[4],arg2=sys.argv[5]))
     else:
         print("WARNING!! Invalid number of arguments. Exiting")
