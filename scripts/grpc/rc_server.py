@@ -29,14 +29,7 @@ class RC(rc_pb2_grpc.RCServicer):
         #cmd = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         cmd = subprocess.Popen(command)
         status = cmd.wait()
-        print(status)
-        if status:
-            print("Success")
-            #mstdout, errorout = cmd.communicate()
-            return rc_pb2.RCReply(message=mstdout)
-        else:
-            print("Failed")
-            return rc_pb2.RCReply(message="ERROR: Command failed to execute")
+        return rc_pb2.RCReply(message="ERROR: Command failed to execute")
 
 
 def serve():
