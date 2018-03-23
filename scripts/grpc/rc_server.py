@@ -20,7 +20,7 @@ class RC(rc_pb2_grpc.RCServicer):
 
     def ExecuteRC(self, request, context):
         args = ' '.join(request.arg)
-        command = "python3 " + rcpy + request.service + " --" + request.flag + " " + args
+        command = "python3 " + rcpy + " " + request.service + " --" + request.flag + " " + args
         cmd = subprocess.Popen(command, shell=True).wait()
         return rc_pb2.RCReply(message="SUCCESS")      
 
