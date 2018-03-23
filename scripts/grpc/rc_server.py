@@ -21,7 +21,8 @@ class RC(rc_pb2_grpc.RCServicer):
     def ExecuteRC(self, request, context):
         args = ' '.join(request.arg)
         #command = "python3 " + rcpy + " " + request.service + " --" + request.flag + " " + args
-        command = "python3 " + rcpy + " " + request.service
+        #command = "python3 " + rcpy + " " + request.service
+        command = ["/usr/bin/python3",rcpy,request.service]
         cmd = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE).wait()
         mstdout, errorout = cmd.communicate()
         return rc_pb2.RCReply(message=mstdout + " " + errorout)      
