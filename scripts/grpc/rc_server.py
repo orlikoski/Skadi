@@ -19,7 +19,8 @@ class RC(rc_pb2_grpc.RCServicer):
         # for item in input_args:
         #     command.append(item)
 
-        cmd = subprocess.Popen(command,stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        #cmd = subprocess.Popen(command,stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        cmd = subprocess.Popen(command)
         status = cmd.wait()
         return rc_pb2.RCReply(message="ERROR: Command failed to execute")
 
