@@ -22,7 +22,7 @@ class RC(rc_pb2_grpc.RCServicer):
         args = ' '.join(request.arg)
         #command = "python3 " + rcpy + " " + request.service + " --" + request.flag + " " + args
         command = "python3 " + rcpy + " " + request.service
-        cmd = subprocess.Popen(command, stdout=runout, stderror=errorout, shell=True).wait()
+        runout, errorout = subprocess.Popen(command, stdout=subprocess.PIPE, stderror=subprocess.PIPE, shell=True).wait()
         return rc_pb2.RCReply(message=runout + " " + errorout)      
 
 
