@@ -15,11 +15,11 @@ def run():
 
     if count == 2:
         response = stub.ExecuteRC(rc_pb2.RCRequest(service=sys.argv[2]))
-    elif if count == 3:
+    elif count == 3:
         response = stub.ExecuteRC(rc_pb2.RCRequest(service=sys.argv[2],flag=sys.argv[3]))
-    elif if count == 4:
+    elif count == 4:
         response = stub.ExecuteRC(rc_pb2.RCRequest(service=sys.argv[2],flag=sys.argv[3],arg1=sys.argv[4]))
-    elif if count == 5:
+    elif count == 5:
         response = stub.ExecuteRC(rc_pb2.RCRequest(service=sys.argv[2],flag=sys.argv[3],arg1=sys.argv[4],arg2=sys.argv[5]))
     else:
         print("WARNING!! Invalid number of arguments. Exiting")
