@@ -1,16 +1,7 @@
 #!/usr/bin/python
 from concurrent import futures
-import time
+import time, grpc, rc_pb2, rc_pb2_grpc, subprocess, os
 
-import grpc
-
-import rc_pb2
-import rc_pb2_grpc
-import subprocess
-
-
-import os 
-#dir_path = os.path.dirname(os.path.realpath(__file__))
 rcpy = "/var/lib/automation/rc.py"
 
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
