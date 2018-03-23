@@ -9,7 +9,7 @@ def run():
     stub = rc_pb2_grpc.RCStub(channel)
     #response = stub.ExecuteRC(rc_pb2.RCRequest(service=service_arg, flag=flag_arg,arg=arg_arg))
 
-    count = sys.argv.length()
+    count = length(sys.argv)
     print(','.join(sys.argv))
     print(count)
 
