@@ -1,4 +1,3 @@
- 
 from concurrent import futures
 import time
 
@@ -19,9 +18,10 @@ _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 class RC(rc_pb2_grpc.RCServicer):
 
     def ExecuteRC(self, request, context):
-        args = ' '.join(request.arg)
-        command = "python " + dir_path + "/..rc.py " + request.service + " --" + request.flag + " " + args
-        cmd = subprocess.Popen(command, shell=True).wait()
+        args = [str(arg) for arg in request.arg]
+        command = ["python", dir_path+"/../rc.py", str(request.service), str("--" + request.flag)]
+        command.extend(args)
+        cmd = subprocess.call(command)
         return rc_pb2.RCReply(message="SUCCESS")      
 
 

@@ -103,14 +103,15 @@ def create_ts_user(ts,userinfo):
     username = myb64decode(userinfo[0])
     password = myb64decode(userinfo[1])
     print("Creating TimeSketch user:", username)
-    margs = " add_user -u " + username + " -p " + password
-    cmd = subprocess.Popen(ts + " " + margs, shell=True).wait()
+    cmd = subprocess.call([ts, "add_user", "-u", username, "-p", password])
 
 def delete_ts(ts,enc_name):
     ts_name = myb64decode(enc_name[0])
     print("Deleting TimeSketch Index named:", ts_name)
     margs = "purge -i " + ts_name
-    cmd = subprocess.Popen("echo y|" + ts + " " + margs, shell=True).wait()
+    cmd = subprocess.Popen([ts, "purge", "-i", ts_name], stdin=PIPE)
+    cmd.stdin.write('y\n')
+    cmd.stdin.flush()
 
 def ts_main(args):
     ts_exec = "/usr/local/bin/tsctl"
@@ -135,11 +136,11 @@ def os_server(args):
     if args[0].lower() == "stop":
         print("Attempging to shut the server down")
         print("sudo shutdown -h now")
-        cmd = subprocess.Popen("sudo /sbin/shutdown -h now", shell=True).wait()
+        cmd = subprocess.call(["sudo", "/sbin/shutdown", "-h", "now"])
     elif args[0].lower() == "restart":
         print("Attempging to restart the server")
         print("sudo shutdown -r now")
-        cmd = subprocess.Popen("sudo /sbin/shutdown -r now", shell=True).wait()
+        cmd = subprocess.call(["sudo", "/sbin/shutdown", "-r", "now"])
     else:
         print("Arguments passed: ", args)
         print("ERROR: Unable to parse Operating System command. Exiting")
@@ -160,11 +161,11 @@ def os_service(args):
     if command == "stop":
         for service in service_list_array:
             print("Stoping:",service)
-            cmd = subprocess.Popen("sudo /bin/systemctl stop " + service, shell=True).wait()
+            cmd = subprocess.call(["sudo", "/bin/systemctl", "stop", service])
     elif command == "restart" or command == "start":
         for service in service_list_array:
             print("Starting / Restarting:",service)
-            cmd = subprocess.Popen("sudo /bin/systemctl restart " + service, shell=True).wait()
+            cmd = subprocess.call(["sudo", "/bin/systemctl", "restart", service])
     else:
         print("Arguments passed: ", args)
         print("ERROR: Unable to parse Operating System command. Exiting")
@@ -188,13 +189,13 @@ def os_main(args):
 def process_cdqr(cdqr,args):
     parsed_args = myb64decode(args[0])
     print("Executing CDQR command")
-    cmd = subprocess.Popen(cdqr + " " + parsed_args, shell=True).wait()
+    cmd = subprocess.call(["cdqr", parsed_args])
 
 def mv_local(args):
     src = myb64decode(args[0])
     dest = myb64decode(args[1])
     print("Locally moving file at " + src + " to " + dest)
-    cmd = subprocess.Popen("mv " + src + " " + dest, shell=True).wait()
+    cmd = subprocess.call(["mv", src, dest])
 
 def dp_main(args):
     cdqr_exec = "/usr/local/bin/cdqr.py"
