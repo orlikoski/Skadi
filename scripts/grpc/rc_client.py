@@ -9,7 +9,7 @@ import rc_pb2_grpc
 
 
 def run():                         
-    channel = grpc.insecure_channel('localhost:50051')
+    channel = grpc.insecure_channel('localhost:10101')
     stub = rc_pb2_grpc.RCStub(channel)
     
     response = stub.ExecuteRC(rc_pb2.RCRequest(service='dp', flag='mv_local',arg=["$(echo a| base64)", "$(echo a| base64)"]))
