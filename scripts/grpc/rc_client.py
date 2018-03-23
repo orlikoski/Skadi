@@ -7,7 +7,6 @@ import grpc, rc_pb2, rc_pb2_grpc, sys
 def run():                         
     channel = grpc.insecure_channel('localhost:10101')
     stub = rc_pb2_grpc.RCStub(channel)
-    #response = stub.ExecuteRC(rc_pb2.RCRequest(service=service_arg, flag=flag_arg,arg=arg_arg))
 
     unapproved_chars = set(';&|')
     strtest = ','.join(sys.argv)
@@ -16,7 +15,6 @@ def run():
         exit(1)
 
     count = len(sys.argv)
-    print(count)
 
     if count == 2:
         response = stub.ExecuteRC(rc_pb2.RCRequest(service=sys.argv[1]))
