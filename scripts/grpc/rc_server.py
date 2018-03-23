@@ -22,6 +22,8 @@ class RC(rc_pb2_grpc.RCServicer):
         args = ' '.join(request.arg)
         #command = "python3 " + rcpy + " " + request.service + " --" + request.flag + " " + args
         #command = "python3 " + rcpy + " " + request.service
+        print(requests.service)
+        exit(1)
         command = ["/usr/bin/python3",rcpy,request.service]
         #cmd = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         cmd = subprocess.Popen(command)
