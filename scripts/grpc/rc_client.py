@@ -13,7 +13,6 @@ def run():
     strtest = ','.join(sys.argv)
     if any((char in unapproved_chars) for char in strtest):
         print("ERROR!! Unapproved chars in string. Exiting")
-        print("Unapproved chars: "+unapproved_chars)
         exit(1)
 
     count = len(sys.argv)
