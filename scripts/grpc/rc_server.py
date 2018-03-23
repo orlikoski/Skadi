@@ -23,12 +23,13 @@ class RC(rc_pb2_grpc.RCServicer):
         #command = "python3 " + rcpy + " " + request.service + " --" + request.flag + " " + args
         #command = "python3 " + rcpy + " " + request.service
         command = ["/usr/bin/python3",rcpy,request.service]
-        cmd = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        #cmd = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        cmd = subprocess.Popen(command)
         status = cmd.wait()
         print(status)
         if status:
             print("Success")
-            mstdout, errorout = cmd.communicate()
+            #mstdout, errorout = cmd.communicate()
             return rc_pb2.RCReply(message=mstdout)
         else:
             print("Failed")
