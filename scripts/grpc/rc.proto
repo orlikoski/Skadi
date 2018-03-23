@@ -14,6 +14,6 @@ message RCRequest {
 
 // The response message containing any error messages
 message RCReply {
-  string message = 1;
+  repeated string message = 1;
 }
 
