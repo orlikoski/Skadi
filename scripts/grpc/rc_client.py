@@ -17,8 +17,6 @@ def run():
         exit(1)
 
     count = len(sys.argv)
-    
-    if 
     print(count)
 
     if count == 2:
