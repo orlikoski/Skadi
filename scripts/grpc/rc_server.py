@@ -22,9 +22,10 @@ class RC(rc_pb2_grpc.RCServicer):
         args = ' '.join(request.arg)
         #command = "python3 " + rcpy + " " + request.service + " --" + request.flag + " " + args
         #command = "python3 " + rcpy + " " + request.service
-        print(request.service)
-        exit(1)
-        command = ["/usr/bin/python3",rcpy,request.service]
+        input_args = request.service.split(' ')
+        command = ["/usr/bin/python3",rcpy]
+        for item in input_args:
+            command.append(item)
         #cmd = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         cmd = subprocess.Popen(command)
         status = cmd.wait()
