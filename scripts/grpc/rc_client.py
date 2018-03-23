@@ -9,7 +9,7 @@ def run():
     stub = rc_pb2_grpc.RCStub(channel)
     #response = stub.ExecuteRC(rc_pb2.RCRequest(service=service_arg, flag=flag_arg,arg=arg_arg))
     response = stub.ExecuteRC(rc_pb2.RCRequest(service=' '.join(sys.argv[1:])))
-    print("RC client received: " + response.message)
+    print("RC client received: " + " " + response.stdout + " " + response.stderror + response.message)
 
 if __name__ == '__main__':
     run()
