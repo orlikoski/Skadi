@@ -23,7 +23,6 @@ class RC(rc_pb2_grpc.RCServicer):
         #command = "python3 " + rcpy + " " + request.service + " --" + request.flag + " " + args
         command = "python3 " + rcpy + " " + request.service
         cmd = subprocess.Popen(command, shell=True).wait()
-        print("RC client received: " + " " + response.stdout + " " + response.stderror + response.message)
         return rc_pb2.RCReply(message=cmd.stdout + " " + cmd.sterror)      
 
 
