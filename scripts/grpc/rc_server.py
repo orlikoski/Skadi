@@ -1,4 +1,4 @@
- 
+#!/usr/bin/python
 from concurrent import futures
 import time
 
@@ -28,7 +28,7 @@ class RC(rc_pb2_grpc.RCServicer):
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     rc_pb2_grpc.add_RCServicer_to_server(RC(), server)
-    server.add_insecure_port('[::]:50051')
+    server.add_insecure_port('[::]:10101')
     server.start()
     try:
         while True:

@@ -1,5 +1,5 @@
+#!/usr/bin/python
 """The Python implementation of the GRPC rc.RC client."""
-
 from __future__ import print_function
 
 import grpc
