@@ -10,7 +10,7 @@ _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 class RC(rc_pb2_grpc.RCServicer):
 
     def ExecuteRC(self, request, context):
-        args = ' '.join(request.arg)
+        #args = ' '.join(request.arg)
         #input_args = request.service.split(' ')
         input_args = [request.service, request.flag, request.arg1]
         if request.arg2:
