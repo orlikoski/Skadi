@@ -11,7 +11,7 @@ service RC {
 message RCRequest {
   required string service = 1;
   required string flag = 2;
-  required string arg1 = 3;
+  optional string arg1 = 3;
   optional string arg2 = 4;
 }
 
