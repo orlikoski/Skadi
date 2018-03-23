@@ -9,8 +9,16 @@ def run():
     stub = rc_pb2_grpc.RCStub(channel)
     #response = stub.ExecuteRC(rc_pb2.RCRequest(service=service_arg, flag=flag_arg,arg=arg_arg))
 
+    unapproved_chars = set(';&|')
+    strtest = ','.join(sys.argv)
+    if any((char in unapproved_chars) for char in strtest):
+        print("ERROR!! Unapproved chars in string. Exiting")
+        print("Unapproved chars: "+unapproved_chars)
+        exit(1)
+
     count = len(sys.argv)
-    print(','.join(sys.argv))
+    
+    if 
     print(count)
 
     if count == 2:
