@@ -24,8 +24,10 @@ class RC(rc_pb2_grpc.RCServicer):
         #command = "python3 " + rcpy + " " + request.service
         command = ["/usr/bin/python3",rcpy,request.service]
         cmd = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        mstdout = "NO OUTPUT"
+        errorout = "NO ERRORS"
         mstdout, errorout = cmd.communicate()
-        return rc_pb2.RCReply(message="Standard Output\n" + mstdout + "\n\nError Output\n" + errorout)      
+        return rc_pb2.RCReply(message="Standard Output\n" + mstdout + "\n\nError Output\n" + errorout)
 
 
 def serve():
