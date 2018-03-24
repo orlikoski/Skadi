@@ -15,6 +15,7 @@ def run():
         exit(1)
 
     count = len(sys.argv)
+    print(sys.argv)
 
     if count == 2:
         response = stub.ExecuteRC(rc_pb2.RCRequest(service=sys.argv[1]))
