@@ -1,8 +1,10 @@
 #!/usr/bin/python3
 import  argparse, base64,  os, requests, subprocess, sys, logging, logging.config, os
 
-logPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'logging.ini')
-logging.config.fileConfig(logPath)
+logConfig = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'logging.ini')
+logPath = os.path.join('/var/log/', 'ccfvm.log')
+
+logging.config.fileConfig(logConfig, defaults={'logfilename': logPath})
 logger = logging.getLogger('main_logger')
 
 # Add all ElasticSearch Parser Options
@@ -106,13 +108,13 @@ def es_main(args):
 def create_ts_user(ts,userinfo):
     username = myb64decode(userinfo[0])
     password = myb64decode(userinfo[1])
-    print("Creating TimeSketch user:", username)
+    logger.info("Creating TimeSketch user:", username)
     margs = " add_user -u " + username + " -p " + password
     cmd = subprocess.Popen(ts + " " + margs, shell=True).wait()
 
 def delete_ts(ts,enc_name):
     ts_name = myb64decode(enc_name[0])
-    print("Deleting TimeSketch Index named:", ts_name)
+    logger.info("Deleting TimeSketch Index named:", ts_name)
     margs = "purge -i " + ts_name
     cmd = subprocess.Popen("echo y|" + ts + " " + margs, shell=True).wait()
 
@@ -121,14 +123,14 @@ def ts_main(args):
     print("Executing TimeSketch command")
     # Create TimeSketch user with the provided base64 encoded username and password
     if args.useradd:
-        print("Attempting to create TimeSketch user")
+        logger.info("Attempting to create TimeSketch user")
         create_ts_user(ts_exec, args.useradd)
     elif args.delete:
-        print("Attempting to delete TimeSketch index")
+        logger.info("Attempting to delete TimeSketch index")
         delete_ts(ts_exec, args.delete)
     else:
-        print("Arguments passed: ", args)
-        print("ERROR: Unable to parse TimeSketch command. Exiting")
+        logger.warn("Arguments passed: ", args)
+        logger.warn("ERROR: Unable to parse TimeSketch command. Exiting")
         exit(1)
 
 ############ Operating System Functions ######################
@@ -137,16 +139,16 @@ def os_server(args):
     print("WARNING!! This requires sudo privledges and the process will hang if a password is required")
     print("WARNING!! It is advised to only use this function with key-pair authentication")
     if args[0].lower() == "stop":
-        print("Attempting to shut the server down")
+        logger.info("Attempting to shut the server down")
         print("sudo shutdown -h now")
         cmd = subprocess.Popen("sudo /sbin/shutdown -h now", shell=True).wait()
     elif args[0].lower() == "restart":
-        print("Attempting to restart the server")
+        logger.info("Attempting to restart the server")
         print("sudo shutdown -r now")
         cmd = subprocess.Popen("sudo /sbin/shutdown -r now", shell=True).wait()
     else:
-        print("Arguments passed: ", args)
-        print("ERROR: Unable to parse Operating System command. Exiting")
+        logger.warn("Arguments passed: ".format(args))
+        logger.warn("ERROR: Unable to parse Operating System command. Exiting")
         exit(1)
 
 def os_service(args):
@@ -163,19 +165,15 @@ def os_service(args):
 
     if command == "stop":
         for service in service_list_array:
-            print("Stoping:",service)
-            logger.debug("Stoping: {}".format(service))
+            logger.info("Stoping: {}".format(service))
             cmd = subprocess.Popen("sudo /bin/systemctl stop " + service, shell=True).wait()
     elif command == "restart" or command == "start":
         for service in service_list_array:
-            print("Starting / Restarting:",service)
-            logging.debug("Starting / Restarting:".format(service))
+            logger.info("Starting / Restarting:".format(service))
             cmd = subprocess.Popen("sudo /bin/systemctl restart " + service, shell=True).wait()
     else:
-        print("Arguments passed: ", args)
-        logging.debug("Arguments passed: {}".format(args))
-        print("ERROR: Unable to parse Operating System command. Exiting")
-        logging.debug("ERROR: Unable to parse Operating System command. Exiting")
+        logger.warn("Arguments passed: {}".format(args))
+        logger.warn("ERROR: Unable to parse Operating System command. Exiting")
         exit(1)
 
 def os_main(args):
@@ -195,29 +193,24 @@ def os_main(args):
 ############ Data Processing Functions ######################
 def process_cdqr(cdqr,args):
     parsed_args = myb64decode(args[0])
-    print("Executing CDQR command")
     logging.info("Executing CDQR command: cdqr {}".format(parsed_args))
     cmd = subprocess.Popen(cdqr + " " + parsed_args, shell=True).wait()
 
 def mv_local(args):
     src = myb64decode(args[0])
     dest = myb64decode(args[1])
-    print("Locally moving file at " + src + " to " + dest)
     logging.info("Locally moving file at {} to {}".format(src, dest))
     cmd = subprocess.Popen("mv " + src + " " + dest, shell=True).wait()
 
 def dp_main(args):
     cdqr_exec = "/usr/local/bin/cdqr.py"
     if args.cdqr:
-        print("Attempting to process data with CDQR")
         logging.debug("Attempting to process data with CDQR: {}".format(args.cdqr))
         process_cdqr(cdqr_exec, args.cdqr)
     elif args.mv_local:
-        print("Attempting to move files locally")
         logging.debug("Attempting to move files locally")
         mv_local(args.mv_local)
     else:  
-        print("Arguments passed: ", args)
         logging.debug("Arguments passed: {}".format(args))
         print("ERROR: Unable to parse Data Processing command. Exiting")
         logging.warning("ERROR: Unable to parse Data Processing command. Exiting")
