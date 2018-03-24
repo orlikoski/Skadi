@@ -110,8 +110,7 @@ def delete_ts(ts,enc_name):
     print("Deleting TimeSketch Index named:", ts_name)
     margs = "purge -i " + ts_name
     cmd = subprocess.Popen([ts, "purge", "-i", ts_name], stdin=PIPE)
-    cmd.stdin.write('y\n')
-    cmd.stdin.flush()
+    cmd.communicate(input='y')
 
 def ts_main(args):
     ts_exec = "/usr/local/bin/tsctl"
@@ -213,6 +212,7 @@ def dp_main(args):
 # Main Program
 def main():
     version = "CCF-VM Automation Engine 0.0.1"
+    print(version)
 
     # Build Parser Options
     parser = argparse.ArgumentParser(description='CCF-VM Automation Engine')
