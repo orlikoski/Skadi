@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-import  argparse, base64,  os, requests, subprocess, sys, logging, logging.config, os
+import  argparse, base64,  os, requests, subprocess, sys, logging, logging.config, boto3
 
 logConfig = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'logging.ini')
 logPath = os.path.join('/var/log/', 'ccfvm.log')
@@ -63,6 +63,10 @@ def add_dp_parsers(subparsers):
                         nargs=2,
                         metavar=("src_local","dest_local"),
                         help="Move data on locally mounted partitions")
+    group.add_argument('--mv_aws',
+                    nargs='*',
+                    metavar=("src","dest","bucket","prefix"),
+                    help="Transfers data between AWS and local mounted partitions")
 
 ############ Base64 Functions ######################
 def myb64decode(encoded_string):
@@ -109,14 +113,14 @@ def create_ts_user(ts,userinfo):
     username = myb64decode(userinfo[0])
     password = myb64decode(userinfo[1])
     logger.info("Creating TimeSketch user:", username)
-    margs = " add_user -u " + username + " -p " + password
-    cmd = subprocess.Popen(ts + " " + margs, shell=True).wait()
+    cmd = subprocess.call([ts, "add_user", "-u", username, "-p", password])
 
 def delete_ts(ts,enc_name):
     ts_name = myb64decode(enc_name[0])
     logger.info("Deleting TimeSketch Index named:", ts_name)
     margs = "purge -i " + ts_name
-    cmd = subprocess.Popen("echo y|" + ts + " " + margs, shell=True).wait()
+    cmd = subprocess.Popen([ts, "purge", "-i", ts_name], stdin=PIPE)
+    cmd.communicate(input='y')
 
 def ts_main(args):
     ts_exec = "/usr/local/bin/tsctl"
@@ -141,11 +145,11 @@ def os_server(args):
     if args[0].lower() == "stop":
         logger.info("Attempting to shut the server down")
         print("sudo shutdown -h now")
-        cmd = subprocess.Popen("sudo /sbin/shutdown -h now", shell=True).wait()
+        cmd = subprocess.call(["sudo", "/sbin/shutdown", "-h", "now"])
     elif args[0].lower() == "restart":
         logger.info("Attempting to restart the server")
         print("sudo shutdown -r now")
-        cmd = subprocess.Popen("sudo /sbin/shutdown -r now", shell=True).wait()
+        cmd = subprocess.call(["sudo", "/sbin/shutdown", "-r", "now"])
     else:
         logger.warn("Arguments passed: ".format(args))
         logger.warn("ERROR: Unable to parse Operating System command. Exiting")
@@ -166,11 +170,11 @@ def os_service(args):
     if command == "stop":
         for service in service_list_array:
             logger.info("Stoping: {}".format(service))
-            cmd = subprocess.Popen("sudo /bin/systemctl stop " + service, shell=True).wait()
+            cmd = subprocess.call(["sudo", "/bin/systemctl", "stop", service])
     elif command == "restart" or command == "start":
         for service in service_list_array:
             logger.info("Starting / Restarting:".format(service))
-            cmd = subprocess.Popen("sudo /bin/systemctl restart " + service, shell=True).wait()
+            cmd = subprocess.call(["sudo", "/bin/systemctl", "restart", service])
     else:
         logger.warn("Arguments passed: {}".format(args))
         logger.warn("ERROR: Unable to parse Operating System command. Exiting")
@@ -194,14 +198,46 @@ def os_main(args):
 def process_cdqr(cdqr,args):
     parsed_args = myb64decode(args[0])
     logging.info("Executing CDQR command: cdqr {}".format(parsed_args))
-    cmd = subprocess.Popen(cdqr + " " + parsed_args, shell=True).wait()
+    cmd = subprocess.call(["cdqr", parsed_args])
 
 def mv_local(args):
     src = myb64decode(args[0])
     dest = myb64decode(args[1])
     logging.info("Locally moving file at {} to {}".format(src, dest))
-    cmd = subprocess.Popen("mv " + src + " " + dest, shell=True).wait()
+    cmd = subprocess.call(["mv", src, dest])
 
+def mv_aws(args):
+    if len(args) < 3:
+        print("Must provide at least 3 arguments!")
+        return
+    src = myb64decode(args[0])
+    dest = myb64decode(args[1])
+    bucket = myb64decode(args[2])
+    s3 = boto3.client('s3')
+    if os.path.dir(src):
+        #src is local dir
+        for (dirpath, dirnames, filenames) in os.walk(src):
+            for filename in files:
+                local_path = os.path.join(root, filename)
+                client.upload_file(local_path, bucket, filename)
+        
+        print("Successfully moved files from %s"%src)
+    elif os.path.isfile(src):
+        #src is local file
+        client.upload_file(src, bucket, os.basename(src))
+        print("Successfully moved %s"%os.basename(src))
+    else:
+        #src is aws bucket
+        try:
+            #allow for prefix use
+            prefix = myb64decode(args[3])
+        except:
+            prefix = None
+        for key in client.list_objects(Bucket = bucket, Prefix = prefix)['Contents']:
+            #Assume key is file with extension
+            client.download_file(Bucket = bucket, Key = key['key'], Filename = dest + '/' + key['key'])
+        print("Successfully retreived files from %s"%bucket)
+        
 def dp_main(args):
     cdqr_exec = "/usr/local/bin/cdqr.py"
     if args.cdqr:
@@ -210,6 +246,9 @@ def dp_main(args):
     elif args.mv_local:
         logging.debug("Attempting to move files locally")
         mv_local(args.mv_local)
+    elif args.mv_aws:
+        print("Attempting to move files to/from AWS bucket")
+        mv_aws(args.mv_aws)
     else:  
         logging.debug("Arguments passed: {}".format(args))
         print("ERROR: Unable to parse Data Processing command. Exiting")
@@ -219,6 +258,7 @@ def dp_main(args):
 # Main Program
 def main():
     version = "CCF-VM Automation Engine 0.0.1"
+    print(version)
 
     # Build Parser Options
     parser = argparse.ArgumentParser(description='CCF-VM Automation Engine')

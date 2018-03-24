@@ -11,11 +11,11 @@ service RC {
 message RCRequest {
   string service = 1;
   string flag = 2;
-  repeated string arg = 3;
+  string arg1 = 3;
+  string arg2 = 4;
 }
 
 // The response message containing any error messages
 message RCReply {
-  string message = 1;
+  repeated string message = 1;
 }
-
