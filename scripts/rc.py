@@ -1,6 +1,14 @@
 #!/usr/bin/python3
-import  argparse, base64,  os, requests, subprocess, sys, boto3
+import  argparse, base64,  os, requests, subprocess, sys, logging, logging.config, boto3, yaml
 
+logConfig = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'logging.yaml')
+with  open(logConfig) as f:
+    c = yaml.load(f)
+    logging.config.dictConfig(c)
+
+logPath = os.path.join('/var/log/', 'ccfvm.log')
+
+logger = logging.getLogger('main_logger')
 
 # Add all ElasticSearch Parser Options
 def add_es_parsers(subparsers):
@@ -59,7 +67,7 @@ def add_dp_parsers(subparsers):
                         metavar=("src_local","dest_local"),
                         help="Move data on locally mounted partitions")
     group.add_argument('--mv_aws',
-                    nargs=*,
+                    nargs='*',
                     metavar=("src","dest","bucket","prefix"),
                     help="Transfers data between AWS and local mounted partitions")
 
@@ -77,7 +85,7 @@ def web_results(r):
 # Delete an ElasticSearch index by name
 def es_del_index(server, indexname):
     decoded_index = myb64decode(indexname[0])
-    print("Deleting ElasticSearch index: " + decoded_index + " from " + server)
+    logger.info("Deleting ElasticSearch index: " + decoded_index + " from " + server)
     url = "http://" + server + ":9200/" + decoded_index + "?pretty"
     web_results(requests.delete(url))
 
@@ -107,103 +115,103 @@ def es_main(args):
 def create_ts_user(ts,userinfo):
     username = myb64decode(userinfo[0])
     password = myb64decode(userinfo[1])
-    print("Creating TimeSketch user:", username)
+    logger.info("Creating TimeSketch user: {}".format(username))
     cmd = subprocess.call([ts, "add_user", "-u", username, "-p", password])
 
 def delete_ts(ts,enc_name):
     ts_name = myb64decode(enc_name[0])
-    print("Deleting TimeSketch Index named:", ts_name)
+    logger.info("Deleting TimeSketch Index named: {}".format(ts_name))
     margs = "purge -i " + ts_name
     cmd = subprocess.Popen([ts, "purge", "-i", ts_name], stdin=PIPE)
     cmd.communicate(input='y')
 
 def ts_main(args):
     ts_exec = "/usr/local/bin/tsctl"
-    print("Executing TimeSketch command")
+    logging.debug("Executing TimeSketch command")
     # Create TimeSketch user with the provided base64 encoded username and password
     if args.useradd:
-        print("Attempting to create TimeSketch user")
+        logger.info("Attempting to create TimeSketch user")
         create_ts_user(ts_exec, args.useradd)
     elif args.delete:
-        print("Attempting to delete TimeSketch index")
+        logger.info("Attempting to delete TimeSketch index")
         delete_ts(ts_exec, args.delete)
     else:
-        print("Arguments passed: ", args)
-        print("ERROR: Unable to parse TimeSketch command. Exiting")
+        logger.warning("Arguments passed: ", args)
+        logger.warning("ERROR: Unable to parse TimeSketch command. Exiting")
         exit(1)
 
 ############ Operating System Functions ######################
 def os_server(args):
-    print("WARNING!! There will not be any acknowledgment if this worked due to stopping the server")
-    print("WARNING!! This requires sudo privledges and the process will hang if a password is required")
-    print("WARNING!! It is advised to only use this function with key-pair authentication")
+    logging.debug("WARNING!! There will not be any acknowledgment if this worked due to stopping the server")
+    logging.debug("WARNING!! This requires sudo privledges and the process will hang if a password is required")
+    logging.debug("WARNING!! It is advised to only use this function with key-pair authentication")
     if args[0].lower() == "stop":
-        print("Attempging to shut the server down")
-        print("sudo shutdown -h now")
+        logger.info("Attempting to shut the server down")
+        logger.debug("sudo shutdown -h now")
         cmd = subprocess.call(["sudo", "/sbin/shutdown", "-h", "now"])
     elif args[0].lower() == "restart":
-        print("Attempging to restart the server")
-        print("sudo shutdown -r now")
+        logger.info("Attempting to restart the server")
+        logger.debug("sudo shutdown -r now")
         cmd = subprocess.call(["sudo", "/sbin/shutdown", "-r", "now"])
     else:
-        print("Arguments passed: ", args)
-        print("ERROR: Unable to parse Operating System command. Exiting")
+        logger.warning("Arguments passed: ".format(args))
+        logger.warning("ERROR: Unable to parse Operating System command. Exiting")
         exit(1)
 
 def os_service(args):
-    print("WARNING!! This requires sudo privledges and the process will hang if a password is required")
-    print("WARNING!! It is advised to only use this function with key-pair authentication")
+    logger.debug("WARNING!! This requires sudo privledges and the process will hang if a password is required")
+    logger.debug("WARNING!! It is advised to only use this function with key-pair authentication")
     command = args[0].lower()
     accepted_commands = ["start","stop","restart"]
     if command not in accepted_commands:
-        print("ERROR: Command " + command + " does not match accepted commands")
-        print("ERROR: Accepted commands are: 'start' 'stop' 'restart'")
+        logger.warning("ERROR: Command " + command + " does not match accepted commands")
+        logger.warning("ERROR: Accepted commands are: 'start' 'stop' 'restart'")
         exit(1)
 
     service_list_array = myb64decode(args[1]).split()
 
     if command == "stop":
         for service in service_list_array:
-            print("Stoping:",service)
+            logger.info("Stoping: {}".format(service))
             cmd = subprocess.call(["sudo", "/bin/systemctl", "stop", service])
     elif command == "restart" or command == "start":
         for service in service_list_array:
-            print("Starting / Restarting:",service)
+            logger.info("Starting / Restarting:".format(service))
             cmd = subprocess.call(["sudo", "/bin/systemctl", "restart", service])
     else:
-        print("Arguments passed: ", args)
-        print("ERROR: Unable to parse Operating System command. Exiting")
+        logger.warning("Arguments passed: {}".format(args))
+        logger.warning("ERROR: Unable to parse Operating System command. Exiting")
         exit(1)
 
 def os_main(args):
-    print("Executing Operating System command")
+    logger.debug("Executing Operating System command")
     # Create TimeSketch user with the provided base64 encoded username and password
     if args.server:
-        print("Attempting to stop or restart the server")
+        logger.debug("Attempting to stop or restart the server")
         os_server(args.server)
     elif args.service:
-        print("Attempting to stop/start/restart a service")
+        logger.debug("Attempting to stop/start/restart a service")
         os_service(args.service)
     else:
-        print("Arguments passed: ", args)
-        print("ERROR: Unable to parse TimeSketch command. Exiting")
+        logger.debug("Arguments passed: {}".format(args))
+        logger.debug("ERROR: Unable to parse operating system command. Exiting")
         exit(1)
 
 ############ Data Processing Functions ######################
 def process_cdqr(cdqr,args):
     parsed_args = myb64decode(args[0])
-    print("Executing CDQR command")
+    logging.info("Executing CDQR command: cdqr {}".format(parsed_args))
     cmd = subprocess.call(["cdqr", parsed_args])
 
 def mv_local(args):
     src = myb64decode(args[0])
     dest = myb64decode(args[1])
-    print("Locally moving file at " + src + " to " + dest)
+    logging.info("Locally moving file at {} to {}".format(src, dest))
     cmd = subprocess.call(["mv", src, dest])
 
 def mv_aws(args):
     if len(args) < 3:
-        print("Must provide at least 3 arguments!")
+        logger.warning("Must provide at least 3 arguments!")
         return
     src = myb64decode(args[0])
     dest = myb64decode(args[1])
@@ -216,11 +224,11 @@ def mv_aws(args):
                 local_path = os.path.join(root, filename)
                 client.upload_file(local_path, bucket, filename)
         
-        print("Successfully moved files from %s"%src)
+        logger.info("Successfully moved files from %s"%src)
     elif os.path.isfile(src):
         #src is local file
         client.upload_file(src, bucket, os.basename(src))
-        print("Successfully moved %s"%os.basename(src))
+        logger.info("Successfully moved %s"%os.basename(src))
     else:
         #src is aws bucket
         try:
@@ -231,28 +239,29 @@ def mv_aws(args):
         for key in client.list_objects(Bucket = bucket, Prefix = prefix)['Contents']:
             #Assume key is file with extension
             client.download_file(Bucket = bucket, Key = key['key'], Filename = dest + '/' + key['key'])
-        print("Successfully retreived files from %s"%bucket)
+        logger.info("Successfully retreived files from %s"%bucket)
         
 def dp_main(args):
     cdqr_exec = "/usr/local/bin/cdqr.py"
     if args.cdqr:
-        print("Attempting to process data with CDQR")
+        logging.debug("Attempting to process data with CDQR: {}".format(args.cdqr))
         process_cdqr(cdqr_exec, args.cdqr)
     elif args.mv_local:
-        print("Attempting to move files locally")
+        logging.debug("Attempting to move files locally")
         mv_local(args.mv_local)
     elif args.mv_aws:
-        print("Attempting to move files to/from AWS bucket")
+        logger.debug("Attempting to move files to/from AWS bucket")
         mv_aws(args.mv_aws)
     else:  
-        print("Arguments passed: ", args)
-        print("ERROR: Unable to parse Data Processing command. Exiting")
+        logging.debug("Arguments passed: {}".format(args))
+        logger.warning("ERROR: Unable to parse Data Processing command. Exiting")
+        logging.warning("ERROR: Unable to parse Data Processing command. Exiting")
         exit(1)
  
 # Main Program
 def main():
     version = "CCF-VM Automation Engine 0.0.1"
-    print(version)
+    logger.debug(version)
 
     # Build Parser Options
     parser = argparse.ArgumentParser(description='CCF-VM Automation Engine')
@@ -276,11 +285,10 @@ def main():
     elif args.auto_type == 'dp':
         dp_main(args)
     else:
-        print("ERROR: Invalid command type. Exiting")
+        logging.debug("ERROR: Invalid command type. Exiting")
         exit(1)
 
-    print("SUCCESS: CCF-VM Automation Engine Completed")
-
+    logging.debug("SUCCESS: CCF-VM Automation Engine Completed")
 
 if __name__ == "__main__":
     main()

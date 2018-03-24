@@ -1,4 +1,4 @@
 #!/bin/bash
 
 echo "Getting Python dependencies"
-pip install boto3
+pip install -r requirements.txt
