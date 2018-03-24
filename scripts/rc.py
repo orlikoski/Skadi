@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-import  argparse, base64,  os, requests, subprocess, sys
+import  argparse, base64,  os, requests, subprocess, sys, boto3
+
 
 # Add all ElasticSearch Parser Options
 def add_es_parsers(subparsers):
@@ -57,6 +58,10 @@ def add_dp_parsers(subparsers):
                         nargs=2,
                         metavar=("src_local","dest_local"),
                         help="Move data on locally mounted partitions")
+    group.add_argument('--mv_aws',
+                    nargs=*,
+                    metavar=("src","dest","bucket","prefix"),
+                    help="Transfers data between AWS and local mounted partitions")
 
 ############ Base64 Functions ######################
 def myb64decode(encoded_string):
@@ -196,6 +201,38 @@ def mv_local(args):
     print("Locally moving file at " + src + " to " + dest)
     cmd = subprocess.Popen("mv " + src + " " + dest, shell=True).wait()
 
+def mv_aws(args):
+    if len(args) < 3:
+        print("Must provide at least 3 arguments!")
+        return
+    src = myb64decode(args[0])
+    dest = myb64decode(args[1])
+    bucket = myb64decode(args[2])
+    s3 = boto3.client('s3')
+    if os.path.dir(src):
+        #src is local dir
+        for (dirpath, dirnames, filenames) in os.walk(src):
+            for filename in files:
+                local_path = os.path.join(root, filename)
+                client.upload_file(local_path, bucket, filename)
+        
+        print("Successfully moved files from %s"%src)
+    elif os.path.isfile(src):
+        #src is local file
+        client.upload_file(src, bucket, os.basename(src))
+        print("Successfully moved %s"%os.basename(src))
+    else:
+        #src is aws bucket
+        try:
+            #allow for prefix use
+            prefix = myb64decode(args[3])
+        except:
+            prefix = None
+        for key in client.list_objects(Bucket = bucket, Prefix = prefix)['Contents']:
+            #Assume key is file with extension
+            client.download_file(Bucket = bucket, Key = key['key'], Filename = dest + '/' + key['key'])
+        print("Successfully retreived files from %s"%bucket)
+        
 def dp_main(args):
     cdqr_exec = "/usr/local/bin/cdqr.py"
     if args.cdqr:
@@ -204,6 +241,9 @@ def dp_main(args):
     elif args.mv_local:
         print("Attempting to move files locally")
         mv_local(args.mv_local)
+    elif args.mv_aws:
+        print("Attempting to move files to/from AWS bucket")
+        mv_aws(args.mv_aws)
     else:  
         print("Arguments passed: ", args)
         print("ERROR: Unable to parse Data Processing command. Exiting")
