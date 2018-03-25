@@ -127,7 +127,7 @@ def delete_ts(ts,enc_name):
 
 def ts_main(args):
     ts_exec = "/usr/local/bin/tsctl"
-    logging.debug("Executing TimeSketch command")
+    logger.debug("Executing TimeSketch command")
     # Create TimeSketch user with the provided base64 encoded username and password
     if args.useradd:
         logger.info("Attempting to create TimeSketch user")
@@ -142,9 +142,9 @@ def ts_main(args):
 
 ############ Operating System Functions ######################
 def os_server(args):
-    logging.debug("WARNING!! There will not be any acknowledgment if this worked due to stopping the server")
-    logging.debug("WARNING!! This requires sudo privledges and the process will hang if a password is required")
-    logging.debug("WARNING!! It is advised to only use this function with key-pair authentication")
+    logger.debug("WARNING!! There will not be any acknowledgment if this worked due to stopping the server")
+    logger.debug("WARNING!! This requires sudo privledges and the process will hang if a password is required")
+    logger.debug("WARNING!! It is advised to only use this function with key-pair authentication")
     if args[0].lower() == "stop":
         logger.info("Attempting to shut the server down")
         logger.debug("sudo shutdown -h now")
@@ -200,13 +200,13 @@ def os_main(args):
 ############ Data Processing Functions ######################
 def process_cdqr(cdqr,args):
     parsed_args = myb64decode(args[0])
-    logging.info("Executing CDQR command: cdqr {}".format(parsed_args))
+    logger.info("Executing CDQR command: cdqr {}".format(parsed_args))
     cmd = subprocess.call(["cdqr", parsed_args])
 
 def mv_local(args):
     src = myb64decode(args[0])
     dest = myb64decode(args[1])
-    logging.info("Locally moving file at {} to {}".format(src, dest))
+    logger.info("Locally moving file at {} to {}".format(src, dest))
     cmd = subprocess.call(["mv", src, dest])
 
 def mv_aws(args):
@@ -243,19 +243,19 @@ def mv_aws(args):
         
 def dp_main(args):
     cdqr_exec = "/usr/local/bin/cdqr.py"
+    logger.debug("Data Processing: {}".format(args))
     if args.cdqr:
-        logging.debug("Attempting to process data with CDQR: {}".format(args.cdqr))
+        logger.debug("Attempting to process data with CDQR: {}".format(args.cdqr))
         process_cdqr(cdqr_exec, args.cdqr)
     elif args.mv_local:
-        logging.debug("Attempting to move files locally")
+        logger.debug("Attempting to move files locally")
         mv_local(args.mv_local)
     elif args.mv_aws:
         logger.debug("Attempting to move files to/from AWS bucket")
         mv_aws(args.mv_aws)
     else:  
-        logging.debug("Arguments passed: {}".format(args))
+        logger.debug("Arguments passed: {}".format(args))
         logger.warning("ERROR: Unable to parse Data Processing command. Exiting")
-        logging.warning("ERROR: Unable to parse Data Processing command. Exiting")
         exit(1)
  
 # Main Program
@@ -285,10 +285,10 @@ def main():
     elif args.auto_type == 'dp':
         dp_main(args)
     else:
-        logging.debug("ERROR: Invalid command type. Exiting")
+        logger.debug("ERROR: Invalid command type. Exiting")
         exit(1)
 
-    logging.debug("SUCCESS: CCF-VM Automation Engine Completed")
+    logger.debug("SUCCESS: CCF-VM Automation Engine Completed")
 
 if __name__ == "__main__":
     main()
