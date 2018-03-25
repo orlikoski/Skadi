@@ -16,6 +16,7 @@ def run():
 
     count = len(sys.argv)
 
+    print("Attempting to send command to server")
     response = ""
     if count == 2:
         response = stub.ExecuteRC(rc_pb2.RCRequest(service=sys.argv[1]))
@@ -28,9 +29,9 @@ def run():
     else:
         print("WARNING!! Invalid number of arguments. Exiting")
 
-    #print(" ".join(response.message))
     print(response.message)
 
+    print("COMPLETE")
 if __name__ == '__main__':
     run()
 
