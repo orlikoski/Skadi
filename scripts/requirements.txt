@@ -1,4 +1,3 @@
-logging
 requests
 botocore==1.8.36
 boto3
