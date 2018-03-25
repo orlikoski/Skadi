@@ -16,7 +16,7 @@ def run():
 
     count = len(sys.argv)
 
-    print("Attempting to send command to server")
+    print("Attempting to send command to server\n")
     response = ""
     if count == 2:
         response = stub.ExecuteRC(rc_pb2.RCRequest(service=sys.argv[1]))
