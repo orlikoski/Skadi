@@ -11,6 +11,7 @@ sudo usermod -aG automationadmin ottomate # Add user to automation group
 
 # Create .ssh directory and authorized_keys file for the new user
 sudo mkdir -p /home/ottomate/.ssh/
+sudo touch /home/ottomate/.ssh/authorized_keys
 sudo chmod 700 /home/ottomate/.ssh/
 sudo chown -R ottomate:ottomate /home/ottomate/.ssh
 sudo chmod 644 /home/ottomate/.ssh/authorized_keys
