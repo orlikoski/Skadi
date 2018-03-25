@@ -17,7 +17,8 @@ class RC(rc_pb2_grpc.RCServicer):
             input_args.append(request.arg1)
         if request.arg2:
             input_args.append(request.arg2)
-         command = ["/usr/bin/python3",rcpy]
+
+        command = ["/usr/bin/python3",rcpy]
         return rc_pb2.RCReply(message=runcommand(command,input_args))
 
 def runcommand(command,input_args):
