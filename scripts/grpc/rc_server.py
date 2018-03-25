@@ -19,9 +19,9 @@ class RC(rc_pb2_grpc.RCServicer):
             input_args.append(request.arg2)
 
         if request.service == "os":
-            command = ["/usr/bin/python3",rcpy]
-        else:
             command = ["sudo","/usr/bin/python3",rcpy]
+        else:
+            command = ["/usr/bin/python3",rcpy]
 
         return rc_pb2.RCReply(message=runcommand(command,input_args))
 
