@@ -230,31 +230,36 @@ def mv_aws(args):
     src = myb64decode(args[0])
     dest = myb64decode(args[1])
     bucket = myb64decode(args[2])
-    s3 = boto3.client('s3')
-    if os.path.dir(src):
+    s3_client = boto3.client(service_name='s3', endpoint_url="http://localhost:4572")
+    if os.path.dirname(src):
         #src is local dir
         for (dirpath, dirnames, filenames) in os.walk(src):
             for filename in files:
-                local_path = os.path.join(root, filename)
-                client.upload_file(local_path, bucket, filename)
-        
+                local_path = os.path.join(src, filename)
+                s3_client.upload_file(local_path, bucket, filename)
         logger.info("Successfully moved files from %s"%src)
     elif os.path.isfile(src):
         #src is local file
-        client.upload_file(src, bucket, os.basename(src))
+        s3_client.upload_file(src, bucket, os.basename(src))
         logger.info("Successfully moved %s"%os.basename(src))
     else:
         #src is aws bucket
-        try:
+        #dest is local dir
+        prefix = ""
+        if len(args) > 3:
             #allow for prefix use
             prefix = myb64decode(args[3])
-        except:
-            prefix = None
-        for key in client.list_objects(Bucket = bucket, Prefix = prefix)['Contents']:
+        obj_response = s3_client.list_objects(Bucket = bucket, Prefix = prefix)
+        if not 'Contents' in obj_response:
+            logger.info("There are no files in bucket %s"%bucket)
+            return
+        for obj in obj_response['Contents']:
+            destination = str(dest + '/' + obj[unicode('Key')])
+            print(destination)
             #Assume key is file with extension
-            client.download_file(Bucket = bucket, Key = key['key'], Filename = dest + '/' + key['key'])
+            s3_client.download_file(Bucket = bucket, Key = obj[unicode('Key')], Filename = destination)
         logger.info("Successfully retreived files from %s"%bucket)
-        
+
 def dp_main(args):
     cdqr_exec = "/usr/local/bin/cdqr.py"
     logger.debug("Data Processing: {}".format(args))
