@@ -16,6 +16,7 @@ def run():
 
     count = len(sys.argv)
 
+    response = ""
     if count == 2:
         response = stub.ExecuteRC(rc_pb2.RCRequest(service=sys.argv[1]))
     elif count == 3:
@@ -26,6 +27,8 @@ def run():
         response = stub.ExecuteRC(rc_pb2.RCRequest(service=sys.argv[1],flag=sys.argv[2],arg1=sys.argv[3],arg2=sys.argv[4]))
     else:
         print("WARNING!! Invalid number of arguments. Exiting")
+
+    print(response)
 
 if __name__ == '__main__':
     run()

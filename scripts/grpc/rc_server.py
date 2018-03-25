@@ -9,6 +9,12 @@ _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 
 class RC(rc_pb2_grpc.RCServicer):
 
+    def runcommand(command):
+        cmd = subprocess.Popen(command)
+        status = cmd.wait()
+        subprocess.Popen(command)
+
+
     def ExecuteRC(self, request, context):
         input_args = [request.service]
         if request.flag:
@@ -22,9 +28,7 @@ class RC(rc_pb2_grpc.RCServicer):
         for item in input_args:
             command.append(item)
 
-        cmd = subprocess.Popen(command)
-        status = cmd.wait()
-        return rc_pb2.RCReply(message="ERROR: Command failed to execute")
+        return rc_pb2.RCReply(message=runcommand(command))
 
 
 def serve():
