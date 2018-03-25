@@ -19,12 +19,14 @@ class RC(rc_pb2_grpc.RCServicer):
             input_args.append(request.arg2)
 
         command = ["/usr/bin/python3",rcpy]
-        for item in input_args:
-            command.append(item)
+        return rc_pb2.RCReply(message=runcommand(command,input_args))
 
-        cmd = subprocess.Popen(command)
-        status = cmd.wait()
-        return rc_pb2.RCReply(message="ERROR: Command failed to execute")
+def runcommand(command,input_args):
+    for item in input_args:
+        command.append(item)
+    cmdout = subprocess.check_output(command)
+    print cmdout.decode("utf-8")
+    return cmdout.decode("utf-8")
 
 
 def serve():
