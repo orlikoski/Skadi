@@ -28,7 +28,7 @@ def run():
     else:
         print("WARNING!! Invalid number of arguments. Exiting")
 
-    print(response)
+    print(response.message)
 
 if __name__ == '__main__':
     run()

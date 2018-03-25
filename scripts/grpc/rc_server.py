@@ -25,7 +25,9 @@ class RC(rc_pb2_grpc.RCServicer):
         return rc_pb2.RCReply(message=runcommand(command))
 
 def runcommand(command):
-    return subprocess.check_output(command)
+    cmdout = subprocess.check_output(command)
+    print cmdout.decode("utf-8")
+    return cmdout.decode("utf-8")
 
 
 def serve():
