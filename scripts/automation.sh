@@ -1,4 +1,7 @@
 #!/bin/bash
+# Specify Branch
+branch="automation"
+
 # Create Automation user and group
 echo "Creating new group `automationadmmin` and new user `ottomate` to be used for all automation functions"
 echo "Please enter user information when prompted"
@@ -6,9 +9,11 @@ sudo addgroup automationadmin # Create automation group
 sudo adduser ottomate --disabled-password --shell /bin/bash # Create automation user: follow prompts to enter user information
 sudo usermod -aG automationadmin ottomate # Add user to automation group
 
-# Create .ssh directory for the new user
+# Create .ssh directory and authorized_keys file for the new user
 sudo mkdir -p /home/ottomate/.ssh/
 sudo chmod 700 /home/ottomate/.ssh/
+sudo chown -R ottomate:ottomate /home/ottomate/.ssh
+sudo chmod 644 /home/ottomate/.ssh/authorized_keys
 
 # Getting Python dependencies
 sudo apt install python3-pip -y # Install pip for python3
@@ -27,7 +32,7 @@ sudo mkdir -p "$automation_dir"
 # Download and install GRPC files
 for i in "${grpc_files[@]}"
 do
-    wget -O "/tmp/$i" "https://raw.githubusercontent.com/rough007/CCF-VM/automation/scripts/grpc/$i"
+    wget -O "/tmp/$i" "https://raw.githubusercontent.com/rough007/CCF-VM/$branch/scripts/grpc/$i"
     sudo mv "/tmp/$i" "$automation_dir/"
     sudo chown root:root "$automation_dir/$i"
     sudo chmod 644 "$automation_dir/$i"
@@ -43,7 +48,7 @@ sudo chown ottomate:ottomate /var/log/ccfvm.log # change ownershipt to ottomate 
 # Download and install Automation files
 for i in "${automation_files[@]}"
 do
-    wget -O "/tmp/$i" "https://raw.githubusercontent.com/rough007/CCF-VM/automation/scripts/$i"
+    wget -O "/tmp/$i" "https://raw.githubusercontent.com/rough007/CCF-VM/$branch/scripts/$i"
     sudo mv "/tmp/$i" "$automation_dir/"
     sudo chown root:root "$automation_dir/$i"
     sudo chmod 644 "$automation_dir/$i"
