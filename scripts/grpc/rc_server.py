@@ -18,13 +18,16 @@ class RC(rc_pb2_grpc.RCServicer):
         if request.arg2:
             input_args.append(request.arg2)
 
-        command = ["/usr/bin/python3",rcpy]
-        for item in input_args:
-            command.append(item)
+        if request.service == "os":
+            command = ["/usr/bin/python3",rcpy]
+        else:
+            command = ["sudo","/usr/bin/python3",rcpy]
 
-        return rc_pb2.RCReply(message=runcommand(command))
+        return rc_pb2.RCReply(message=runcommand(command,input_args))
 
-def runcommand(command):
+def runcommand(command,input_args):
+    for item in input_args:
+        command.append(item)
     cmdout = subprocess.check_output(command)
     print cmdout.decode("utf-8")
     return cmdout.decode("utf-8")
