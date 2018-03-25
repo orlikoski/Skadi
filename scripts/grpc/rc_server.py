@@ -25,9 +25,8 @@ class RC(rc_pb2_grpc.RCServicer):
         return rc_pb2.RCReply(message=runcommand(command))
 
 def runcommand(command):
-    cmd = subprocess.Popen(command)
-    status = cmd.wait()
-    subprocess.Popen(command)
+    return subprocess.check_output(command)
+
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
