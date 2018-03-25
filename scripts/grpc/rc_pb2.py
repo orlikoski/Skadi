@@ -18,9 +18,9 @@ _sym_db = _symbol_database.Default()
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='rc.proto',
   package='rc',
-  serialized_pb=_b('\n\x08rc.proto\x12\x02rc\"F\n\tRCRequest\x12\x0f\n\x07service\x18\x01 \x02(\t\x12\x0c\n\x04\x66lag\x18\x02 \x01(\t\x12\x0c\n\x04\x61rg1\x18\x03 \x01(\t\x12\x0c\n\x04\x61rg2\x18\x04 \x01(\t\"\x1a\n\x07RCReply\x12\x0f\n\x07message\x18\x01 \x03(\t2/\n\x02RC\x12)\n\tExecuteRC\x12\r.rc.RCRequest\x1a\x0b.rc.RCReply\"\x00')
+  syntax='proto3',
+  serialized_pb=_b('\n\x08rc.proto\x12\x02rc\"F\n\tRCRequest\x12\x0f\n\x07service\x18\x01 \x01(\t\x12\x0c\n\x04\x66lag\x18\x02 \x01(\t\x12\x0c\n\x04\x61rg1\x18\x03 \x01(\t\x12\x0c\n\x04\x61rg2\x18\x04 \x01(\t\"\x1a\n\x07RCReply\x12\x0f\n\x07message\x18\x01 \x01(\t2/\n\x02RC\x12)\n\tExecuteRC\x12\r.rc.RCRequest\x1a\x0b.rc.RCReply\"\x00\x62\x06proto3')
 )
-_sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 
 
@@ -34,32 +34,32 @@ _RCREQUEST = _descriptor.Descriptor(
   fields=[
     _descriptor.FieldDescriptor(
       name='service', full_name='rc.RCRequest.service', index=0,
-      number=1, type=9, cpp_type=9, label=2,
+      number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='flag', full_name='rc.RCRequest.flag', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='arg1', full_name='rc.RCRequest.arg1', index=2,
       number=3, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='arg2', full_name='rc.RCRequest.arg2', index=3,
       number=4, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -68,6 +68,7 @@ _RCREQUEST = _descriptor.Descriptor(
   ],
   options=None,
   is_extendable=False,
+  syntax='proto3',
   extension_ranges=[],
   oneofs=[
   ],
@@ -85,11 +86,11 @@ _RCREPLY = _descriptor.Descriptor(
   fields=[
     _descriptor.FieldDescriptor(
       name='message', full_name='rc.RCReply.message', index=0,
-      number=1, type=9, cpp_type=9, label=3,
-      has_default_value=False, default_value=[],
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -98,6 +99,7 @@ _RCREPLY = _descriptor.Descriptor(
   ],
   options=None,
   is_extendable=False,
+  syntax='proto3',
   extension_ranges=[],
   oneofs=[
   ],
@@ -107,6 +109,7 @@ _RCREPLY = _descriptor.Descriptor(
 
 DESCRIPTOR.message_types_by_name['RCRequest'] = _RCREQUEST
 DESCRIPTOR.message_types_by_name['RCReply'] = _RCREPLY
+_sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 RCRequest = _reflection.GeneratedProtocolMessageType('RCRequest', (_message.Message,), dict(
   DESCRIPTOR = _RCREQUEST,
@@ -122,5 +125,29 @@ RCReply = _reflection.GeneratedProtocolMessageType('RCReply', (_message.Message,
   ))
 _sym_db.RegisterMessage(RCReply)
 
+
+
+_RC = _descriptor.ServiceDescriptor(
+  name='RC',
+  full_name='rc.RC',
+  file=DESCRIPTOR,
+  index=0,
+  options=None,
+  serialized_start=116,
+  serialized_end=163,
+  methods=[
+  _descriptor.MethodDescriptor(
+    name='ExecuteRC',
+    full_name='rc.RC.ExecuteRC',
+    index=0,
+    containing_service=None,
+    input_type=_RCREQUEST,
+    output_type=_RCREPLY,
+    options=None,
+  ),
+])
+_sym_db.RegisterServiceDescriptor(_RC)
+
+DESCRIPTOR.services_by_name['RC'] = _RC
 
 # @@protoc_insertion_point(module_scope)
