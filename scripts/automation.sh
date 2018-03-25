@@ -3,7 +3,7 @@
 branch="automation"
 
 # Create Automation user and group
-echo "Creating new group `automationadmmin` and new user `ottomate` to be used for all automation functions"
+echo "Creating new group 'automationadmmin' and new user 'ottomate' to be used for all automation functions"
 echo "Please enter user information when prompted"
 sudo addgroup automationadmin # Create automation group
 sudo adduser ottomate --disabled-password --shell /bin/bash # Create automation user: follow prompts to enter user information
