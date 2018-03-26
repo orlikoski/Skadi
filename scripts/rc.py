@@ -73,7 +73,11 @@ def add_dp_parsers(subparsers):
 
 ############ Base64 Functions ######################
 def myb64decode(encoded_string):
-    decoded_string = base64.b64decode(encoded_string).decode('utf-8').strip()
+    try:
+        decoded_string = base64.b64decode(encoded_string).decode('utf-8').strip()
+    except (base64.binascii.Error, UnicodeDecodeError) as e:
+        logger.warning("Encode parameters in base64")
+        exit(1)
     return decoded_string
 
 ############ Web Request Output Handling ######################
