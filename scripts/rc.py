@@ -180,7 +180,7 @@ def os_service(args):
             cmd = subprocess.call(["sudo", "/bin/systemctl", "stop", service])
     elif command == "restart" or command == "start":
         for service in service_list_array:
-            logger.info("Starting / Restarting:".format(service))
+            logger.info("Starting / Restarting: {}".format(service))
             cmd = subprocess.call(["sudo", "/bin/systemctl", "restart", service])
     else:
         logger.warning("Arguments passed: {}".format(args))
