@@ -193,7 +193,7 @@ def os_service(args):
                 logger.warning("Failed to stop %s, exited with status code %d"%(service, cmd))
     elif command == "restart" or command == "start":
         for service in service_list_array:
-            logger.info("Starting / Restarting:".format(service))
+            logger.info("Starting / Restarting: {}".format(service))
             cmd = subprocess.call(["sudo", "/bin/systemctl", "restart", service])
             if cmd != 0:
                 logger.warning("Failed to start/restart %s, exited with status code %d"%(service, cmd))
