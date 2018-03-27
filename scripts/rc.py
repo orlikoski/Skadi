@@ -38,6 +38,11 @@ def add_ts_parsers(subparsers):
                         metavar="timesketch_name",
                         help="Delete the Base64 encoded timesketch name provided")
 
+    group.add_argument('--start',
+                        nargs=0,
+                        metavar="",
+                        help="Starts Timesketch Service")
+
 # Add all Operating System Parser Options
 def add_os_parsers(subparsers):
     server_commands = ["restart","stop"]
@@ -129,6 +134,10 @@ def delete_ts(ts,enc_name):
     cmd = subprocess.Popen([ts, "purge", "-i", ts_name], stdin=PIPE)
     cmd.communicate(input='y')
 
+def ts_start_server(ts):
+    cmd = subprocess.Popen([ts, "runserver"], shell=False)
+    cmd.communicate(input='y')
+
 def ts_main(args):
     ts_exec = "/usr/local/bin/tsctl"
     logging.debug("Executing TimeSketch command")
@@ -139,8 +148,11 @@ def ts_main(args):
     elif args.delete:
         logger.info("Attempting to delete TimeSketch index")
         delete_ts(ts_exec, args.delete)
+    elif args.start:
+        logger.info("Attempting to start TimeSketch")
+        ts_start_server(ts_exec)
     else:
-        logger.warning("Arguments passed: ", args)
+        logger.warning("Arguments passed: {}".format(args))
         logger.warning("ERROR: Unable to parse TimeSketch command. Exiting")
         exit(1)
 
@@ -197,8 +209,8 @@ def os_main(args):
         logger.debug("Attempting to stop/start/restart a service")
         os_service(args.service)
     else:
-        logger.debug("Arguments passed: {}".format(args))
-        logger.debug("ERROR: Unable to parse operating system command. Exiting")
+        logger.warning("Arguments passed: {}".format(args))
+        logger.warning("ERROR: Unable to parse operating system command. Exiting")
         exit(1)
 
 ############ Data Processing Functions ######################
