@@ -39,9 +39,14 @@ def add_ts_parsers(subparsers):
                         help="Delete the Base64 encoded timesketch name provided")
 
     group.add_argument('--start',
-                        nargs=0,
-                        metavar="",
+                        nargs='?',
+                        const="127.0.0.1",
+                        metavar="listener",
                         help="Starts Timesketch Service")
+
+    group.add_argument('--stop',
+                        action="store_true",
+                        help="Stops Timesketch Service")
 
 # Add all Operating System Parser Options
 def add_os_parsers(subparsers):
@@ -134,9 +139,18 @@ def delete_ts(ts,enc_name):
     cmd = subprocess.Popen([ts, "purge", "-i", ts_name], stdin=PIPE)
     cmd.communicate(input='y')
 
-def ts_start_server(ts):
-    cmd = subprocess.Popen([ts, "runserver"], shell=False)
-    cmd.communicate(input='y')
+def ts_start_server(ts, listener):
+    logger.debug(listener)
+    ts_parameters = [ts, "runserver", "-h", listener] 
+    logger.debug(ts_parameters)
+    cmd = subprocess.Popen(ts_parameters, stdout=subprocess.PIPE)
+    logger.info("Timesketch Running pid: {} - listening on {}".format(cmd.pid, listener))
+
+def ts_stop_server():
+    logger.debug("Attempting to stop timesketch server")
+    logger.info("Stopping TimeSketch Service")
+    cmd = subprocess.call("killall tsctl", shell=True, stdout=subprocess.PIPE)
+        
 
 def ts_main(args):
     ts_exec = "/usr/local/bin/tsctl"
@@ -150,7 +164,10 @@ def ts_main(args):
         delete_ts(ts_exec, args.delete)
     elif args.start:
         logger.info("Attempting to start TimeSketch")
-        ts_start_server(ts_exec)
+        ts_start_server(ts_exec, args.start)
+    elif args.stop:
+        logger.info("Attempting to stop TimeSketch")
+        ts_stop_server()
     else:
         logger.warning("Arguments passed: {}".format(args))
         logger.warning("ERROR: Unable to parse TimeSketch command. Exiting")
