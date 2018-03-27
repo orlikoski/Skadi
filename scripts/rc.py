@@ -117,6 +117,8 @@ def create_ts_user(ts,userinfo):
     password = myb64decode(userinfo[1])
     logger.info("Creating TimeSketch user: {}".format(username))
     cmd = subprocess.call([ts, "add_user", "-u", username, "-p", password])
+    if cmd != 0:
+        logger.warning("Failed to create TimeSketch user, exited with status code %d"%cmd)
 
 def delete_ts(ts,enc_name):
     ts_name = myb64decode(enc_name[0])
@@ -149,10 +151,14 @@ def os_server(args):
         logger.info("Attempting to shut the server down")
         logger.debug("sudo shutdown -h now")
         cmd = subprocess.call(["sudo", "/sbin/shutdown", "-h", "now"])
+        if cmd != 0:
+            logger.warning("Failed to shutdown server, exited with status code %d"%cmd)
     elif args[0].lower() == "restart":
         logger.info("Attempting to restart the server")
         logger.debug("sudo shutdown -r now")
         cmd = subprocess.call(["sudo", "/sbin/shutdown", "-r", "now"])
+        if cmd != 0:
+            logger.warning("Failed to restart server, exited with status code %d"%cmd)
     else:
         logger.warning("Arguments passed: ".format(args))
         logger.warning("ERROR: Unable to parse Operating System command. Exiting")
@@ -174,10 +180,14 @@ def os_service(args):
         for service in service_list_array:
             logger.info("Stoping: {}".format(service))
             cmd = subprocess.call(["sudo", "/bin/systemctl", "stop", service])
+            if cmd != 0:
+                logger.warning("Failed to stop %s, exited with status code %d"%(service, cmd))
     elif command == "restart" or command == "start":
         for service in service_list_array:
             logger.info("Starting / Restarting:".format(service))
             cmd = subprocess.call(["sudo", "/bin/systemctl", "restart", service])
+            if cmd != 0:
+                logger.warning("Failed to start/restart %s, exited with status code %d"%(service, cmd))
     else:
         logger.warning("Arguments passed: {}".format(args))
         logger.warning("ERROR: Unable to parse Operating System command. Exiting")
@@ -202,12 +212,16 @@ def process_cdqr(cdqr,args):
     parsed_args = myb64decode(args[0])
     logger.info("Executing CDQR command: cdqr {}".format(parsed_args))
     cmd = subprocess.call(["cdqr", parsed_args])
+    if cmd != 0:
+        logger.warning("Failed process CDQR, exited with status code %d"%cmd)
 
 def mv_local(args):
     src = myb64decode(args[0])
     dest = myb64decode(args[1])
     logger.info("Locally moving file at {} to {}".format(src, dest))
     cmd = subprocess.call(["mv", src, dest])
+    if cmd != 0:
+        logger.warning("Failed to move file, exited with status code %d"%cmd)
 
 def mv_aws(args):
     if len(args) < 3:
