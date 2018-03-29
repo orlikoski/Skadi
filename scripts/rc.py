@@ -66,10 +66,15 @@ def add_dp_parsers(subparsers):
                         nargs=2,
                         metavar=("src_local","dest_local"),
                         help="Move data on locally mounted partitions")
-    group.add_argument('--mv_aws',
+    group.add_argument('--mv_to_aws',
                     nargs='*',
-                    metavar=("src","dest","bucket","prefix"),
+                    metavar=("src","bucket","prefix"),
                     help="Transfers data between AWS and local mounted partitions")
+    group.add_argument('--mv_from_aws',
+                    nargs='*',
+                    metavar=("dest","bucket","prefix"),
+                    help="Transfers data between AWS and local mounted partitions")
+
 
 ############ Base64 Functions ######################
 def myb64decode(encoded_string):
@@ -223,38 +228,50 @@ def mv_local(args):
     if cmd != 0:
         logger.warning("Failed to move file, exited with status code %d"%cmd)
 
-def mv_aws(args):
-    if len(args) < 3:
-        logger.warning("Must provide at least 3 arguments!")
+def mv_to_aws(args):
+    if len(args) < 2:
+        logger.warning("Must provide at least 2 arguments!")
         return
     src = myb64decode(args[0])
-    dest = myb64decode(args[1])
-    bucket = myb64decode(args[2])
-    s3 = boto3.client('s3')
-    if os.path.dir(src):
+    bucket = myb64decode(args[1])
+    s3_client = boto3.client(service_name='s3')
+    if os.path.dirname(src):
         #src is local dir
         for (dirpath, dirnames, filenames) in os.walk(src):
             for filename in files:
-                local_path = os.path.join(root, filename)
-                client.upload_file(local_path, bucket, filename)
-        
+                local_path = os.path.join(src, filename)
+                s3_client.upload_file(local_path, bucket, filename)
         logger.info("Successfully moved files from %s"%src)
     elif os.path.isfile(src):
         #src is local file
-        client.upload_file(src, bucket, os.basename(src))
+        s3_client.upload_file(src, bucket, os.basename(src))
         logger.info("Successfully moved %s"%os.basename(src))
-    else:
-        #src is aws bucket
-        try:
-            #allow for prefix use
-            prefix = myb64decode(args[3])
-        except:
-            prefix = None
-        for key in client.list_objects(Bucket = bucket, Prefix = prefix)['Contents']:
-            #Assume key is file with extension
-            client.download_file(Bucket = bucket, Key = key['key'], Filename = dest + '/' + key['key'])
-        logger.info("Successfully retreived files from %s"%bucket)
-        
+    else: 
+        logger.info("Source provided is neither a file nor directory %s"%os.basename(src))
+
+def mv_from_aws(args):
+    if len(args) < 2:
+        logger.warning("Must provide at least 2 arguments!")
+        return
+    dest = myb64decode(args[0])
+    bucket = myb64decode(args[1])
+    #src is aws bucket
+    #dest is local dir
+    prefix = ""
+    if len(args) > 2:
+        #allow for prefix use
+        prefix = myb64decode(args[2])
+    obj_response = s3_client.list_objects(Bucket = bucket, Prefix = prefix)
+    if not 'Contents' in obj_response:
+        logger.info("There are no files in bucket %s"%bucket)
+        return
+    for obj in obj_response['Contents']:
+        destination = str(dest + '/' + obj[unicode('Key')])
+        print(destination)
+        #Assume key is file with extension
+        s3_client.download_file(Bucket = bucket, Key = obj[unicode('Key')], Filename = destination)
+    logger.info("Successfully retreived files from %s"%bucket)
+
 def dp_main(args):
     cdqr_exec = "/usr/local/bin/cdqr.py"
     logger.debug("Data Processing: {}".format(args))
@@ -264,9 +281,12 @@ def dp_main(args):
     elif args.mv_local:
         logger.debug("Attempting to move files locally")
         mv_local(args.mv_local)
-    elif args.mv_aws:
-        logger.debug("Attempting to move files to/from AWS bucket")
-        mv_aws(args.mv_aws)
+    elif args.mv_to_aws:
+        logger.debug("Attempting to move files to AWS bucket")
+        mv_to_aws(args.mv_to_aws)
+    elif args.mv_from_aws:
+        logger.debug("Attempting to move files from AWS bucket")
+        mv_from_aws(args.mv_from_aws)
     else:  
         logger.debug("Arguments passed: {}".format(args))
         logger.warning("ERROR: Unable to parse Data Processing command. Exiting")
