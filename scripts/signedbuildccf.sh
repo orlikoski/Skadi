@@ -1,8 +1,4 @@
 #!/bin/bash
-echo "*********** WARNING ***********"
-echo "root or sudo privileges are required for this installation"
-echo "*********** WARNING ***********"
-echo ""
 echo "Installing / Updating / Configuring the following:"
 echo "  -Change hostname to 'ccf-vm'"
 echo "  -CDQR"
@@ -31,7 +27,13 @@ echo ""
 echo "All usernames and passwords are made dynamically at run time"
 echo "These are displayed at the end of the script (record them for use)"
 echo ""
+echo "*********** WARNING ***********"
+echo "root or sudo privileges are required for this installation"
+echo "*********** WARNING ***********"
+echo ""
 read -n 1 -r -s -p "Press any key to continue... or CTRL+C to exit (nothing has been installed)"
+echo ""
+echo ""
 
 # Set Hostname to ccf-vm
 newhostname='ccf-vm'
@@ -45,16 +47,18 @@ sudo systemctl restart systemd-logind.service >/dev/null 2>&1
 sudo sed -i 's/deb cdrom/#deb cdrom/g' /etc/apt/sources.list
 sudo apt update -y
 sudo apt dist-upgrade -y
-sudo apt install -y vim openssh-server curl software-properties-common unzip htop
+sudo apt install -y vim openssh-server curl software-properties-common unzip htop ca-certificates apt-transport-https
 
-# Install Docker
 sudo add-apt-repository ppa:gift/stable -y
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" -y
-
-# Install Plaso
 sudo apt update -y
 sudo apt dist-upgrade -y
+
+# Install Docker
+sudo apt-get install docker-ce -y
+
+# Install Plaso
 sudo apt install -y python-software-properties python-plaso plaso-tools
 sudo apt autoremove -y
 
@@ -67,7 +71,6 @@ sudo apt install mono-devel -y
 
 #Install and Configure Elasticsearch
 wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
-sudo apt install apt-transport-https -y
 echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-6.x.list
 sudo add-apt-repository ppa:webupd8team/java -y
 sudo apt update -y
@@ -311,6 +314,19 @@ sudo systemctl daemon-reload
 sudo systemctl restart ccfvm_grpc.service
 sudo systemctl enable ccfvm_grpc.service
 
+clear
+echo "Installed Software Version Checks (Where it is supported)"
+/usr/bin/log2timeline.py --version
+/usr/local/bin/cdqr.py --version
+mono /opt/CyLR/CyLR.exe --version |grep Version
+docker --version
+echo "ELK Version: $(curl --silent -XGET 'localhost:9200' |awk '/number/{print substr($3, 1, length($3)-1)}')"
+redis-server --version
+neo4j --version
+echo "Celery version: $(celery --version)"
+echo "Cerebro version: $cerebro_version"
+echo ""
+echo ""
 
 echo "System Health Checks"
 # system health checks
@@ -333,17 +349,8 @@ done
 echo ""
 echo "Logstash and ccfvm_grpc are installed but not enabled by default"
 echo "To enable run the following commands"
-echo "    sudo systemctl restart logstash ccfvm_grpc_service"
-echo "    sudo systemctl enable logstash ccfvm_grpc_service"
-echo ""
-echo "Verifying version of Plaso"
-/usr/bin/log2timeline.py --version
-echo ""
-echo "Verifying version of CDQR"
-/usr/local/bin/cdqr.py --version
-echo ""
-echo "Verifying version of CyLR"
-mono /opt/CyLR/CyLR.exe --version |grep Version
+echo "    sudo systemctl restart logstash ccfvm_grpc"
+echo "    sudo systemctl enable logstash ccfvm_grpc"
 echo ""
 echo ""
 echo "TimeSketch Initial User Information (reset with 'tsctl add_user -u $timesketchuser -p <password>')"
