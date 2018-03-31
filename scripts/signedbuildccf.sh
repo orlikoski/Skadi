@@ -32,6 +32,8 @@ echo "All usernames and passwords are made dynamically at run time"
 echo "These are displayed at the end of the script (record them for use)"
 echo ""
 read -n 1 -r -s -p "Press any key to continue... or CTRL+C to exit (nothing has been installed)"
+echo ""
+echo ""
 
 # Set Hostname to ccf-vm
 newhostname='ccf-vm'
