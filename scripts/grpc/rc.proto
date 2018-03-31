@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package rc;
+
+// The greeting service definition.
+service RC {
+  rpc ExecuteRC (RCRequest) returns (RCReply) {}
+}
+
+// The request message containing the requested command and arguments.
+message RCRequest {
+  string service = 1;
+  string flag = 2;
+  string arg1 = 3;
+  string arg2 = 4;
+}
+
+// The response message containing any error messages
+message RCReply {
+  string message = 1;
+}
