@@ -1,0 +1,29 @@
+version: 1
+formatters:
+    standardFormatter:
+#        format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        format: '%(asctime)s [%(levelname)s]  %(funcName)s: %(message)s'
+    simpleFormatter:
+        format:   '%(message)s'
+handlers:
+    consoleHandler:
+        class: logging.StreamHandler
+        formatter: simpleFormatter
+        level: DEBUG
+        stream: ext://sys.stdout
+    fileHandler:
+        class: logging.FileHandler
+        formatter: standardFormatter
+        filename: "/var/log/ccfvm.log"
+
+loggers:
+    main_logger:
+        level: DEBUG
+        handlers: [consoleHandler]
+    flogger:
+        level: WARNING
+        handlers: [fileHandler]
+
+root:
+    level: DEBUG
+    handlers: [fileHandler]
