@@ -63,6 +63,7 @@ fi
 
 # Extract verified installation file and execute it
 tar xzf $buildccf_tgz -C $tempdir
+chmod +x $buildccf_sh
 $buildccf_sh
 
 # Remove all files associated with build
