@@ -57,3 +57,11 @@ done
 sudo chmod 755 "$automation_dir/rc.py" # Make this executable
 
 
+# Configure gRPC as a service named ccfvm_grpc_service
+ccfvm_grpc="W1VuaXRdCkRlc2NyaXB0aW9uPUNDRi1WTSBBdXRvbWF0aW9uIFNlcnZpY2UKQWZ0ZXI9bmV0d29yay50YXJnZXQKCltTZXJ2aWNlXQpVc2VyPW90dG9tYXRlCkdyb3VwPW90dG9tYXRlCkV4ZWNTdGFydD0vdXNyL2Jpbi9weXRob24gL3Zhci9saWIvYXV0b21hdGlvbi9yY19zZXJ2ZXIucHkKCltJbnN0YWxsXQpXYW50ZWRCeT1tdWx0aS11c2VyLnRhcmdldAo="
+echo $ccfvm_grpc |base64 -d | sudo tee /etc/systemd/system/ccfvm_grpc.service
+sudo chmod g+w /etc/systemd/system/ccfvm_grpc.service
+sudo systemctl daemon-reload
+sudo systemctl restart ccfvm_grpc.service
+sudo systemctl enable ccfvm_grpc.service
+
