@@ -77,6 +77,16 @@ echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-se
 sudo apt install elasticsearch oracle-java8-installer -y
 
 sudo sed -i 's/#network.host\: 192.168.0.1/network.host\: localhost/g' /etc/elasticsearch/elasticsearch.yml
+# Assign jvm.options to 1/2 the allocated memory at run time
+# Default Values
+# -Xms1g
+# -Xmx1g
+total_mem=$(free -h |awk '/Mem/{print substr($2, 1, length($2)-1)}'|cut -d'.' -f1)
+mem_size=$(($total_mem/2))
+echo "Setting jvm.options memory size to $mem_size GB. This should be half (always rounding down) of total memory on machine"
+sudo sed -i "s/-Xms1/-Xms$mem_size/g" /etc/elasticsearch/jvm.options
+sudo sed -i "s/-Xmx1/-Xmx$mem_size/g" /etc/elasticsearch/jvm.options
+
 sudo systemctl daemon-reload
 sudo systemctl restart elasticsearch
 sudo systemctl enable elasticsearch
