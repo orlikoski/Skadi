@@ -282,7 +282,7 @@ sudo mkdir -p "$automation_dir"
 # Download and install GRPC files
 for i in "${grpc_files[@]}"
 do
-    wget -O "/tmp/$i" "https://raw.githubusercontent.com/rough007/CCF-VM/$branch/scripts/grpc/$i"
+    wget -O "/tmp/$i" "https://raw.githubusercontent.com/rough007/CCF-VM/master/scripts/grpc/$i"
     sudo mv "/tmp/$i" "$automation_dir/"
     sudo chown root:root "$automation_dir/$i"
     sudo chmod 644 "$automation_dir/$i"
@@ -313,6 +313,7 @@ sudo chmod g+w /etc/systemd/system/ccfvm_grpc.service
 sudo systemctl daemon-reload
 sudo systemctl restart ccfvm_grpc.service
 sudo systemctl enable ccfvm_grpc.service
+echo ""
 
 clear
 echo "Installed Software Version Checks (Where it is supported)"
