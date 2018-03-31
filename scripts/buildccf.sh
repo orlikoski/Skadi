@@ -52,7 +52,8 @@ echo $pubkey |base64 -d > $buildccf_pem
 verify=$(openssl dgst -sha256 -verify $buildccf_pem -signature $buildccf_sig $buildccf_tgz)
 
 if [ "$verify" == "Verified OK" ]; then
-  echo "Installer verified, installation starting"
+  echo "OpenSSL digital signature verified; launching installation"
+  echo ""
   echo ""
 else
   echo "ERROR: Unable to verify installation file. Exiting"
@@ -62,6 +63,7 @@ fi
 
 # Extract verified installation file and execute it
 tar xzf $buildccf_tgz -C $tempdir
+chmod +x $buildccf_sh
 $buildccf_sh
 
 # Remove all files associated with build
