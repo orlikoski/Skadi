@@ -78,7 +78,11 @@ def add_dp_parsers(subparsers):
 
 ############ Base64 Functions ######################
 def myb64decode(encoded_string):
-    decoded_string = base64.b64decode(encoded_string).decode('utf-8').strip()
+    try:
+        decoded_string = base64.b64decode(encoded_string).decode('utf-8').strip()
+    except (base64.binascii.Error, UnicodeDecodeError) as e:
+        logger.warning("Encode parameters in base64")
+        exit(1)
     return decoded_string
 
 ############ Web Request Output Handling ######################
@@ -189,7 +193,7 @@ def os_service(args):
                 logger.warning("Failed to stop %s, exited with status code %d"%(service, cmd))
     elif command == "restart" or command == "start":
         for service in service_list_array:
-            logger.info("Starting / Restarting:".format(service))
+            logger.info("Starting / Restarting: {}".format(service))
             cmd = subprocess.call(["sudo", "/bin/systemctl", "restart", service])
             if cmd != 0:
                 logger.warning("Failed to start/restart %s, exited with status code %d"%(service, cmd))
