@@ -1,9 +1,47 @@
 [
   {
+    "_id": "IR_04-Appcompat-slash-Internet-History",
+    "_type": "dashboard",
+    "_source": {
+      "title": "Internet History",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"panelIndex\":\"2\",\"gridData\":{\"x\":0,\"y\":0,\"w\":12,\"h\":5,\"i\":\"2\"},\"id\":\"Internet-History\",\"type\":\"visualization\",\"version\":\"6.2.3\"}]",
+      "optionsJSON": "{\"darkTheme\":false,\"useMargins\":false}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[],\"query\":{\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true,\"default_field\":\"*\"}},\"language\":\"lucene\"},\"highlightAll\":true,\"version\":true}"
+      }
+    },
+    "_meta": {
+      "savedObjectVersion": 2
+    }
+  },
+  {
+    "_id": "445be4b0-3704-11e8-a971-414e54e085c1",
+    "_type": "dashboard",
+    "_source": {
+      "title": "Appcompat",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"panelIndex\":\"1\",\"gridData\":{\"x\":0,\"y\":0,\"w\":12,\"h\":4,\"i\":\"1\"},\"id\":\"Appcompat\",\"type\":\"visualization\",\"version\":\"6.2.3\"}]",
+      "optionsJSON": "{\"darkTheme\":false,\"useMargins\":false}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[],\"query\":{\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true,\"default_field\":\"*\"}},\"language\":\"lucene\"},\"highlightAll\":true,\"version\":true}"
+      }
+    },
+    "_meta": {
+      "savedObjectVersion": 2
+    }
+  },
+  {
     "_id": "IR_02-General-Information",
     "_type": "dashboard",
     "_source": {
-      "title": "IR_02 Windows System and User Information",
+      "title": "Windows System and User Information",
       "hits": 0,
       "description": "",
       "panelsJSON": "[{\"panelIndex\":\"2\",\"gridData\":{\"x\":5,\"y\":0,\"w\":7,\"h\":6,\"i\":\"2\"},\"id\":\"User-Information\",\"type\":\"visualization\",\"version\":\"6.2.3\"},{\"panelIndex\":\"3\",\"gridData\":{\"x\":0,\"y\":0,\"w\":5,\"h\":6,\"i\":\"3\"},\"version\":\"6.2.3\",\"type\":\"visualization\",\"id\":\"e306a2d0-35f6-11e8-bb5c-418087d19514\"}]",
@@ -19,75 +57,18 @@
     }
   },
   {
-    "_id": "IR_04-Appcompat-slash-Internet-History",
+    "_id": "IR_01-Parser-Details",
     "_type": "dashboard",
     "_source": {
-      "title": "IR_04 Appcompat / Internet History",
+      "title": "Parser Details",
       "hits": 0,
       "description": "",
-      "panelsJSON": "[{\"panelIndex\":\"1\",\"gridData\":{\"x\":0,\"y\":0,\"w\":12,\"h\":4,\"i\":\"1\"},\"id\":\"Appcompat\",\"type\":\"visualization\",\"version\":\"6.2.3\"},{\"panelIndex\":\"2\",\"gridData\":{\"x\":0,\"y\":4,\"w\":12,\"h\":5,\"i\":\"2\"},\"id\":\"Internet-History\",\"type\":\"visualization\",\"version\":\"6.2.3\"}]",
+      "panelsJSON": "[{\"panelIndex\":\"1\",\"gridData\":{\"x\":0,\"y\":5,\"w\":12,\"h\":3,\"i\":\"1\"},\"id\":\"Parser-Results\",\"type\":\"visualization\",\"version\":\"6.2.3\"},{\"panelIndex\":\"2\",\"gridData\":{\"x\":0,\"y\":0,\"w\":12,\"h\":5,\"i\":\"2\"},\"version\":\"6.2.3\",\"type\":\"visualization\",\"id\":\"3184b570-3604-11e8-abe3-892c2e94b163\"}]",
       "optionsJSON": "{\"darkTheme\":false,\"useMargins\":false}",
       "version": 1,
       "timeRestore": false,
       "kibanaSavedObjectMeta": {
-        "searchSourceJSON": "{\"filter\":[],\"query\":{\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true,\"default_field\":\"*\"}},\"language\":\"lucene\"},\"highlightAll\":true,\"version\":true}"
-      }
-    },
-    "_meta": {
-      "savedObjectVersion": 2
-    }
-  },
-  {
-    "_id": "IR_03-Ant-Virus-slash-FIrewall",
-    "_type": "dashboard",
-    "_source": {
-      "title": "IR_03 Ant-Virus / FIrewall",
-      "hits": 0,
-      "description": "",
-      "panelsJSON": "[{\"panelIndex\":\"1\",\"gridData\":{\"x\":0,\"y\":0,\"w\":12,\"h\":4,\"i\":\"1\"},\"id\":\"Anti-Virus\",\"type\":\"visualization\",\"version\":\"6.2.3\"},{\"panelIndex\":\"2\",\"gridData\":{\"x\":0,\"y\":4,\"w\":12,\"h\":4,\"i\":\"2\"},\"id\":\"Firewall\",\"type\":\"visualization\",\"version\":\"6.2.3\"}]",
-      "optionsJSON": "{\"darkTheme\":false,\"useMargins\":false}",
-      "version": 1,
-      "timeRestore": false,
-      "kibanaSavedObjectMeta": {
-        "searchSourceJSON": "{\"filter\":[],\"query\":{\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"query\":\"*\",\"default_field\":\"*\"}},\"language\":\"lucene\"},\"highlightAll\":true,\"version\":true}"
-      }
-    },
-    "_meta": {
-      "savedObjectVersion": 2
-    }
-  },
-  {
-    "_id": "c9570d00-3602-11e8-abe3-892c2e94b163",
-    "_type": "dashboard",
-    "_source": {
-      "title": "IR_05 Linux",
-      "hits": 0,
-      "description": "",
-      "panelsJSON": "[{\"panelIndex\":\"1\",\"gridData\":{\"x\":0,\"y\":0,\"w\":12,\"h\":5,\"i\":\"1\"},\"id\":\"Linux\",\"type\":\"visualization\",\"version\":\"6.2.3\"}]",
-      "optionsJSON": "{\"darkTheme\":false,\"useMargins\":false}",
-      "version": 1,
-      "timeRestore": false,
-      "kibanaSavedObjectMeta": {
-        "searchSourceJSON": "{\"filter\":[],\"query\":{\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true,\"default_field\":\"*\"}},\"language\":\"lucene\"},\"highlightAll\":true,\"version\":true}"
-      }
-    },
-    "_meta": {
-      "savedObjectVersion": 2
-    }
-  },
-  {
-    "_id": "IR_05-Linux-slash-Mac",
-    "_type": "dashboard",
-    "_source": {
-      "title": "IR_06 Mac",
-      "hits": 0,
-      "description": "",
-      "panelsJSON": "[{\"panelIndex\":\"2\",\"gridData\":{\"x\":0,\"y\":0,\"w\":12,\"h\":4,\"i\":\"2\"},\"id\":\"MAC\",\"type\":\"visualization\",\"version\":\"6.2.3\"}]",
-      "optionsJSON": "{\"darkTheme\":false,\"useMargins\":false}",
-      "version": 1,
-      "timeRestore": false,
-      "kibanaSavedObjectMeta": {
-        "searchSourceJSON": "{\"filter\":[],\"query\":{\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true,\"default_field\":\"*\"}},\"language\":\"lucene\"},\"highlightAll\":true,\"version\":true}"
+        "searchSourceJSON": "{\"filter\":[],\"query\":{\"language\":\"lucene\",\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"default_field\":\"*\",\"query\":\"*\"}}},\"highlightAll\":true,\"version\":true}"
       }
     },
     "_meta": {
@@ -98,7 +79,7 @@
     "_id": "4a0196a0-3603-11e8-abe3-892c2e94b163",
     "_type": "dashboard",
     "_source": {
-      "title": "IR_08 Persistence",
+      "title": "Persistence",
       "hits": 0,
       "description": "",
       "panelsJSON": "[{\"panelIndex\":\"1\",\"gridData\":{\"x\":0,\"y\":0,\"w\":12,\"h\":5,\"i\":\"1\"},\"id\":\"Persistence\",\"type\":\"visualization\",\"version\":\"6.2.3\"}]",
@@ -114,10 +95,48 @@
     }
   },
   {
+    "_id": "76162600-3704-11e8-a971-414e54e085c1",
+    "_type": "dashboard",
+    "_source": {
+      "title": "Ant-Virus",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"panelIndex\":\"1\",\"gridData\":{\"x\":0,\"y\":0,\"w\":12,\"h\":4,\"i\":\"1\"},\"id\":\"Anti-Virus\",\"type\":\"visualization\",\"version\":\"6.2.3\"}]",
+      "optionsJSON": "{\"darkTheme\":false,\"useMargins\":false}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[],\"query\":{\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"query\":\"*\",\"default_field\":\"*\"}},\"language\":\"lucene\"},\"highlightAll\":true,\"version\":true}"
+      }
+    },
+    "_meta": {
+      "savedObjectVersion": 2
+    }
+  },
+  {
+    "_id": "c9570d00-3602-11e8-abe3-892c2e94b163",
+    "_type": "dashboard",
+    "_source": {
+      "title": "Linux Items",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"panelIndex\":\"1\",\"gridData\":{\"x\":0,\"y\":0,\"w\":12,\"h\":5,\"i\":\"1\"},\"id\":\"Linux\",\"type\":\"visualization\",\"version\":\"6.2.3\"}]",
+      "optionsJSON": "{\"darkTheme\":false,\"useMargins\":false}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[],\"query\":{\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true,\"default_field\":\"*\"}},\"language\":\"lucene\"},\"highlightAll\":true,\"version\":true}"
+      }
+    },
+    "_meta": {
+      "savedObjectVersion": 2
+    }
+  },
+  {
     "_id": "IR_06-Persistence-slash-Prefetch",
     "_type": "dashboard",
     "_source": {
-      "title": "IR_07 Prefetch",
+      "title": "Prefetch",
       "hits": 0,
       "description": "",
       "panelsJSON": "[{\"panelIndex\":\"3\",\"gridData\":{\"x\":0,\"y\":0,\"w\":12,\"h\":6,\"i\":\"3\"},\"id\":\"Prefetch\",\"type\":\"visualization\",\"version\":\"6.2.3\"}]",
@@ -133,10 +152,29 @@
     }
   },
   {
+    "_id": "IR_03-Ant-Virus-slash-FIrewall",
+    "_type": "dashboard",
+    "_source": {
+      "title": "FIrewall",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"panelIndex\":\"2\",\"gridData\":{\"x\":0,\"y\":0,\"w\":12,\"h\":4,\"i\":\"2\"},\"id\":\"Firewall\",\"type\":\"visualization\",\"version\":\"6.2.3\"}]",
+      "optionsJSON": "{\"darkTheme\":false,\"useMargins\":false}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[],\"query\":{\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"query\":\"*\",\"default_field\":\"*\"}},\"language\":\"lucene\"},\"highlightAll\":true,\"version\":true}"
+      }
+    },
+    "_meta": {
+      "savedObjectVersion": 2
+    }
+  },
+  {
     "_id": "f7a91780-35ca-11e8-b33b-ff969cd97ce8",
     "_type": "dashboard",
     "_source": {
-      "title": "IR_09 Torrents",
+      "title": "Torrents",
       "hits": 0,
       "description": "",
       "panelsJSON": "[{\"panelIndex\":\"1\",\"gridData\":{\"x\":0,\"y\":0,\"w\":8,\"h\":5,\"i\":\"1\"},\"version\":\"6.2.3\",\"type\":\"visualization\",\"id\":\"dfa77640-35ca-11e8-b33b-ff969cd97ce8\"}]",
@@ -152,18 +190,18 @@
     }
   },
   {
-    "_id": "IR_01-Parser-Details",
+    "_id": "IR_05-Linux-slash-Mac",
     "_type": "dashboard",
     "_source": {
-      "title": "IR_01 Parser Details",
+      "title": "Mac Items",
       "hits": 0,
       "description": "",
-      "panelsJSON": "[{\"panelIndex\":\"1\",\"gridData\":{\"x\":0,\"y\":5,\"w\":12,\"h\":3,\"i\":\"1\"},\"id\":\"Parser-Results\",\"type\":\"visualization\",\"version\":\"6.2.3\"},{\"panelIndex\":\"2\",\"gridData\":{\"x\":0,\"y\":0,\"w\":12,\"h\":5,\"i\":\"2\"},\"version\":\"6.2.3\",\"type\":\"visualization\",\"id\":\"3184b570-3604-11e8-abe3-892c2e94b163\"}]",
+      "panelsJSON": "[{\"panelIndex\":\"2\",\"gridData\":{\"x\":0,\"y\":0,\"w\":12,\"h\":4,\"i\":\"2\"},\"id\":\"MAC\",\"type\":\"visualization\",\"version\":\"6.2.3\"}]",
       "optionsJSON": "{\"darkTheme\":false,\"useMargins\":false}",
       "version": 1,
       "timeRestore": false,
       "kibanaSavedObjectMeta": {
-        "searchSourceJSON": "{\"filter\":[],\"query\":{\"language\":\"lucene\",\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"default_field\":\"*\",\"query\":\"*\"}}},\"highlightAll\":true,\"version\":true}"
+        "searchSourceJSON": "{\"filter\":[],\"query\":{\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true,\"default_field\":\"*\"}},\"language\":\"lucene\"},\"highlightAll\":true,\"version\":true}"
       }
     },
     "_meta": {
