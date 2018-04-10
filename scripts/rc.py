@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import  argparse, base64,  os, requests, subprocess, sys, logging, logging.config, boto3, yaml
 
-logPath = os.path.join('/var/log/', 'ccfvm.log')
+logPath = os.path.join('/var/log/', 'skadi_automation.log')
 logdir = os.path.join('/var/log/')
 logger = logging.getLogger('main_logger')
 
