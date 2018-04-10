@@ -239,8 +239,8 @@ def os_main(args):
 def process_cdqr(cdqr,args):
     cdqr_loc = "/usr/local/bin/cdqr.py"
     parsed_args = myb64decode(args[0])
-    logger.info("Executing CDQR command: cdqr {}".format(parsed_args))
-    cmd = subprocess.call([cdqr_loc, parsed_args])
+    logger.info("Executing CDQR command: "+cdqr_loc+" {}".format(parsed_args))
+    cmd = subprocess.Popen(cdqr_loc +" "+ parsed_args)
     if cmd != 0:
         logger.warning("Failed process CDQR, exited with status code %d"%cmd)
 
