@@ -81,18 +81,18 @@ def add_dp_parsers(subparsers):
                         nargs=1,
                         metavar="cdqr_args",
                         help="Execute CDQR with the base64 encoded arguments provided")
-    group.add_argument('--mv_local',
-                        nargs=2,
-                        metavar=("src_local","dest_local"),
-                        help="Move data on locally mounted partitions")
-    group.add_argument('--mv_to_aws',
-                    nargs='*',
-                    metavar=("src","bucket","prefix"),
-                    help="Transfers data between AWS and local mounted partitions")
-    group.add_argument('--mv_from_aws',
-                    nargs='*',
-                    metavar=("dest","bucket","prefix"),
-                    help="Transfers data between AWS and local mounted partitions")
+    # group.add_argument('--mv_local',
+    #                     nargs=2,
+    #                     metavar=("src_local","dest_local"),
+    #                     help="Move data on locally mounted partitions")
+    # group.add_argument('--mv_to_aws',
+    #                 nargs='*',
+    #                 metavar=("src","bucket","prefix"),
+    #                 help="Transfers data between AWS and local mounted partitions")
+    # group.add_argument('--mv_from_aws',
+    #                 nargs='*',
+    #                 metavar=("dest","bucket","prefix"),
+    #                 help="Transfers data between AWS and local mounted partitions")
 
 
 ############ Base64 Functions ######################
@@ -317,7 +317,7 @@ def dp_main(args):
  
 # Main Program
 def main():
-    version = "CCF-VM Automation Engine 0.0.1"
+    version = "CCF-VM Automation Engine 1.0.0"
     logger.debug(version)
 
     # Build Parser Options
