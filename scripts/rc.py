@@ -20,7 +20,7 @@ if not os.path.isfile(logPath):
         with open(logPath) as file:
             pass
     except IOError as e:
-        print "ERROR: Unable to verify '"+logPath+"'' exists. Verify path exists and permission settings. Exiting"
+        print("ERROR: Unable to verify '"+logPath+"'' exists. Verify path exists and permission settings. Exiting")
         exit(1)
 
 with  f:
