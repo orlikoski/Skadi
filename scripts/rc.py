@@ -325,7 +325,7 @@ def main():
     subparsers = parser.add_subparsers(help='Automation Options', dest='auto_type')
     add_es_parsers(subparsers)
     add_ts_parsers(subparsers)
-    add_os_parsers(subparsers)
+#    add_os_parsers(subparsers)
     add_dp_parsers(subparsers)
     parser.add_argument('-v','--version',
                         action='version',
@@ -337,8 +337,8 @@ def main():
         es_main(args)
     elif args.auto_type == 'ts':
         ts_main(args)
-    elif args.auto_type == 'os':
-        os_main(args)
+    # elif args.auto_type == 'os':
+    #     os_main(args)
     elif args.auto_type == 'dp':
         dp_main(args)
     else:
