@@ -81,10 +81,10 @@ def add_dp_parsers(subparsers):
                         nargs=1,
                         metavar="cdqr_args",
                         help="Execute CDQR with the base64 encoded arguments provided")
-    # group.add_argument('--mv_local',
-    #                     nargs=2,
-    #                     metavar=("src_local","dest_local"),
-    #                     help="Move data on locally mounted partitions")
+    group.add_argument('--mv_local',
+                        nargs=2,
+                        metavar=("src_local","dest_local"),
+                        help="Move data on locally mounted partitions with base64 encoded source and destiation")
     # group.add_argument('--mv_to_aws',
     #                 nargs='*',
     #                 metavar=("src","bucket","prefix"),
@@ -125,7 +125,7 @@ def es_list_index(server):
     web_results(requests.get(url))
 
 def es_main(args):
-    print("Executing ElasticSearch command")
+    print("Executing ElasticSearch command: {}".format(args))
     es_server='localhost'
     # Delete an ElasticSearch index by name
     if args.delete:
@@ -157,7 +157,7 @@ def delete_ts(ts,enc_name):
 
 def ts_main(args):
     ts_exec = "/usr/local/bin/tsctl"
-    logger.debug("Executing TimeSketch command")
+    logger.debug("Executing TimeSketch command: {}".format(args))
     # Create TimeSketch user with the provided base64 encoded username and password
     if args.useradd:
         logger.info("Attempting to create TimeSketch user")
@@ -222,7 +222,7 @@ def os_service(args):
         exit(1)
 
 def os_main(args):
-    logger.debug("Executing Operating System command")
+    logger.debug("Executing Operating System command: {}".format(args))
     # Create TimeSketch user with the provided base64 encoded username and password
     if args.server:
         logger.debug("Attempting to stop or restart the server")
@@ -345,7 +345,7 @@ def main():
         logger.debug("ERROR: Invalid command type. Exiting")
         exit(1)
 
-    logger.debug("SUCCESS: CCF-VM Automation Engine Completed")
+    logger.debug("CCF-VM Automation Engine Completed")
 
 if __name__ == "__main__":
     main()
