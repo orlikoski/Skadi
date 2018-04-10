@@ -4,7 +4,7 @@ from __future__ import print_function
 import grpc, rc_pb2, rc_pb2_grpc, sys, argparse
 
 
-def parse_input(commands):
+def parse_input(stub, commands):
     count = len(commands)
     if count == 1:
         response = stub.ExecuteRC(rc_pb2.RCRequest(service=commands[0]))
@@ -42,7 +42,7 @@ def main():
 
     response = ""
     if args.commands:
-        response = parse_input(args.commands)
+        response = parse_input(stub, args.commands)
     else:
         print("WARNING: No commands provided. Exiting")
 
