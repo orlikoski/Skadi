@@ -1,14 +1,29 @@
 #!/usr/bin/python3
 import  argparse, base64,  os, requests, subprocess, sys, logging, logging.config, boto3, yaml
 
+logPath = os.path.join('/var/log/', 'ccfvm.log')
+logdir = os.path.join('/var/log/')
+logger = logging.getLogger('main_logger')
+
 logConfig = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'logging.yaml')
-with  open(logConfig) as f:
+try:
+    f = open(logConfig)
+except:
+    print("ERROR: Could not find logging.yaml file. Exiting")
+    exit(1)
+
+if not os.path.isfile(logPath):
+    print("WARNING: '"+logPath+"'' doesn't exist. Attempting to create it now.")
+    os.makedirs(logdir)
+    if not os.path.isfile(logPath):
+        print("ERROR: Unable to verify '"+logPath+"'' exists. Exiting")
+        exit(1)
+
+with  f:
     c = yaml.load(f)
     logging.config.dictConfig(c)
 
-logPath = os.path.join('/var/log/', 'ccfvm.log')
 
-logger = logging.getLogger('main_logger')
 
 # Add all ElasticSearch Parser Options
 def add_es_parsers(subparsers):
