@@ -239,7 +239,7 @@ def os_main(args):
 def process_cdqr(cdqr,args):
     cdqr_loc = "/usr/local/bin/cdqr.py"
     parsed_args = myb64decode(args[0])
-    unapproved_chars = set('`~!#$&*()\t{[|\\;\'\"<>?\n=')
+    unapproved_chars = set('`~!#$&*()\t{[|\\;\'\"<>?')
     if any((char in unapproved_chars) for char in "{}".format(parsed_args)):
         logger.warning("ERROR!! Unapproved chars in CDQR command string. Exiting")
         exit(1)
