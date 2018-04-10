@@ -24,7 +24,7 @@ def main():
     version = "Skadi Automation Engine Version: 1.0.0"
     parser = argparse.ArgumentParser(description=version)
     parser.add_argument('server',nargs=1, help='Routable Domain Name or IP address of Skadi server')
-    parser.add_argument('commands', type=str, nargs='+')
+    parser.add_argument('--commands', required=True, type=str, nargs='+')
     parser.add_argument('-v','--version', action='version', version=version)
     args=parser.parse_args()
 
