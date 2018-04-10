@@ -152,7 +152,7 @@ def delete_ts(ts,enc_name):
     ts_name = myb64decode(enc_name[0])
     logger.info("Deleting TimeSketch Index named: {}".format(ts_name))
     margs = "purge -i " + ts_name
-    cmd = subprocess.Popen([ts, "purge", "-i", ts_name], stdin=PIPE)
+    cmd = subprocess.Popen([ts, "purge", "-i", ts_name], stdin=subprocess.PIPE)
     cmd.communicate(input='y')
 
 def ts_main(args):
