@@ -246,7 +246,7 @@ def process_cdqr(cdqr,args):
         logger.info("ERROR!! Unapproved chars in CDQR command string. Exiting")
         exit(1)
 
-    command = cdqr_loc+" "+parse_args
+    command = cdqr_loc+" "+parsed_args
     cmd = os.system(command)
     if cmd != 0:
         logger.warning("Failed process CDQR, exited with status code %d"%cmd)
