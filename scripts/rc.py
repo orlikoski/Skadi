@@ -237,11 +237,17 @@ def os_main(args):
 
 ############ Data Processing Functions ######################
 def process_cdqr(cdqr,args):
-    cdqr_loc = "/usr/local/bin/cdqr.py"
-    parsed_args = myb64decode(args[0])
     logger.info("Executing CDQR command: "+cdqr_loc+" {}".format(parsed_args))
-    command = cdqr_loc+" {}".format(parsed_args)
-    cmd = subprocess.Popen('""' + command + '""')
+    cdqr_loc = "/usr/local/bin/cdqr.py"
+    # Checking for invalid characters
+    parsed_args = myb64decode(args[0])
+    unapproved_chars = set(';&|<>')
+    if any((char in unapproved_chars) for char in parsed_args):
+        logger.info("ERROR!! Unapproved chars in CDQR command string. Exiting")
+        exit(1)
+
+    command = cdqr_loc+" "+parse_args
+    cmd = os.system(command)
     if cmd != 0:
         logger.warning("Failed process CDQR, exited with status code %d"%cmd)
 
