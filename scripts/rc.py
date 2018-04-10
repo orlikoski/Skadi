@@ -14,9 +14,13 @@ except:
 
 if not os.path.isfile(logPath):
     print("WARNING: '"+logPath+"'' doesn't exist. Attempting to create it now.")
-    os.makedirs(logdir)
-    if not os.path.isfile(logPath):
-        print("ERROR: Unable to verify '"+logPath+"'' exists. Exiting")
+    if not os.path.exists(logdir):
+        os.makedirs(logdir)
+    try:
+        with open(logPath) as file:
+            pass
+    except IOError as e:
+        print "ERROR: Unable to verify '"+logPath+"'' exists. Verify path exists and permission settings. Exiting"
         exit(1)
 
 with  f:
