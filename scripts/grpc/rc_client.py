@@ -23,7 +23,7 @@ def parse_input(commands):
 def main():
     version = "Skadi Automation Engine Version: 1.0.0"
     parser = argparse.ArgumentParser(description=version)
-    parser.add_argument('-s','--server',nargs=1,required=True,help='Routable Domain Name or IP address of Skadi server')
+    parser.add_argument('server',nargs=1,required=True,help='Routable Domain Name or IP address of Skadi server')
     parser.add_argument('commands', type=str, nargs='+')
     parser.add_argument('-v','--version', action='version', version=version)
     args=parser.parse_args()
@@ -34,9 +34,9 @@ def main():
         print("ERROR!! Unapproved chars in string. Exiting")
         exit(1)
 
-    
-    channel = grpc.insecure_channel('localhost:10101')
-    stub = rc_pb2_grpc.RCStub(channel)
+    if args.server:
+        channel = grpc.insecure_channel(args.server+':10101')
+        stub = rc_pb2_grpc.RCStub(channel)
 
     response = ""
     if args.commands:
