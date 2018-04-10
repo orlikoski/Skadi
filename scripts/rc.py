@@ -107,7 +107,7 @@ def myb64decode(encoded_string):
 ############ Web Request Output Handling ######################
 def web_results(r):
     logger.debug(r)
-    logger.debug(r.text)
+    logger.info(r.text)
 
 ############ ElasticSearch Functions ######################
 # Delete an ElasticSearch index by name
