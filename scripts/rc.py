@@ -238,9 +238,9 @@ def os_main(args):
 ############ Data Processing Functions ######################
 def process_cdqr(cdqr,args):
     cdqr_loc = "/usr/local/bin/cdqr.py"
+    parsed_args = myb64decode(args[0])
     logger.info("Executing CDQR command: "+cdqr_loc+" {}".format(parsed_args))
     # Checking for invalid characters
-    parsed_args = myb64decode(args[0])
     unapproved_chars = set(';&|<>')
     if any((char in unapproved_chars) for char in parsed_args):
         logger.info("ERROR!! Unapproved chars in CDQR command string. Exiting")
