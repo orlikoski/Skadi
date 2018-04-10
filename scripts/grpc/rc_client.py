@@ -8,7 +8,7 @@ def run():
     channel = grpc.insecure_channel('localhost:10101')
     stub = rc_pb2_grpc.RCStub(channel)
 
-    unapproved_chars = set(';&|')
+    unapproved_chars = set('`~!#$&*()\t{[|\\;\'\"<>?\n=')
     strtest = ','.join(sys.argv)
     if any((char in unapproved_chars) for char in strtest):
         print("ERROR!! Unapproved chars in string. Exiting")
