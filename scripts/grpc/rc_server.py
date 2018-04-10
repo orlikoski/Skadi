@@ -1,6 +1,6 @@
 #!/usr/bin/python
 from concurrent import futures
-import time, grpc, rc_pb2, rc_pb2_grpc, subprocess, os
+import time, grpc, rc_pb2, rc_pb2_grpc, subprocess, os, argparse
 
 rcpy = "/var/lib/automation/rc.py"
 
@@ -8,7 +8,6 @@ _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 
 
 class RC(rc_pb2_grpc.RCServicer):
-
     def ExecuteRC(self, request, context):
         input_args = [request.service]
         if request.flag:
@@ -29,7 +28,8 @@ def runcommand(command,input_args):
     return cmdout.decode("utf-8")
 
 
-def serve():
+def main():
+    version = "Skadi Automation Engine Version: 1.0.0"
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     rc_pb2_grpc.add_RCServicer_to_server(RC(), server)
     server.add_insecure_port('[::]:10101')
@@ -42,5 +42,5 @@ def serve():
 
 
 if __name__ == '__main__':
-    serve()
+    main()
 

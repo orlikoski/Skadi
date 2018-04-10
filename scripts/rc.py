@@ -325,11 +325,11 @@ def dp_main(args):
  
 # Main Program
 def main():
-    version = "CCF-VM Automation Engine 1.0.0"
+    version = "Skadi Automation Engine 1.0.0"
     logger.debug(version)
 
     # Build Parser Options
-    parser = argparse.ArgumentParser(description='CCF-VM Automation Engine')
+    parser = argparse.ArgumentParser(description='Skadi Automation Engine')
     subparsers = parser.add_subparsers(help='Automation Options', dest='auto_type')
     add_es_parsers(subparsers)
     add_ts_parsers(subparsers)
@@ -353,7 +353,7 @@ def main():
         logger.debug("ERROR: Invalid command type. Exiting")
         exit(1)
 
-    logger.debug("CCF-VM Automation Engine Completed")
+    logger.debug("Skadi Automation Engine Completed")
 
 if __name__ == "__main__":
     main()

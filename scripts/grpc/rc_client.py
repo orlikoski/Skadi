@@ -1,12 +1,15 @@
 #!/usr/bin/python
 """The Python implementation of the GRPC rc.RC client."""
 from __future__ import print_function
-import grpc, rc_pb2, rc_pb2_grpc, sys
+import grpc, rc_pb2, rc_pb2_grpc, sys, argparse
 
 
-def run():                         
-    channel = grpc.insecure_channel('localhost:10101')
-    stub = rc_pb2_grpc.RCStub(channel)
+def main():
+    version = "Skadi Automation Engine Version: 1.0.0"
+    parser = argparse.ArgumentParser(description='Skadi Automation Engine')
+    parser.add_argument('-s','--server',nargs=1,help='Routable Domain Name or IP address of Skadi server')
+    parser.add_argument('-v','--version', action='version', version=version)
+    args=parser.parse_args()
 
     unapproved_chars = set('`~!#$&*()\t{[|\\;\'\"<>?')
     strtest = ','.join(sys.argv)
@@ -15,6 +18,9 @@ def run():
         exit(1)
 
     count = len(sys.argv)
+    channel = grpc.insecure_channel('localhost:10101')
+    stub = rc_pb2_grpc.RCStub(channel)
+
 
     print("Attempting to send command to server\n")
     response = ""
@@ -33,5 +39,5 @@ def run():
 
     print("COMPLETE")
 if __name__ == '__main__':
-    run()
+    main()
 
