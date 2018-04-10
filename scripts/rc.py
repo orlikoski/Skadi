@@ -241,7 +241,7 @@ def process_cdqr(cdqr,args):
     parsed_args = myb64decode(args[0])
     logger.info("Executing CDQR command: "+cdqr_loc+" {}".format(parsed_args))
     command = cdqr_loc+" {}".format(parsed_args)
-    cmd = subprocess.Popen(command)
+    cmd = subprocess.Popen('""' + command + '""')
     if cmd != 0:
         logger.warning("Failed process CDQR, exited with status code %d"%cmd)
 
