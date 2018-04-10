@@ -106,37 +106,37 @@ def myb64decode(encoded_string):
 
 ############ Web Request Output Handling ######################
 def web_results(r):
-    print(r)
-    print(r.text)
+    logger.debug(r)
+    logger.debug(r.text)
 
 ############ ElasticSearch Functions ######################
 # Delete an ElasticSearch index by name
 def es_del_index(server, indexname):
     decoded_index = myb64decode(indexname[0])
-    logger.info("Deleting ElasticSearch index: " + decoded_index + " from " + server)
+    logger.debug("Deleting ElasticSearch index: " + decoded_index + " from " + server)
     url = "http://" + server + ":9200/" + decoded_index + "?pretty"
     web_results(requests.delete(url))
 
 # List all ElasticSearch indices
 def es_list_index(server):
-    print("List all ElasticSearch indices from " + server)
+    logger.debug("List all ElasticSearch indices from " + server)
     #curl -XGET 'localhost:9200/_cat/indices?v&pretty'
     url = "http://" + server + ":9200/_cat/indices?v&pretty"
     web_results(requests.get(url))
 
 def es_main(args):
-    print("Executing ElasticSearch command: {}".format(args))
+    logger.debug("Executing ElasticSearch command: {}".format(args))
     es_server='localhost'
     # Delete an ElasticSearch index by name
     if args.delete:
-        print("Attempting to delete an index")
+        logger.info("Attempting to delete an index")
         es_del_index(es_server, args.delete)
     elif args.list:
-        print("Attempting to list all indices")
+        logger.info("Attempting to list all indices")
         es_list_index(es_server)
     else:
-        print("Arguments passed: ", args)
-        print("ERROR: Unable to parse ElasticSearch command. Exiting")
+        logger.warning("Arguments passed: ", args)
+        logger.warning("ERROR: Unable to parse ElasticSearch command. Exiting")
         exit(1)
 
 ############ TimeSketch Functions ######################
@@ -290,7 +290,7 @@ def mv_from_aws(args):
         return
     for obj in obj_response['Contents']:
         destination = str(dest + '/' + obj[unicode('Key')])
-        print(destination)
+        logger.debug(destination)
         #Assume key is file with extension
         s3_client.download_file(Bucket = bucket, Key = obj[unicode('Key')], Filename = destination)
     logger.info("Successfully retreived files from %s"%bucket)
