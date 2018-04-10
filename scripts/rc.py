@@ -153,7 +153,7 @@ def delete_ts(ts,enc_name):
     logger.info("Deleting TimeSketch Index named: {}".format(ts_name))
     margs = "purge -i " + ts_name
     cmd = subprocess.Popen([ts, "purge", "-i", ts_name], stdin=subprocess.PIPE)
-    cmd.communicate(input='y')
+    cmd.communicate(input=b'y')
 
 def ts_main(args):
     ts_exec = "/usr/local/bin/tsctl"
@@ -237,9 +237,10 @@ def os_main(args):
 
 ############ Data Processing Functions ######################
 def process_cdqr(cdqr,args):
+    cdqr_loc = "/usr/local/bin/cdqr.py"
     parsed_args = myb64decode(args[0])
     logger.info("Executing CDQR command: cdqr {}".format(parsed_args))
-    cmd = subprocess.call(["cdqr", parsed_args])
+    cmd = subprocess.call([cdqr_loc, parsed_args])
     if cmd != 0:
         logger.warning("Failed process CDQR, exited with status code %d"%cmd)
 
@@ -251,54 +252,54 @@ def mv_local(args):
     if cmd != 0:
         logger.warning("Failed to move file, exited with status code %d"%cmd)
 
-def mv_to_aws(args):
-    if len(args) < 2:
-        logger.warning("Must provide at least 2 arguments!")
-        return
-    src = myb64decode(args[0])
-    bucket = myb64decode(args[1])
-    s3_client = boto3.client(service_name='s3')
-    if os.path.dirname(src):
-        #src is local dir
-        for (dirpath, dirnames, filenames) in os.walk(src):
-            for filename in files:
-                local_path = os.path.join(src, filename)
-                s3_client.upload_file(local_path, bucket, filename)
-        logger.info("Successfully moved files from %s"%src)
-    elif os.path.isfile(src):
-        #src is local file
-        s3_client.upload_file(src, bucket, os.basename(src))
-        logger.info("Successfully moved %s"%os.basename(src))
-    else: 
-        logger.info("Source provided is neither a file nor directory %s"%os.basename(src))
+# def mv_to_aws(args):
+#     if len(args) < 2:
+#         logger.warning("Must provide at least 2 arguments!")
+#         return
+#     src = myb64decode(args[0])
+#     bucket = myb64decode(args[1])
+#     s3_client = boto3.client(service_name='s3')
+#     if os.path.dirname(src):
+#         #src is local dir
+#         for (dirpath, dirnames, filenames) in os.walk(src):
+#             for filename in files:
+#                 local_path = os.path.join(src, filename)
+#                 s3_client.upload_file(local_path, bucket, filename)
+#         logger.info("Successfully moved files from %s"%src)
+#     elif os.path.isfile(src):
+#         #src is local file
+#         s3_client.upload_file(src, bucket, os.basename(src))
+#         logger.info("Successfully moved %s"%os.basename(src))
+#     else: 
+#         logger.info("Source provided is neither a file nor directory %s"%os.basename(src))
 
-def mv_from_aws(args):
-    if len(args) < 2:
-        logger.warning("Must provide at least 2 arguments!")
-        return
-    dest = myb64decode(args[0])
-    bucket = myb64decode(args[1])
-    #src is aws bucket
-    #dest is local dir
-    prefix = ""
-    if len(args) > 2:
-        #allow for prefix use
-        prefix = myb64decode(args[2])
-    obj_response = s3_client.list_objects(Bucket = bucket, Prefix = prefix)
-    if not 'Contents' in obj_response:
-        logger.info("There are no files in bucket %s"%bucket)
-        return
-    for obj in obj_response['Contents']:
-        destination = str(dest + '/' + obj[unicode('Key')])
-        logger.debug(destination)
-        #Assume key is file with extension
-        s3_client.download_file(Bucket = bucket, Key = obj[unicode('Key')], Filename = destination)
-    logger.info("Successfully retreived files from %s"%bucket)
+# def mv_from_aws(args):
+#     if len(args) < 2:
+#         logger.warning("Must provide at least 2 arguments!")
+#         return
+#     dest = myb64decode(args[0])
+#     bucket = myb64decode(args[1])
+#     #src is aws bucket
+#     #dest is local dir
+#     prefix = ""
+#     if len(args) > 2:
+#         #allow for prefix use
+#         prefix = myb64decode(args[2])
+#     obj_response = s3_client.list_objects(Bucket = bucket, Prefix = prefix)
+#     if not 'Contents' in obj_response:
+#         logger.info("There are no files in bucket %s"%bucket)
+#         return
+#     for obj in obj_response['Contents']:
+#         destination = str(dest + '/' + obj[unicode('Key')])
+#         logger.debug(destination)
+#         #Assume key is file with extension
+#         s3_client.download_file(Bucket = bucket, Key = obj[unicode('Key')], Filename = destination)
+#     logger.info("Successfully retreived files from %s"%bucket)
 
 def dp_main(args):
     cdqr_exec = "/usr/local/bin/cdqr.py"
     logger.debug("Data Processing: {}".format(args))
-    if args.cdqr:
+    if args.cdqr: 
         logger.debug("Attempting to process data with CDQR: {}".format(args.cdqr))
         process_cdqr(cdqr_exec, args.cdqr)
     elif args.mv_local:
