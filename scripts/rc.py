@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 import  argparse, base64,  os, requests, subprocess, sys, logging, logging.config, boto3, yaml
 
-logPath = os.path.join('/var/log/', 'skadi_automation.log')
-logdir = os.path.join('/var/log/')
+logPath = os.path.join('/var/log/automation', 'skadi_automation.log')
+logdir = os.path.join('/var/log/automation')
 logger = logging.getLogger('main_logger')
 
 logConfig = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'logging.yaml')
