@@ -35,8 +35,10 @@ def main():
         exit(1)
 
     if args.server:
-        channel = grpc.insecure_channel(args.server+':10101')
+        channel = grpc.insecure_channel(args.server[0]+':10101')
         stub = rc_pb2_grpc.RCStub(channel)
+    else:
+        print("ERROR!! No server information provided. Exiting")
 
     response = ""
     if args.commands:
