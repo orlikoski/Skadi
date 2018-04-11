@@ -91,11 +91,18 @@ sudo systemctl enable grpc_automation.service
 # Open port in UFW firewall
 sudo ufw allow 10101
 
+rc_client_usage = "rc_client.py <server IP address or routable domain name> <commands to send to rc_server.py>"
 echo ""
 echo ""
 echo "Installation complete"
+echo "  - Refer to Skadi wiki for remaining items required to use a RSA keypair for SSH based automation"
 echo "  - Use 'sudo systemctl status grpc_automation' to verify service is running"
 echo "  - Use 'tail -f $logging_file' to check the automation engine ('rc.py') logs"
-echo "  - Use 'journalctl -f -u grpc_automation' to check the gRPC automation service ('rc_server.py') logs"
+echo "  - Use 'sudo journalctl -f -u grpc_automation' to check the gRPC automation service ('rc_server.py') logs"
+echo ""
+echo "gRPC Automation Instructions"
 echo "  - Use the files in '$automation_dir' and specifically '$automation_dir/rc_client.py' to send automation commands to Skadi"
-echo "    NOTE: See Skadi wiki for remaining items required to use a RSA keypair for SSH based automation"
+echo "  - Usage: /usr/bin/python $rc_client_usage"
+echo ""
+echo "To verify Automation is working run the following:"
+echo "/usr/bin/python /var/lib/automation/rc_client.py localhost -h"
