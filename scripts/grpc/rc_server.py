@@ -1,6 +1,6 @@
 #!/usr/bin/python
 from concurrent import futures
-import time, grpc, rc_pb2, rc_pb2_grpc, subprocess, os, argparse
+import time, grpc, rc_pb2, rc_pb2_grpc, subprocess, os
 
 rcpy = "/var/lib/automation/rc.py"
 
