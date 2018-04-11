@@ -1,8 +1,14 @@
 ## Purpose
 Skadi is a free, open source collection of tools that enables the collection, processing and advanced analysis of forensic artifacts and images. It scales to work effectively on laptops, desktops, servers, the cloud, and can be installed on top of hardened / gold disk images. 
 
-## Releases
-All information about releases (including current release) is found here: [Skadi Releases](https://github.com/orlikoski/skadi/releases)
+## Latest Releases!!  
+[Skadi Server 2018.1](https://drive.google.com/open?id=16DNRbr-uvwi9YrUeWT5HyyVd6O2eKMwe): Headless server ~2GB in size  
+[Skadi Desktop 2018.1](https://drive.google.com/open?id=1eq9ZVQAS8WUCNDMhQdjP9mFXdn75ekId): Provides GNOME Desktop environment: ~3GB in size 
+
+## Skadi Add-on Packs  
+Skadi add-on packs are installed on top of the base Skadi VM and provide extra functionality  
+*  [Skadi Pack 01: Automation](tbd)  
+*  [Skadi Pack 02: Secure Networking](tbd) 
 
 ## Included Tools
 The following tools are combined into one platform that all work together to provide the ability to collect data and convert the bits and bytes to words and numbers. It enables the ability to rapidly answer, "Have I been hacked? Do I need to call for help?
