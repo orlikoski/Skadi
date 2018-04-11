@@ -27,8 +27,6 @@ with  f:
     c = yaml.load(f)
     logging.config.dictConfig(c)
 
-
-
 # Add all ElasticSearch Parser Options
 def add_es_parsers(subparsers):
     es_parsers = subparsers.add_parser('es',
@@ -322,7 +320,7 @@ def dp_main(args):
         logger.debug("Arguments passed: {}".format(args))
         logger.warning("ERROR: Unable to parse Data Processing command. Exiting")
         exit(1)
- 
+
 # Main Program
 def main():
     version = "Skadi Automation Engine 1.0.0"

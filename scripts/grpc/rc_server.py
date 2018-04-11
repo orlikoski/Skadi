@@ -27,7 +27,6 @@ def runcommand(command,input_args):
     print cmdout.decode("utf-8")
     return cmdout.decode("utf-8")
 
-
 def main():
     version = "Skadi Automation Server Version: 1.0.0"
     print("Starting "+version)
@@ -42,7 +41,5 @@ def main():
         server.stop(0)
         print("Stopping "+version)
 
-
 if __name__ == '__main__':
     main()
-
