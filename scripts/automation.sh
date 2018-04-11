@@ -1,7 +1,30 @@
 #!/bin/bash
+# Download and place files in the correct places on server
+automation_files=("rc.py" "logging.yaml")
+grpc_files=("rc_client.py" "rc_server.py" "rc.proto") 
+automation_dir="/var/lib/automation"
+logging_dir="/var/log/automation"
+logging_file="/var/log/automation/skadi_automation.log"
+
 echo "Installing gRPC automation"
+echo "This installation will do the following:"
+echo "  - Create new group 'automationadmin'"
+echo "  - Create new user 'ottomate' and add to 'automationadmin' group"
+echo "  - Install all Skadi automation files to '/var/lib/automation'"
+echo "  - Setup automation log file in $logging_file"
+echo "  - Configure Systemd service 'grpc_automation.service' to control the gRPC automation"
+echo "  - Add UFW firewall rule to allow port 10101 from anywhere to use with gRPC service"
+echo ""
+echo "*********** WARNING ***********"
+echo "root or sudo privileges are required for this installation"
+echo "*********** WARNING ***********"
+echo ""
+read -n 1 -r -s -p "Press any key to continue... or CTRL+C to exit (nothing has been installed)"
+echo ""
+echo ""
+
+
 # Create Automation user and group
-echo "Creating new group 'automationadmmin' and new user 'ottomate' to be used for all automation functions"
 sudo addgroup automationadmin # Create automation group
 sudo adduser ottomate --disabled-password --gecos "" --shell /bin/bash # Create automation user: follow prompts to enter user information
 sudo usermod -aG automationadmin ottomate # Add user to automation group
@@ -18,13 +41,6 @@ sudo apt install python3-pip -y # Install pip for python3
 sudo -H pip3 install --upgrade pip # Upgrade pip for python3
 sudo -H pip3 install requests botocore==1.8.36 boto3 pyyaml # Python3 requirements
 sudo -H python -m pip install grpcio grpcio-tools # Python2 requirements
-
-# Download and place files in the correct places on server
-automation_files=("rc.py" "logging.yaml")
-grpc_files=("rc_client.py" "rc_server.py" "rc.proto") 
-automation_dir="/var/lib/automation"
-logging_dir="/var/log/automation"
-logging_file="/var/log/automation/skadi_automation.log"
 
 # Create automation directory where all automation files will run from
 sudo mkdir -p "$automation_dir"
@@ -69,3 +85,14 @@ sudo chmod g+w /etc/systemd/system/grpc_automation.service
 sudo systemctl daemon-reload
 sudo systemctl restart grpc_automation.service
 sudo systemctl enable grpc_automation.service
+
+# Open port in UFW firewall
+sudo ufw allow 10101
+
+echo ""
+echo ""
+echo "Installation complete"
+echo "  - Use 'sudo systemctl status grpc_automation' to verify service is running"
+echo "  - Use 'tail -f $logging_file' to check the automation engine ('rc.py') logs"
+echo "  - Use 'journalctl -f -u grpc_automation' to check the gRPC automation service ('rc_server.py') logs"
+echo "  - Use the files in '$automation_dir' and specifically '$automation_dir/rc_client.py' to send automation commands to Skadi"
