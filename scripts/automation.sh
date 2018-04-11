@@ -38,7 +38,7 @@ sudo chmod 644 "$logging_file"
 # Download and install GRPC files
 for i in "${grpc_files[@]}"
 do
-    wget -O "/tmp/$i" "https://raw.githubusercontent.com/orlikoski/CCF-VM/$branch/scripts/grpc/$i"
+    wget -O "/tmp/$i" "https://raw.githubusercontent.com/orlikoski/Skadi/master/scripts/grpc/$i"
     sudo mv "/tmp/$i" "$automation_dir/"
     sudo chown root:root "$automation_dir/$i"
     sudo chmod 644 "$automation_dir/$i"
@@ -46,15 +46,15 @@ done
 sudo python -m grpc_tools.protoc -I"$automation_dir/" --python_out="$automation_dir/" --grpc_python_out="$automation_dir/" "$automation_dir/rc.proto" # Compile proto file for GRPC API
 
 # Setup GRPC Logging
-sudo mkdir -p /var/log/ # create path if not there
-sudo touch /var/log/ccfvm.log # create initial file
-sudo chmod 666 /var/log/ccfvm.log # adjust permission, can change to 644 once service is built
-sudo chown ottomate:ottomate /var/log/ccfvm.log # change ownershipt to ottomate user
+sudo mkdir -p "$automation_dir" # create path if not there
+sudo touch "$logging_file" # create initial file
+sudo chmod 666 "$logging_file" # adjust permission, can change to 644 once service is built
+sudo chown ottomate:ottomate "$logging_file" # change ownershipt to ottomate user
 
 # Download and install Automation files
 for i in "${automation_files[@]}"
 do
-    wget -O "/tmp/$i" "https://raw.githubusercontent.com/orlikoski/CCF-VM/master/scripts/$i"
+    wget -O "/tmp/$i" "https://raw.githubusercontent.com/orlikoski/Skadi/master/scripts/$i"
     sudo mv "/tmp/$i" "$automation_dir/"
     sudo chown root:root "$automation_dir/$i"
     sudo chmod 644 "$automation_dir/$i"
@@ -62,10 +62,10 @@ done
 sudo chmod 755 "$automation_dir/rc.py" # Make this executable
 
 
-# Configure gRPC as a service named ccfvm_grpc_service
-ccfvm_grpc="W1VuaXRdCkRlc2NyaXB0aW9uPUNDRi1WTSBBdXRvbWF0aW9uIFNlcnZpY2UKQWZ0ZXI9bmV0d29yay50YXJnZXQKCltTZXJ2aWNlXQpVc2VyPW90dG9tYXRlCkdyb3VwPW90dG9tYXRlCkV4ZWNTdGFydD0vdXNyL2Jpbi9weXRob24gL3Zhci9saWIvYXV0b21hdGlvbi9yY19zZXJ2ZXIucHkKCltJbnN0YWxsXQpXYW50ZWRCeT1tdWx0aS11c2VyLnRhcmdldAo="
-echo $ccfvm_grpc |base64 -d | sudo tee /etc/systemd/system/ccfvm_grpc.service
-sudo chmod g+w /etc/systemd/system/ccfvm_grpc.service
+# Configure gRPC as a service named grpc_automation
+skadi_grpc="W1VuaXRdCkRlc2NyaXB0aW9uPWdSUEMgQXV0b21hdGlvbiBTZXJ2aWNlCkFmdGVyPW5ldHdvcmsudGFyZ2V0CgpbU2VydmljZV0KVXNlcj1vdHRvbWF0ZQpHcm91cD1vdHRvbWF0ZQpFeGVjU3RhcnQ9L3Vzci9iaW4vcHl0aG9uIC92YXIvbGliL2F1dG9tYXRpb24vcmNfc2VydmVyLnB5CgpbSW5zdGFsbF0KV2FudGVkQnk9bXVsdGktdXNlci50YXJnZXQK"
+echo $skadi_grpc |base64 -d | sudo tee /etc/systemd/system/grpc_automation.service
+sudo chmod g+w /etc/systemd/system/grpc_automation.service
 sudo systemctl daemon-reload
-sudo systemctl restart ccfvm_grpc.service
-sudo systemctl enable ccfvm_grpc.service
+sudo systemctl restart grpc_automation.service
+sudo systemctl enable grpc_automation.service
