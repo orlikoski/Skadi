@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "Installing / Updating / Configuring the following:"
-echo "  -Change hostname to 'ccf-vm'"
+echo "  -Change hostname to 'skadi'"
 echo "  -CDQR"
 echo "  -CyLR"
 echo "  -Docker"
@@ -23,6 +23,8 @@ echo "    -curl"
 echo "    -software-properties-common"
 echo "    -unzip"
 echo "    -htop"
+echo "    -ca-certificates"
+echo "    -apt-transport-https"
 echo ""
 echo "All usernames and passwords are made dynamically at run time"
 echo "These are displayed at the end of the script (record them for use)"
@@ -35,12 +37,12 @@ read -n 1 -r -s -p "Press any key to continue... or CTRL+C to exit (nothing has 
 echo ""
 echo ""
 
-# Set Hostname to ccf-vm
-newhostname='ccf-vm'
+# Set Hostname to skadi
+newhostname='skadi'
 oldhostname=$(</etc/hostname)
 sudo hostname $newhostname >/dev/null 2>&1
 sudo sed -i "s/$oldhostname/$newhostname/g" /etc/hosts >/dev/null 2>&1
-echo ccf-vm |sudo tee /etc/hostname >/dev/null 2>&1
+echo skadi |sudo tee /etc/hostname >/dev/null 2>&1
 sudo systemctl restart systemd-logind.service >/dev/null 2>&1
 
 # Install dependancies: 
@@ -198,7 +200,7 @@ sudo chown -R cerebro:cerebro /opt/cerebro
 sudo chmod +w /opt/cerebro
 sudo sed -i "s@./cerebro.db@/opt/cerebro/cerebro-$cerebro_version/cerebro.db@g" "/opt/cerebro/cerebro-$cerebro_version/conf/application.conf"
 sudo sed -i "s/secret = .*/secret = \"$cerebro_secret\"/g"  "/opt/cerebro/cerebro-$cerebro_version/conf/application.conf"
-sudo sed -i "s@hosts = \[@hosts = \[\\n\  {\\n    host = \"http\://localhost\:9200\"\\n    name = \"CCF-VM\"\\n  \}@g" "/opt/cerebro/cerebro-$cerebro_version/conf/application.conf"
+sudo sed -i "s@hosts = \[@hosts = \[\\n\  {\\n    host = \"http\://localhost\:9200\"\\n    name = \"SKADI\"\\n  \}@g" "/opt/cerebro/cerebro-$cerebro_version/conf/application.conf"
 #sudo sed -i "s@basePath = \"/\"@basePath = \"/opt/cerebro/cerebro-$cerebro_version\"@g" "/opt/cerebro/cerebro-$cerebro_version/conf/application.conf"
 
 cerebro_config="aG9zdHMgPSBbCiAgewogICAgaG9zdCA9ICJodHRwOi8vbG9jYWxob3N0OjkyMDAiCiAgICBuYW1lID0gIkNDRi1WTSIKICB9Cg=="
@@ -282,7 +284,7 @@ sudo mkdir -p "$automation_dir"
 # Download and install GRPC files
 for i in "${grpc_files[@]}"
 do
-    wget -O "/tmp/$i" "https://raw.githubusercontent.com/rough007/CCF-VM/master/scripts/grpc/$i"
+    wget -O "/tmp/$i" "https://raw.githubusercontent.com/rough007/Skadi/master/scripts/grpc/$i"
     sudo mv "/tmp/$i" "$automation_dir/"
     sudo chown root:root "$automation_dir/$i"
     sudo chmod 644 "$automation_dir/$i"
@@ -298,7 +300,7 @@ sudo chown ottomate:ottomate /var/log/ccfvm.log # change ownershipt to ottomate 
 # Download and install Automation files
 for i in "${automation_files[@]}"
 do
-    wget -O "/tmp/$i" "https://raw.githubusercontent.com/rough007/CCF-VM/master/scripts/$i"
+    wget -O "/tmp/$i" "https://raw.githubusercontent.com/rough007/Skadi/master/scripts/$i"
     sudo mv "/tmp/$i" "$automation_dir/"
     sudo chown root:root "$automation_dir/$i"
     sudo chmod 644 "$automation_dir/$i"
@@ -309,10 +311,8 @@ sudo chmod 755 "$automation_dir/rc.py" # Make this executable
 # Configure gRPC as a service named ccfvm_grpc_service
 ccfvm_grpc="W1VuaXRdCkRlc2NyaXB0aW9uPUNDRi1WTSBBdXRvbWF0aW9uIFNlcnZpY2UKQWZ0ZXI9bmV0d29yay50YXJnZXQKCltTZXJ2aWNlXQpVc2VyPW90dG9tYXRlCkdyb3VwPW90dG9tYXRlCkV4ZWNTdGFydD0vdXNyL2Jpbi9weXRob24gL3Zhci9saWIvYXV0b21hdGlvbi9yY19zZXJ2ZXIucHkKCltJbnN0YWxsXQpXYW50ZWRCeT1tdWx0aS11c2VyLnRhcmdldAo="
 echo $ccfvm_grpc |base64 -d | sudo tee /etc/systemd/system/ccfvm_grpc.service
-sudo chmod g+w /etc/systemd/system/ccfvm_grpc.service
+sudo chmod g+w /etc/systemd/system/automation_grpc.service
 sudo systemctl daemon-reload
-sudo systemctl restart ccfvm_grpc.service
-sudo systemctl enable ccfvm_grpc.service
 echo ""
 
 clear
@@ -348,10 +348,10 @@ do
 done
 
 echo ""
-echo "Logstash and ccfvm_grpc are installed but not enabled by default"
+echo "Logstash and automation_grpc are installed but not enabled by default"
 echo "To enable run the following commands"
-echo "    sudo systemctl restart logstash ccfvm_grpc"
-echo "    sudo systemctl enable logstash ccfvm_grpc"
+echo "    sudo systemctl restart logstash automation_grpc_service"
+echo "    sudo systemctl enable logstash automation_grpc_service"
 echo ""
 echo ""
 echo "TimeSketch Initial User Information (reset with 'tsctl add_user -u $timesketchuser -p <password>')"
