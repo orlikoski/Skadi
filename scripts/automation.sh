@@ -13,9 +13,10 @@ echo "  - Create new user 'ottomate' and add to 'automationadmin' group"
 echo "    - 'ottomate' is disabled from authenticating with password (must use key pair)"
 echo "    - 'ottomate' is used to execute all items related to automation (gRPC and SSH options)"
 echo "  - Install all Skadi automation files to '/var/lib/automation'"
-echo "  - Setup automation log file in $logging_file"
+echo "  - Setup automation log file in '$logging_file'"
 echo "  - Configure Systemd service 'grpc_automation.service' to control the gRPC automation"
 echo "  - Add UFW firewall rule to allow port 10101 from anywhere to use with gRPC service"
+echo "    NOTE: Highly recommended to restrict this to just the automation server"
 echo ""
 echo "*********** WARNING ***********"
 echo "root or sudo privileges are required for this installation"
@@ -91,7 +92,7 @@ sudo systemctl enable grpc_automation.service
 # Open port in UFW firewall
 sudo ufw allow 10101
 
-rc_client_usage = "rc_client.py <server IP address or routable domain name> <commands to send to rc_server.py>"
+rc_client_usage="rc_client.py <server IP address or routable domain name> <commands to send to rc_server.py>"
 echo ""
 echo ""
 echo "Installation complete"

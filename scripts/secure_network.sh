@@ -1,7 +1,14 @@
 #!/bin/bash 
 
-echo "This script is going to disable IPv6, install, configure, and enable the Nginx reverse proxy and configure letsencrypt for valid certificats."
+echo "Installing Skadi Pack: Secure Networking"
+echo "This installation will do the following:"
+echo "  - Disable IPv6"
+echo "  - Install and configure Nginx reverse proxy for TimeSketch, Kibana, and Cerebro websites"
+echo "  - Install and configure all prerequisits, and provide single command, required to install valid TLS/SSL certificates from Letsencrypt"
+echo ""
 echo "In order to continue a domain name needs to provided and the Kibana, Cerebro, and TimeSketch websites will be setup as sub-domains"
+echo "For testing and home/student use it is recommended to use a 'xip.io' domain. Read more about it here: http://xip.io/"
+echo ""
 echo "Example Domain: 'mydomain.com'"
 echo "Results in the following: "
 echo "   - 'kibana.mydomain.com'"
