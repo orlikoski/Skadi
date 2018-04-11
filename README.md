@@ -1,12 +1,24 @@
 ## Purpose
-The CCF-VM is a free, open source collection of tools that enables the collection, processing and advanced analysis of forensic artifacts and images.  It will operate on laptops, on-prem servers, the Cloud, and can be installed on top of hardened / gold disk images.  
-  
-It provides everyone the ability to collect data and convert the bits and bytes to words and numbers. All of this enables the ability to rapidly answer, "Have I been hacked? Do I need to call for help?"
+Skadi is a free, open source collection of tools that enables the collection, processing and advanced analysis of forensic artifacts and images. It scales to work effectively on laptops, desktops, servers, the cloud, and can be installed on top of hardened / gold disk images. 
+
+## Included Tools
+The following tools are combined into one platform that all work together to provide the ability to collect data and convert the bits and bytes to words and numbers. It enables the ability to rapidly answer, "Have I been hacked? Do I need to call for help?
+
+ - Plaso  
+ - CDQR  
+ - CyLR  
+ - Docker  
+ - ElasticSearch, Logstash, Kibana (ELK)  
+ - Redis  
+ - Neo4j  
+ - Celery  
+ - Cerebro  
 
 ## Read the Wiki!
-A lot of common questions and good information are now stored in the [Wiki](https://github.com/rough007/CCF-VM/wiki).  This has replaced the "Users Guide".
+A lot of common questions and good information are now stored in the [Wiki](https://github.com/orlikoski/skadi/wiki). 
 
 ## Videos and Media
+**Note: Skadi was formerly known as CCF-VM**
 *  [Alamo ISSA 2018](https://docs.google.com/presentation/d/1Rl_wF9mUDOkPlbHiWAt-hOiJ-_X8WzTsRfgyYQi9t6M/edit?usp=sharing) Slides: Reviews CCF-VM components, walkthrough of how to install GCP version and discuss automation possibilities and risks
 *  [SANS DFIR Summit 2017](https://www.youtube.com/watch?v=f5B4bngftP8) Video: A talk about using CCF-VM for Digital Forensics and Incident Response (DFIR) 
 *  [ISC2 Security Congress 2017](https://drive.google.com/file/d/0B5z7g7P2BWJAckUxbUJWVVZzNDQ/view?usp=sharing) Slides: Another talk about using CCF-VM for Digital Forensics and Incident Response (DFIR) 
@@ -16,6 +28,5 @@ A lot of common questions and good information are now stored in the [Wiki](http
 ## Credits
 Thank you for the wonderful writeup, link is here (http://diftdisk.blogspot.com/2016/06/viewing-log2timeline-output-with-kibana.html), by Michael Maurer that gave me the knowledge to put many of the pieces together. 
 
-## AUTHOR
-
-* [Alan Orlikoski](https://github.com/rough007)
+## CREATOR  
+* [Alan Orlikoski](https://github.com/orlikoski)
