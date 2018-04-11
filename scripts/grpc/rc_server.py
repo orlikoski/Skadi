@@ -29,7 +29,7 @@ def runcommand(command,input_args):
 
 
 def main():
-    version = "Skadi Automation Engine Version: 1.0.0"
+    version = "Skadi Automation Server Version: 1.0.0"
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     rc_pb2_grpc.add_RCServicer_to_server(RC(), server)
     server.add_insecure_port('[::]:10101')
