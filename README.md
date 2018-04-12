@@ -21,7 +21,7 @@ There is a Slack community setup for developers and users of the Skadi ecosystem
 ### Kibana, TimeSketch, Cerebro Included (All versions)
   ![](/objects/images/desk_tools.jpg?)  
   
-### 11 New Kibana Dashboard Sample (All versions)
+### 11 New Kibana Dashboards (All versions)  
   ![](/objects/images/kib_dash01.JPG?)  
   ![](/objects/images/kib_dash02.JPG?)  
   
