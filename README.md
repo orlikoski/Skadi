@@ -5,15 +5,15 @@ _**Note: Skadi was formerly known as CCF-VM**_
 
 ## Purpose
 Skadi is a free, open source collection of tools that enables the collection, processing and advanced analysis of forensic artifacts and images. It scales to work effectively on laptops, desktops, servers, the cloud, and can be installed on top of hardened / gold disk images. 
-
+  
 ## Skadi Wiki Page
 The answers to common questions and information about how to get started with Skadi is stored in the [Skadi Wiki Pages](https://github.com/orlikoski/skadi/wiki).
   
 ## Skadi Community
 There is a Slack community setup for developers and users of the Skadi ecosystem. It is a safe place to ask questions and share information.  
   
-[Join the Skadi Community Slack](http://skadicommunity.herokuapp.com/)
-
+[Join the Skadi Community Slack](http://skadicommunity.herokuapp.com/)  
+  
 ## Latest Releases!!
 [Skadi Server 2018.1](https://drive.google.com/open?id=16DNRbr-uvwi9YrUeWT5HyyVd6O2eKMwe): Headless server ~2GB in size  
 [Skadi Desktop 2018.1](https://drive.google.com/open?id=1eq9ZVQAS8WUCNDMhQdjP9mFXdn75ekId): Provides Ubuntu's Default Desktop environment: ~3GB in size  
@@ -22,8 +22,12 @@ There is a Slack community setup for developers and users of the Skadi ecosystem
   ![](/objects/images/desk_tools.jpg?)  
   
 ### 11 New Kibana Dashboard Sample (All versions)
-  ![](/objects/images/kib_dash01.jpg?)  
-  ![](/objects/images/kib_dash02.jpg?)  
+  ![](/objects/images/kib_dash01.JPG?)  
+  ![](/objects/images/kib_dash02.JPG?)  
+  
+### TimeSketch (All veresions)
+  ![](/objects/images/ts_shot01.JPG?)  
+  ![](/objects/images/ts_shot02.JPG?)  
   
 ### Skadi Desktop (NEW!)
   ![](/objects/images/desktop.jpg?)  
