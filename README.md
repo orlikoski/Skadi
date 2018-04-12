@@ -8,7 +8,7 @@ Skadi is a free, open source collection of tools that enables the collection, pr
 [Skadi Desktop 2018.1](https://drive.google.com/open?id=1eq9ZVQAS8WUCNDMhQdjP9mFXdn75ekId): Provides GNOME Desktop environment: ~3GB in size 
   
 ## Skadi Add-on Packs  
-Skadi add-on packs are installed on top of the base Skadi VM and provide extra functionality  
+Skadi add-on packs are installed on top of the base Skadi VM to provide extra functionality  
 *  [Skadi Pack 01: Automation](https://github.com/orlikoski/Skadi/wiki/Skadi-Pack-01:-Automation): Provides two methods of integrating with any Automation tool: gRPC API or using SSH  
 *  [Skadi Pack 02: Secure Networking](https://github.com/orlikoski/Skadi/wiki/Skadi-Pack-02:-Secure-Networking): Installs and configures the firewall as well as an authenticated reverse proxy with valid TLS/SSL certificates
   
