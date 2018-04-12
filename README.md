@@ -22,7 +22,7 @@ There is a Slack community setup for developers and users of the Skadi ecosystem
 Skadi add-on packs are installed on top of the base Skadi VM to provide extra functionality  
 *  [Skadi Pack 01: Automation](https://github.com/orlikoski/Skadi/wiki/Skadi-Pack-01:-Automation): Provides two methods of integrating with any Automation tool: gRPC API or using SSH  
 *  [Skadi Pack 02: Secure Networking](https://github.com/orlikoski/Skadi/wiki/Skadi-Pack-02:-Secure-Networking): Installs and configures the firewall as well as an authenticated reverse proxy with valid TLS/SSL certificates  
-  ![](/objects/images/Skadi Desktop CLI tools.jpg?)  
+  ![](/objects/images/desktop.jpg?)  
   
 ## Included Tools
 The following tools are combined into one platform that all work together to provide the ability to collect data and convert the bits and bytes to words and numbers. It enables the ability to rapidly answer, "Have I been hacked? Do I need to call for help?
