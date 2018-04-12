@@ -25,7 +25,7 @@ There is a Slack community setup for developers and users of the Skadi ecosystem
   ![](/objects/images/kib_dash01.JPG?)  
   ![](/objects/images/kib_dash02.JPG?)  
   
-### TimeSketch (All veresions)
+### TimeSketch (All versions)
   ![](/objects/images/ts_shot02.JPG?)  
   ![](/objects/images/ts_shot01.JPG?)  
   
