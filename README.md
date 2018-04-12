@@ -1,11 +1,10 @@
 
 # Skadi  
 (pronounced “SKAHD-ee;”) is a giantess and goddess of hunting in Norse mythology
+_**Note: Skadi was formerly known as CCF-VM**_
 
 ## Purpose
 Skadi is a free, open source collection of tools that enables the collection, processing and advanced analysis of forensic artifacts and images. It scales to work effectively on laptops, desktops, servers, the cloud, and can be installed on top of hardened / gold disk images. 
-  
-**Note: Skadi was formerly known as CCF-VM**
   
 ## Latest Releases!!
 [Skadi Server 2018.1](https://drive.google.com/open?id=16DNRbr-uvwi9YrUeWT5HyyVd6O2eKMwe): Headless server ~2GB in size  
