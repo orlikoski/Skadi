@@ -58,8 +58,12 @@ The following tools are combined into one platform that all work together to pro
 *  [DEFCON 25 4-hour Workshop 2017](https://media.defcon.org/DEF%20CON%2025/DEF%20CON%2025%20workshops/DEFCON-25-Workshop-Alan-Orlikoski-and-Dan-M-Free-and-Easy-DFIR-Triage-for-Everyone.pdf) Slides: Free and Easy DFIR Triage for Everyone 
 *  [OSDFCON 2017](http://www.osdfcon.org/presentations/2017/Asif-Matadar_Rapid-Incident-Response.pdf) Slides: Walk-through different techniques that are required to provide forensics results for Windows and *nix environments (Including CyLR and CDQR)
 
-## Credits
-Thank you to everyone who has helped, and those that continue to, making this project a reality.
+## Thank you to everyone who has helped, and those that continue to, making this project a reality. 
+  
+### Special Thanks to:
+ - https://www.komand.com/ for their support
+ - https://twitter.com/SpyglassSec for their guidance
+ - Every single one of the contributors who's efforts made the automation Addon Pack possible  
 
 ## CREATOR  
 * [Alan Orlikoski](https://github.com/orlikoski)
