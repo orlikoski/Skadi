@@ -31,8 +31,7 @@ There is a Slack community setup for developers and users of the Skadi ecosystem
   
 ### Skadi Desktop (NEW!)
   ![](/objects/images/desktop.jpg?)  
-    
-  ![](/objects/images/desk_cli.jpg?)  
+
   
 ## Skadi Add-on Packs  
 Skadi add-on packs are installed on top of the base Skadi VM to provide extra functionality  
