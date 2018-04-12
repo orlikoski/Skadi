@@ -15,7 +15,6 @@ echo "  -Neo4j"
 echo "  -Celery"
 echo "  -Timesketch"
 echo "  -Cerebro"
-echo "  -gRPC"
 echo "  -Other Dependancies"
 echo "    -vim"
 echo "    -openssh-server"
@@ -130,7 +129,7 @@ sudo systemctl enable kibana
 # Configure Celery
 celery_service="W1VuaXRdCkRlc2NyaXB0aW9uPUNlbGVyeSBTZXJ2aWNlCkFmdGVyPW5ldHdvcmsudGFyZ2V0CgpbU2VydmljZV0KVHlwZT1mb3JraW5nClVzZXI9Y2VsZXJ5Ckdyb3VwPWNlbGVyeQpQSURGaWxlPS9vcHQvY2VsZXJ5L2NlbGVyeS5waWRsb2NrCgpFeGVjU3RhcnQ9L3Vzci9sb2NhbC9iaW4vY2VsZXJ5IG11bHRpIHN0YXJ0IHNpbmdsZS13b3JrZXIgLUEgdGltZXNrZXRjaC5saWIudGFza3Mgd29ya2VyIC0tbG9nbGV2ZWw9aW5mbyAtLWxvZ2ZpbGU9L3Zhci9sb2cvY2VsZXJ5X3dvcmtlciAtLXBpZGZpbGU9L29wdC9jZWxlcnkvY2VsZXJ5LnBpZGxvY2sKRXhlY1N0b3A9L3Vzci9sb2NhbC9iaW4vY2VsZXJ5IG11bHRpIHN0b3B3YWl0IHNpbmdsZS13b3JrZXIgLS1waWRmaWxlPS9vcHQvY2VsZXJ5L2NlbGVyeS5waWRsb2NrIC0tbG9nZmlsZT0vdmFyL2xvZy9jZWxlcnlfd29ya2VyCkV4ZWNSZWxvYWQ9L3Vzci9sb2NhbC9iaW4vY2VsZXJ5IG11bHRpIHJlc3RhcnQgc2luZ2xlLXdvcmtlciAtLXBpZGZpbGU9L29wdC9jZWxlcnkvY2VsZXJ5LnBpZGxvY2sgLS1sb2dmaWxlPS92YXIvbG9nL2NlbGVyeV93b3JrZXIKCgpbSW5zdGFsbF0KV2FudGVkQnk9bXVsdGktdXNlci50YXJnZXQK"
 sudo useradd -r -s /bin/false celery
-sudo mkdir /opt/celery
+sudo mkdir -p /opt/celery
 sudo touch /var/log/celery_worker
 sudo touch /opt/celery/celery.pidlock
 sudo chown -R celery:celery /opt/celery
@@ -251,68 +250,6 @@ else
 fi
 rm /tmp/CyLR.zip
 echo ""
-echo ""
-
-echo "Installing gRPC automation"
-# Create Automation user and group
-echo "Creating new group 'automationadmmin' and new user 'ottomate' to be used for all automation functions"
-sudo addgroup automationadmin # Create automation group
-sudo adduser ottomate --disabled-password --gecos "" --shell /bin/bash # Create automation user: follow prompts to enter user information
-sudo usermod -aG automationadmin ottomate # Add user to automation group
-
-# Create .ssh directory and authorized_keys file for the new user
-sudo mkdir -p /home/ottomate/.ssh/
-sudo touch /home/ottomate/.ssh/authorized_keys
-sudo chmod 700 /home/ottomate/.ssh/
-sudo chown -R ottomate:ottomate /home/ottomate/.ssh
-sudo chmod 644 /home/ottomate/.ssh/authorized_keys
-
-# Getting Python dependencies
-sudo apt install python3-pip -y # Install pip for python3
-sudo -H pip3 install --upgrade pip # Upgrade pip for python3
-sudo -H pip3 install requests botocore==1.8.36 boto3 pyyaml # Python3 requirements
-sudo -H python -m pip install grpcio grpcio-tools # Python2 requirements
-
-# Download and place files in the correct places on server
-automation_files=("rc.py" "logging.yaml")
-grpc_files=("rc_client.py" "rc_server.py" "rc.proto") 
-automation_dir="/var/lib/automation"
-
-# Create automation directory where all automation files will run from
-sudo mkdir -p "$automation_dir"
-
-# Download and install GRPC files
-for i in "${grpc_files[@]}"
-do
-    wget -O "/tmp/$i" "https://raw.githubusercontent.com/orlikoski/Skadi/master/scripts/grpc/$i"
-    sudo mv "/tmp/$i" "$automation_dir/"
-    sudo chown root:root "$automation_dir/$i"
-    sudo chmod 644 "$automation_dir/$i"
-done
-sudo python -m grpc_tools.protoc -I"$automation_dir/" --python_out="$automation_dir/" --grpc_python_out="$automation_dir/" "$automation_dir/rc.proto" # Compile proto file for GRPC API
-
-# Setup GRPC Logging
-sudo mkdir -p /var/log/ # create path if not there
-sudo touch /var/log/ccfvm.log # create initial file
-sudo chmod 666 /var/log/ccfvm.log # adjust permission, can change to 644 once service is built
-sudo chown ottomate:ottomate /var/log/ccfvm.log # change ownershipt to ottomate user
-
-# Download and install Automation files
-for i in "${automation_files[@]}"
-do
-    wget -O "/tmp/$i" "https://raw.githubusercontent.com/orlikoski/Skadi/master/scripts/$i"
-    sudo mv "/tmp/$i" "$automation_dir/"
-    sudo chown root:root "$automation_dir/$i"
-    sudo chmod 644 "$automation_dir/$i"
-done
-sudo chmod 755 "$automation_dir/rc.py" # Make this executable
-
-
-# Configure gRPC as a service named ccfvm_grpc_service
-ccfvm_grpc="W1VuaXRdCkRlc2NyaXB0aW9uPUNDRi1WTSBBdXRvbWF0aW9uIFNlcnZpY2UKQWZ0ZXI9bmV0d29yay50YXJnZXQKCltTZXJ2aWNlXQpVc2VyPW90dG9tYXRlCkdyb3VwPW90dG9tYXRlCkV4ZWNTdGFydD0vdXNyL2Jpbi9weXRob24gL3Zhci9saWIvYXV0b21hdGlvbi9yY19zZXJ2ZXIucHkKCltJbnN0YWxsXQpXYW50ZWRCeT1tdWx0aS11c2VyLnRhcmdldAo="
-echo $ccfvm_grpc |base64 -d | sudo tee /etc/systemd/system/ccfvm_grpc.service
-sudo chmod g+w /etc/systemd/system/automation_grpc.service
-sudo systemctl daemon-reload
 echo ""
 
 clear
