@@ -8,7 +8,7 @@ Skadi is a free, open source collection of tools that enables the collection, pr
   
 ## Latest Releases!!
 [Skadi Server 2018.1](https://drive.google.com/open?id=16DNRbr-uvwi9YrUeWT5HyyVd6O2eKMwe): Headless server ~2GB in size  
-[Skadi Desktop 2018.1](https://drive.google.com/open?id=1eq9ZVQAS8WUCNDMhQdjP9mFXdn75ekId): Provides GNOME Desktop environment: ~3GB in size 
+[Skadi Desktop 2018.1](https://drive.google.com/open?id=1eq9ZVQAS8WUCNDMhQdjP9mFXdn75ekId): Provides Ubuntu's Default Desktop environment: ~3GB in size 
   
 ## Skadi Add-on Packs  
 Skadi add-on packs are installed on top of the base Skadi VM to provide extra functionality  
