@@ -62,7 +62,7 @@ The following tools are combined into one platform that all work together to pro
   
 ### Special Thanks to:
  - The team from [Komand](https://www.komand.com/) for their support
- - Jackie & Jason from https://twitter.com/SpyglassSec for their guidance
+ - Jackie & Jason from [@SpyglassSec](https://twitter.com/SpyglassSec) for their guidance
  - Every single one of the contributors who's efforts made the automation Addon Pack possible  
 
 ## CREATOR  
