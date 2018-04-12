@@ -18,14 +18,14 @@ There is a Slack community setup for developers and users of the Skadi ecosystem
 [Skadi Server 2018.1](https://drive.google.com/open?id=16DNRbr-uvwi9YrUeWT5HyyVd6O2eKMwe): Headless server ~2GB in size  
 [Skadi Desktop 2018.1](https://drive.google.com/open?id=1eq9ZVQAS8WUCNDMhQdjP9mFXdn75ekId): Provides Ubuntu's Default Desktop environment: ~3GB in size  
 
-### Kibana, TimeSketch, Cerebro Included (All versions)
+### Kibana, TimeSketch, Cerebro Included 
   ![](/objects/images/desk_tools.jpg?)  
   
-### 11 New Kibana Dashboards (All versions)  
+### 11 New Kibana Dashboards  
   ![](/objects/images/kib_dash01.JPG?)  
   ![](/objects/images/kib_dash02.JPG?)  
   
-### TimeSketch (All versions)
+### TimeSketch 
   ![](/objects/images/ts_shot02.JPG?)  
   ![](/objects/images/ts_shot01.JPG?)  
   
