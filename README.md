@@ -18,9 +18,7 @@ A lot of common questions and good information is stored in the [Wiki](https://g
 ## Skadi Community
 There is a Slack community setup for developers and users of the Skadi system. It is a safe place to ask questions and share information.  
   
-To join, please send an email requesting access to: 
-```slacksignup (at) skadivm (dot) com```    
-_**The email to be added to the Slack must match the sender or it will be ignored.**_
+To join, ...
   
 ## Included Tools
 The following tools are combined into one platform that all work together to provide the ability to collect data and convert the bits and bytes to words and numbers. It enables the ability to rapidly answer, "Have I been hacked? Do I need to call for help?
