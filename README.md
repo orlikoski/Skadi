@@ -1,3 +1,7 @@
+
+# Skadi  
+(pronounced “SKAHD-ee;”) is a giantess and goddess of hunting in Norse mythology
+
 ## Purpose
 Skadi is a free, open source collection of tools that enables the collection, processing and advanced analysis of forensic artifacts and images. It scales to work effectively on laptops, desktops, servers, the cloud, and can be installed on top of hardened / gold disk images. 
   
