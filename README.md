@@ -1,5 +1,5 @@
 
-![# Skadi](/objects/images/skadi_header.png?raw=true |width=1491)
+![# Skadi  ](/objects/images/skadi_header.png?raw=true | width=1491)
 (pronounced “SKAHD-ee;”) is a giantess and goddess of hunting in Norse mythology  
 _**Note: Skadi was formerly known as CCF-VM**_
 
