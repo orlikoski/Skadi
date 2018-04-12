@@ -16,18 +16,26 @@ There is a Slack community setup for developers and users of the Skadi ecosystem
 
 ## Latest Releases!!
 [Skadi Server 2018.1](https://drive.google.com/open?id=16DNRbr-uvwi9YrUeWT5HyyVd6O2eKMwe): Headless server ~2GB in size  
-[Skadi Desktop 2018.1](https://drive.google.com/open?id=1eq9ZVQAS8WUCNDMhQdjP9mFXdn75ekId): Provides Ubuntu's Default Desktop environment: ~3GB in size 
-## Skadi Desktop 
-  ![](/objects/images/desktop.jpg?)  
+[Skadi Desktop 2018.1](https://drive.google.com/open?id=1eq9ZVQAS8WUCNDMhQdjP9mFXdn75ekId): Provides Ubuntu's Default Desktop environment: ~3GB in size  
+  
+### Kibana, TimeSketch, Cerebro Included (All versions)
   ![](/objects/images/desk_tools.jpg?)  
   
+### 11 New Kibana Dashboard Sample (All versions)
+  ![](/objects/images/kib_dash01.jpg?)  
+  ![](/objects/images/kib_dash02.jpg?)  
+  
+### Skadi Desktop (NEW!)
+  ![](/objects/images/desktop.jpg?)  
+  ![](/objects/images/desk_cli.jpg?)  
+
 ## Skadi Add-on Packs  
 Skadi add-on packs are installed on top of the base Skadi VM to provide extra functionality  
 *  [Skadi Pack 01: Automation](https://github.com/orlikoski/Skadi/wiki/Skadi-Pack-01:-Automation): Provides two methods of integrating with any Automation tool: gRPC API or using SSH  
 *  [Skadi Pack 02: Secure Networking](https://github.com/orlikoski/Skadi/wiki/Skadi-Pack-02:-Secure-Networking): Installs and configures the firewall as well as an authenticated reverse proxy with valid TLS/SSL certificates  
   
 ## Included Tools
-The following tools are combined into one platform that all work together to provide the ability to collect data and convert the bits and bytes to words and numbers. It enables the ability to rapidly answer, "Have I been hacked? Do I need to call for help?
+The following tools are combined into one platform that all work together to provide everyone with the ability to collect data, convert the bits and bytes to words and numbers, and analyse the results quickly and easily. All of this enables the ability to rapidly hunt for host based evidence of a malicious activities.  
 
  - Plaso  
  - CDQR  
