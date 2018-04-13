@@ -14,7 +14,7 @@ handlers:
     fileHandler:
         class: logging.FileHandler
         formatter: standardFormatter
-        filename: "/var/log/ccfvm.log"
+        filename: "/var/log/automation/skadi_automation.log"
 
 loggers:
     main_logger:
