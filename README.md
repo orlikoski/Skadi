@@ -64,11 +64,6 @@ The following tools are combined into one platform that all work together to pro
  - The team from [Komand](https://www.komand.com/) for their advice and support on all things Automation
  - Jackie & Jason from [@SpyglassSec](https://twitter.com/SpyglassSec) for their guidance
  - Every single one of the contributors who's efforts made the automation Addon Pack possible  
-     - @chunderstruck
-     - @jugalde
-     - @jdf400
-     - @mbroomfield-r7
-     - @rephric
 
 ## CREATOR  
 * [Alan Orlikoski](https://github.com/orlikoski)
