@@ -1,31 +1,14 @@
 #!/usr/bin/python3
 import  argparse, base64,  os, requests, subprocess, sys, logging, logging.config, boto3, yaml
 
-logPath = os.path.join('/var/log/automation', 'skadi_automation.log')
-logdir = os.path.join('/var/log/automation')
-logger = logging.getLogger('main_logger')
-
 logConfig = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'logging.yaml')
-try:
-    f = open(logConfig)
-except:
-    print("ERROR: Could not find logging.yaml file. Exiting")
-    exit(1)
-
-if not os.path.isfile(logPath):
-    print("WARNING: '"+logPath+"'' doesn't exist. Attempting to create it now.")
-    if not os.path.exists(logdir):
-        os.makedirs(logdir)
-    try:
-        with open(logPath) as file:
-            pass
-    except IOError as e:
-        print("ERROR: Unable to verify '"+logPath+"'' exists. Verify path exists and permission settings. Exiting")
-        exit(1)
-
-with  f:
+with  open(logConfig) as f:
     c = yaml.load(f)
     logging.config.dictConfig(c)
+
+logPath = os.path.join('/var/log/', 'ccfvm.log')
+
+logger = logging.getLogger('main_logger')
 
 # Add all ElasticSearch Parser Options
 def add_es_parsers(subparsers):
@@ -82,59 +65,55 @@ def add_dp_parsers(subparsers):
     group.add_argument('--mv_local',
                         nargs=2,
                         metavar=("src_local","dest_local"),
-                        help="Move data on locally mounted partitions with base64 encoded source and destiation")
-    # group.add_argument('--mv_to_aws',
-    #                 nargs='*',
-    #                 metavar=("src","bucket","prefix"),
-    #                 help="Transfers data between AWS and local mounted partitions")
-    # group.add_argument('--mv_from_aws',
-    #                 nargs='*',
-    #                 metavar=("dest","bucket","prefix"),
-    #                 help="Transfers data between AWS and local mounted partitions")
+                        help="Move data on locally mounted partitions")
+    group.add_argument('--mv_to_aws',
+                    nargs='*',
+                    metavar=("src","bucket","prefix"),
+                    help="Transfers data between AWS and local mounted partitions")
+    group.add_argument('--mv_from_aws',
+                    nargs='*',
+                    metavar=("dest","bucket","prefix"),
+                    help="Transfers data between AWS and local mounted partitions")
 
 
 ############ Base64 Functions ######################
 def myb64decode(encoded_string):
-    try:
-        decoded_string = base64.b64decode(encoded_string).decode('utf-8').strip()
-    except (base64.binascii.Error, UnicodeDecodeError) as e:
-        logger.warning("Encode parameters in base64")
-        exit(1)
+    decoded_string = base64.b64decode(encoded_string).decode('utf-8').strip()
     return decoded_string
 
 ############ Web Request Output Handling ######################
 def web_results(r):
-    logger.debug(r)
-    logger.info(r.text)
+    print(r)
+    print(r.text)
 
 ############ ElasticSearch Functions ######################
 # Delete an ElasticSearch index by name
 def es_del_index(server, indexname):
     decoded_index = myb64decode(indexname[0])
-    logger.debug("Deleting ElasticSearch index: " + decoded_index + " from " + server)
+    logger.info("Deleting ElasticSearch index: " + decoded_index + " from " + server)
     url = "http://" + server + ":9200/" + decoded_index + "?pretty"
     web_results(requests.delete(url))
 
 # List all ElasticSearch indices
 def es_list_index(server):
-    logger.debug("List all ElasticSearch indices from " + server)
+    print("List all ElasticSearch indices from " + server)
     #curl -XGET 'localhost:9200/_cat/indices?v&pretty'
     url = "http://" + server + ":9200/_cat/indices?v&pretty"
     web_results(requests.get(url))
 
 def es_main(args):
-    logger.debug("Executing ElasticSearch command: {}".format(args))
+    print("Executing ElasticSearch command")
     es_server='localhost'
     # Delete an ElasticSearch index by name
     if args.delete:
-        logger.info("Attempting to delete an index")
+        print("Attempting to delete an index")
         es_del_index(es_server, args.delete)
     elif args.list:
-        logger.info("Attempting to list all indices")
+        print("Attempting to list all indices")
         es_list_index(es_server)
     else:
-        logger.warning("Arguments passed: ", args)
-        logger.warning("ERROR: Unable to parse ElasticSearch command. Exiting")
+        print("Arguments passed: ", args)
+        print("ERROR: Unable to parse ElasticSearch command. Exiting")
         exit(1)
 
 ############ TimeSketch Functions ######################
@@ -150,12 +129,12 @@ def delete_ts(ts,enc_name):
     ts_name = myb64decode(enc_name[0])
     logger.info("Deleting TimeSketch Index named: {}".format(ts_name))
     margs = "purge -i " + ts_name
-    cmd = subprocess.Popen([ts, "purge", "-i", ts_name], stdin=subprocess.PIPE)
-    cmd.communicate(input=b'y')
+    cmd = subprocess.Popen([ts, "purge", "-i", ts_name], stdin=PIPE)
+    cmd.communicate(input='y')
 
 def ts_main(args):
     ts_exec = "/usr/local/bin/tsctl"
-    logger.debug("Executing TimeSketch command: {}".format(args))
+    logger.debug("Executing TimeSketch command")
     # Create TimeSketch user with the provided base64 encoded username and password
     if args.useradd:
         logger.info("Attempting to create TimeSketch user")
@@ -210,7 +189,7 @@ def os_service(args):
                 logger.warning("Failed to stop %s, exited with status code %d"%(service, cmd))
     elif command == "restart" or command == "start":
         for service in service_list_array:
-            logger.info("Starting / Restarting: {}".format(service))
+            logger.info("Starting / Restarting:".format(service))
             cmd = subprocess.call(["sudo", "/bin/systemctl", "restart", service])
             if cmd != 0:
                 logger.warning("Failed to start/restart %s, exited with status code %d"%(service, cmd))
@@ -220,7 +199,7 @@ def os_service(args):
         exit(1)
 
 def os_main(args):
-    logger.debug("Executing Operating System command: {}".format(args))
+    logger.debug("Executing Operating System command")
     # Create TimeSketch user with the provided base64 encoded username and password
     if args.server:
         logger.debug("Attempting to stop or restart the server")
@@ -235,17 +214,9 @@ def os_main(args):
 
 ############ Data Processing Functions ######################
 def process_cdqr(cdqr,args):
-    cdqr_loc = "/usr/local/bin/cdqr.py"
     parsed_args = myb64decode(args[0])
-    unapproved_chars = set('`~!#$&*()\t{[|\\;\'\"<>?')
-    if any((char in unapproved_chars) for char in "{}".format(parsed_args)):
-        logger.warning("ERROR!! Unapproved chars in CDQR command string. Exiting")
-        exit(1)
-    logger.info("Executing CDQR command: "+cdqr_loc+" {}".format(parsed_args))
-    # Checking for invalid characters
-
-    command = cdqr_loc+" "+parsed_args
-    cmd = os.system(command)
+    logger.info("Executing CDQR command: cdqr {}".format(parsed_args))
+    cmd = subprocess.call(["cdqr", parsed_args])
     if cmd != 0:
         logger.warning("Failed process CDQR, exited with status code %d"%cmd)
 
@@ -257,54 +228,54 @@ def mv_local(args):
     if cmd != 0:
         logger.warning("Failed to move file, exited with status code %d"%cmd)
 
-# def mv_to_aws(args):
-#     if len(args) < 2:
-#         logger.warning("Must provide at least 2 arguments!")
-#         return
-#     src = myb64decode(args[0])
-#     bucket = myb64decode(args[1])
-#     s3_client = boto3.client(service_name='s3')
-#     if os.path.dirname(src):
-#         #src is local dir
-#         for (dirpath, dirnames, filenames) in os.walk(src):
-#             for filename in files:
-#                 local_path = os.path.join(src, filename)
-#                 s3_client.upload_file(local_path, bucket, filename)
-#         logger.info("Successfully moved files from %s"%src)
-#     elif os.path.isfile(src):
-#         #src is local file
-#         s3_client.upload_file(src, bucket, os.basename(src))
-#         logger.info("Successfully moved %s"%os.basename(src))
-#     else: 
-#         logger.info("Source provided is neither a file nor directory %s"%os.basename(src))
+def mv_to_aws(args):
+    if len(args) < 2:
+        logger.warning("Must provide at least 2 arguments!")
+        return
+    src = myb64decode(args[0])
+    bucket = myb64decode(args[1])
+    s3_client = boto3.client(service_name='s3')
+    if os.path.dirname(src):
+        #src is local dir
+        for (dirpath, dirnames, filenames) in os.walk(src):
+            for filename in files:
+                local_path = os.path.join(src, filename)
+                s3_client.upload_file(local_path, bucket, filename)
+        logger.info("Successfully moved files from %s"%src)
+    elif os.path.isfile(src):
+        #src is local file
+        s3_client.upload_file(src, bucket, os.basename(src))
+        logger.info("Successfully moved %s"%os.basename(src))
+    else: 
+        logger.info("Source provided is neither a file nor directory %s"%os.basename(src))
 
-# def mv_from_aws(args):
-#     if len(args) < 2:
-#         logger.warning("Must provide at least 2 arguments!")
-#         return
-#     dest = myb64decode(args[0])
-#     bucket = myb64decode(args[1])
-#     #src is aws bucket
-#     #dest is local dir
-#     prefix = ""
-#     if len(args) > 2:
-#         #allow for prefix use
-#         prefix = myb64decode(args[2])
-#     obj_response = s3_client.list_objects(Bucket = bucket, Prefix = prefix)
-#     if not 'Contents' in obj_response:
-#         logger.info("There are no files in bucket %s"%bucket)
-#         return
-#     for obj in obj_response['Contents']:
-#         destination = str(dest + '/' + obj[unicode('Key')])
-#         logger.debug(destination)
-#         #Assume key is file with extension
-#         s3_client.download_file(Bucket = bucket, Key = obj[unicode('Key')], Filename = destination)
-#     logger.info("Successfully retreived files from %s"%bucket)
+def mv_from_aws(args):
+    if len(args) < 2:
+        logger.warning("Must provide at least 2 arguments!")
+        return
+    dest = myb64decode(args[0])
+    bucket = myb64decode(args[1])
+    #src is aws bucket
+    #dest is local dir
+    prefix = ""
+    if len(args) > 2:
+        #allow for prefix use
+        prefix = myb64decode(args[2])
+    obj_response = s3_client.list_objects(Bucket = bucket, Prefix = prefix)
+    if not 'Contents' in obj_response:
+        logger.info("There are no files in bucket %s"%bucket)
+        return
+    for obj in obj_response['Contents']:
+        destination = str(dest + '/' + obj[unicode('Key')])
+        print(destination)
+        #Assume key is file with extension
+        s3_client.download_file(Bucket = bucket, Key = obj[unicode('Key')], Filename = destination)
+    logger.info("Successfully retreived files from %s"%bucket)
 
 def dp_main(args):
     cdqr_exec = "/usr/local/bin/cdqr.py"
     logger.debug("Data Processing: {}".format(args))
-    if args.cdqr: 
+    if args.cdqr:
         logger.debug("Attempting to process data with CDQR: {}".format(args.cdqr))
         process_cdqr(cdqr_exec, args.cdqr)
     elif args.mv_local:
@@ -320,18 +291,18 @@ def dp_main(args):
         logger.debug("Arguments passed: {}".format(args))
         logger.warning("ERROR: Unable to parse Data Processing command. Exiting")
         exit(1)
-
+ 
 # Main Program
 def main():
-    version = "Skadi Automation Engine 1.0.0"
+    version = "CCF-VM Automation Engine 0.0.1"
     logger.debug(version)
 
     # Build Parser Options
-    parser = argparse.ArgumentParser(description='Skadi Automation Engine')
+    parser = argparse.ArgumentParser(description='CCF-VM Automation Engine')
     subparsers = parser.add_subparsers(help='Automation Options', dest='auto_type')
     add_es_parsers(subparsers)
     add_ts_parsers(subparsers)
-#    add_os_parsers(subparsers)
+    add_os_parsers(subparsers)
     add_dp_parsers(subparsers)
     parser.add_argument('-v','--version',
                         action='version',
@@ -343,15 +314,15 @@ def main():
         es_main(args)
     elif args.auto_type == 'ts':
         ts_main(args)
-    # elif args.auto_type == 'os':
-    #     os_main(args)
+    elif args.auto_type == 'os':
+        os_main(args)
     elif args.auto_type == 'dp':
         dp_main(args)
     else:
         logger.debug("ERROR: Invalid command type. Exiting")
         exit(1)
 
-    logger.debug("Skadi Automation Engine Completed")
+    logger.debug("SUCCESS: CCF-VM Automation Engine Completed")
 
 if __name__ == "__main__":
     main()
