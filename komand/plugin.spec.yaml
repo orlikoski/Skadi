@@ -1,0 +1,180 @@
+plugin_spec_version: v1
+name: skadi
+title: "Skadi"
+description: "Open source collection of tools for digital forensics"
+version: 1.0.0
+vendor: komand
+tags: ["artifacts","SSH","elasticsearch", "time"]
+icon: ''
+enable_cache: true
+language: python
+help: |
+  ## About
+  [Skadi](https://github.com/orlikoski/Skadi) is a free, open source collection of tools that enables the collection, processing and advanced analysis of forensic artifacts and images. It will operate on laptops, on-prem servers, the Cloud, and can be installed on top of hardened / gold disk images.
+  It provides everyone the ability to collect data and convert the bits and bytes to words and numbers. All of this enables the ability to rapidly answer, "Have I been hacked? Do I need to call for help?"
+  ## Actions
+
+  ## Troubleshooting
+  This plugin does not contain any troubleshooting information.
+  ## Versions
+  * 1.0.0 - Initial plugin
+  ## Workflows
+  * Configure network devices
+  * Show the network devices' running-configuration
+  * Update firewall rules
+  ## References
+  * [Skadi](https://github.com/orlikoski/Skadi)
+  * [Wiki](https://github.com/orlikoski/Skadi/wiki)
+
+  https://github.com/orlikoski/Skadi/wiki
+
+connection:
+  username:
+    type: string
+    description: "User to run command as"
+    default: 'ottomate'
+    required: false
+  password:
+    type: password
+    description: "Password authentication or password to decrypt provided private key. Either this or SSH private key is required"
+    required: false
+  key:
+    type: password
+    description: "A base64 encoded SSH private key to use to authenticate to remote server. A newline is required after the beginning and before the end marker"
+    required: false
+  host:
+    type: string
+    description: "Remote host to connect to. Can be over-ridden in actions"
+    required: true
+  port:
+    type: integer
+    description: "Remote port to use"
+    default: 22
+    required: false
+
+actions:
+  elasticsearch_list:
+    name: "ElasticSearch List"
+    description: "Lists the current ES indices and their status"
+    input:
+      es_host:
+        type: string
+        description: "ElasticSearch host to connect to"
+      store_true:
+        description: "Command to execute on remote host"
+        type: string
+        required: true
+    output:
+      results:
+        description: "Output results"
+        type: string
+        required: true
+  elasticsearch_delete:
+    name: "ElasticSearch Delete"
+    description: "Base64 encoded index name to delete"
+    input:
+      index_name:
+        type: string
+        description: "ElasticSearch index name to delete"
+      command:
+        description: "Command to execute on remote host"
+        type: string
+        required: true
+    output:
+      results:
+        description: "Output results"
+        type: string
+        required: true
+  timesketch_createuser:
+    name: "TimeSketch Create User"
+    description: "Create a TimeSketch user with the base64 encoded username and  password provided"
+    input:
+      b64_username:
+        type: string
+        description: "b64_username"
+        required: true
+      b64_password:
+        description: "b64_password"
+        type: string
+        required: true
+    output:
+      results:
+        description: "Output results"
+        type: string
+        required: true
+  timesketch_deleteuser:
+    name: "TimeSketch Delete User"
+    description: "Delete the Base64 encoded timesketch name provided"
+    input:
+      timesketch_name:
+        type: string
+        description: "timesketch_name"
+        required: true
+      b64_password:
+        description: "b64_password"
+        type: string
+        required: true
+    output:
+      results:
+        description: "Output results"
+        type: string
+        required: true
+  dataprocessing_mvlocal:
+    name: "Data Processing Move Data "
+    description: "Move data on locally mounted partitions"
+    input:
+      source_local:
+        type: string
+        description: "Source local"
+        required: true
+      destination_local:
+        description: "Destination local"
+        type: string
+        required: true
+    output:
+      results:
+        description: "Output results"
+        type: string
+        required: true
+  dataprocessing_movetoaws:
+    name: "Move to AWS"
+    description: "Transfers data between AWS and local mounted partitions"
+    input:
+      source:
+        type: string
+        description: "Source"
+        required: true
+      bucket:
+        description: "Bucket in AWS"
+        type: string
+        required: true
+      prefix:
+        description: "Prefix"
+        type: string
+        required: true
+    output:
+      results:
+        description: "Output results"
+        type: string
+        required: true
+  dataprocessing_movefromaws:
+    name: "Move from AWS"
+    description: "Transfers data between AWS and local mounted partitions"
+    input:
+      destination:
+        type: string
+        description: "Destination"
+        required: true
+      bucket:
+        description: "Bucket in AWS"
+        type: string
+        required: true
+      prefix:
+        description: "Prefix"
+        type: string
+        required: true
+    output:
+      results:
+        description: "Output results"
+        type: string
+        required: true
