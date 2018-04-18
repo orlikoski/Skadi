@@ -76,7 +76,7 @@ echo $t_pass | sudo htpasswd -i -c /etc/nginx/.timesketch_auth $t_user
 
 echo $timeksetch_conf |base64 -d | sudo tee /etc/nginx/sites-available/timesketch
 sudo sed -i "s@$old_domain@$new_domain@g" /etc/nginx/sites-available/timesketch
-sudo ln -s /etc/nginx/sites-available/kibana /etc/nginx/sites-enabled/timesketch
+sudo ln -s /etc/nginx/sites-available/timesketch /etc/nginx/sites-enabled/timesketch
 
 # Kibana config and basic_auth user creation
 kibana_conf="c2VydmVyIHsKICBsaXN0ZW4gODA7CiAgICBzZXJ2ZXJfbmFtZSBraWJhbmEuMTAuMS4wLjQzLnhpcC5pbyB3d3cua2liYW5hLjEwLjEuMC40My54aXAuaW87CgogIGVycm9yX2xvZyAgIC92YXIvbG9nL25naW54L2tpYmFuYS5lcnJvci5sb2c7CiAgYWNjZXNzX2xvZyAgL3Zhci9sb2cvbmdpbngva2liYW5hLmFjY2Vzcy5sb2c7CgogIGxvY2F0aW9uIC8gewogICAgcHJveHlfcGFzcyBodHRwOi8vbG9jYWxob3N0OjU2MDE7CiAgICBhdXRoX2Jhc2ljICJLaWJhbmEgTG9naW4iOwogICAgYXV0aF9iYXNpY191c2VyX2ZpbGUgL2V0Yy9uZ2lueC8ua2liYW5hX2F1dGg7CiAgfQp9Cg=="
@@ -86,7 +86,7 @@ echo $k_pass | sudo htpasswd -i -c /etc/nginx/.kibana_auth $k_user
 
 echo $kibana_conf |base64 -d | sudo tee /etc/nginx/sites-available/kibana
 sudo sed -i "s@$old_domain@$new_domain@g" /etc/nginx/sites-available/kibana
-sudo ln -s /etc/nginx/sites-available/timesketch /etc/nginx/sites-enabled/kibana
+sudo ln -s /etc/nginx/sites-available/kibana /etc/nginx/sites-enabled/kibana
 
 sudo systemctl restart nginx
 sudo systemctl enable nginx
