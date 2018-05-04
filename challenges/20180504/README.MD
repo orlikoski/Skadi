@@ -1,7 +1,7 @@
 # May The 04, 2018 Challenge
 ![](https://www.skadivm.com/objects/images/challenges/May4SkadiChallenge.png)  
 
-DFIR and infosec practitioner spend a lot of time decoding / deciphering attempts by bad actors to hide or obfuscate malicious data. This challenge provides a fun example for practitioners to practice and hone their skills.  
+DFIR and infosec practitioners spend a lot of time decoding / deciphering attempts by bad actors to hide or obfuscate malicious data. This challenge provides a fun example for practitioners to practice and hone their skills.  
   
 ## Rules
 The first three people to send an email to `alan(at)skadivm[dot]com` with the fully decoded / deciphered message, along with the decoding / deciphering algorithm(s) used, will win some free Skadi swag!  
