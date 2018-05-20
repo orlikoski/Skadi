@@ -13,8 +13,8 @@ echo ""
 echo "Example Domain: 'mydomain.com'"
 echo "Results in the following: "
 echo "   - 'mydomain.com'"
-echo "   - 'mydomain.com\kibana'"
-echo "   - 'mydomain.com\cerebro'"
+echo "   - 'mydomain.com/kibana'"
+echo "   - 'mydomain.com/cerebro'"
 echo ""
 echo "All of this can be changed in the following file:"
 echo "   - /etc/nginx/sites-available/default"
@@ -39,7 +39,7 @@ sudo sysctl -p
 # Ask for and validate domain name to use
 echo ""
 echo ""
-read -p "Please enter the domain name to use (leave blank if not using a FQDN): " new_domain
+read -p "Please enter the hostname name to use (leave blank if not using a FQDN or routable hostname): " new_domain
 
 if [ -z "$new_domain" ]; then
   echo "Warning: Domain entered was Null or empty"
