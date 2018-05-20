@@ -50,6 +50,11 @@ fi
 # Install gunicorn
 sudo pip2 install gunicorn
 
+# Update Kibana to work with forwarding
+sudo systemctl stop kibana
+sudo sed -i "s@\#server.basePath: \"\"@server.basePath: \"/kibana\"@g" /etc/kibana/kibana.yml
+sudo systemctl start kibana
+
 # Install Nginx and web utils
 sudo apt install nginx apache2-utils -y
 sudo ufw allow 'Nginx Full'
