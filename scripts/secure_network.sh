@@ -49,6 +49,9 @@ echo "net.ipv6.conf.default.disable_ipv6 = 1" | sudo tee -a /etc/sysctl.d/99-sys
 echo "net.ipv6.conf.lo.disable_ipv6 = 1" | sudo tee -a /etc/sysctl.d/99-sysctl.conf
 sudo sysctl -p
 
+# Install gunicorn
+sudo pip2 install gunicorn
+
 # Install Nginx and web utils
 sudo apt install nginx apache2-utils -y
 sudo ufw allow 'Nginx Full'
