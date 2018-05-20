@@ -30,6 +30,11 @@ echo ""
 read -n 1 -r -s -p "Press any key to continue... or CTRL+C to exit (nothing has been installed)"
 echo ""
 echo ""
+# Disable IPv6
+echo "net.ipv6.conf.all.disable_ipv6 = 1" | sudo tee -a /etc/sysctl.d/99-sysctl.conf
+echo "net.ipv6.conf.default.disable_ipv6 = 1" | sudo tee -a /etc/sysctl.d/99-sysctl.conf
+echo "net.ipv6.conf.lo.disable_ipv6 = 1" | sudo tee -a /etc/sysctl.d/99-sysctl.conf
+sudo sysctl -p
 
 # Ask for and validate domain name to use
 echo ""
@@ -42,12 +47,6 @@ if [ -z "$new_domain" ]; then
   echo "The server name can be changed later in /etc/nginx/sites-available/default"
 fi
 
-# Disable IPv6
-echo "net.ipv6.conf.all.disable_ipv6 = 1" | sudo tee -a /etc/sysctl.d/99-sysctl.conf
-echo "net.ipv6.conf.default.disable_ipv6 = 1" | sudo tee -a /etc/sysctl.d/99-sysctl.conf
-echo "net.ipv6.conf.lo.disable_ipv6 = 1" | sudo tee -a /etc/sysctl.d/99-sysctl.conf
-sudo sysctl -p
-
 # Install gunicorn
 sudo pip2 install gunicorn
 
@@ -59,6 +58,16 @@ sudo ufw --force enable
 
 # Configure Nginx for Kibana, Cerebro, and TimeSketch
 nginx_conf="c2VydmVyIHsKICBsaXN0ZW4gODA7CiAgc2VydmVyX25hbWUgXzsKICBjbGllbnRfbWF4X2JvZHlfc2l6ZSA3NU07CiAgcHJveHlfY29ubmVjdF90aW1lb3V0IDkwMHM7CiAgcHJveHlfcmVhZF90aW1lb3V0IDkwMHM7CiAgcm9vdCAgICAgICAgIC91c3Ivc2hhcmUvbmdpbngvaHRtbDsKICBlcnJvcl9wYWdlIDQwNCAvNDA0Lmh0bWw7CiAgICBsb2NhdGlvbiA9IC80MDQuaHRtbCB7fQogIGVycm9yX3BhZ2UgNTAwIDUwMiA1MDMgNTA0IC81MHguaHRtbDsKICAgIGxvY2F0aW9uID0gLzUweC5odG1sIHt9CgogIGVycm9yX2xvZyAgIC92YXIvbG9nL25naW54L2Vycm9yLmxvZzsKICBhY2Nlc3NfbG9nICAvdmFyL2xvZy9uZ2lueC9hY2Nlc3MubG9nOwoKICBsb2NhdGlvbiAvIHsKICAgIHByb3h5X3Bhc3MgaHR0cDovL2xvY2FsaG9zdDo1MDAwOwogICAgcHJveHlfaHR0cF92ZXJzaW9uIDEuMTsKICAgIHByb3h5X3NldF9oZWFkZXIgVXBncmFkZSAkaHR0cF91cGdyYWRlOwogICAgcHJveHlfc2V0X2hlYWRlciBDb25uZWN0aW9uICd1cGdyYWRlJzsKICAgIHByb3h5X3NldF9oZWFkZXIgSG9zdCAkaG9zdDsKICAgIHByb3h5X2NhY2hlX2J5cGFzcyAkaHR0cF91cGdyYWRlOwogICAgc3ViX2ZpbHRlciAnTG9nb3V0PC9hPicgJ0xvZ291dDwvYT48YnI+Jm5ic3A7Jm5ic3A7Jm5ic3A7PGEgdGFyZ2V0PSJfYmxhbmsiIHN0eWxlPSJjb2xvcjojZmZmOyIgaHJlZj0iL2tpYmFuYS8iPktpYmFuYTwvYT4mbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDs8YSB0YXJnZXQ9Il9ibGFuayIgc3R5bGU9ImNvbG9yOiNmZmY7IiBocmVmPSIvY2VyZWJyby8jL292ZXJ2aWV3P2hvc3Q9aHR0cDolMkYlMkZsb2NhbGhvc3Q6OTIwMCI+Q2VyZWJybzwvYT4nOwogICAgc3ViX2ZpbHRlciAnU2lnbiBpbjwvYnV0dG9uPicgJ1NpZ24gaW48L2J1dHRvbj48YnI+PGJyPjxhIHRhcmdldD0iX2JsYW5rIiBzdHlsZT0iY29sb3I6I2ZmZjsiIGhyZWY9Ii9raWJhbmEvIj5LaWJhbmE8L2E+PGJyPjxhIHRhcmdldD0iX2JsYW5rIiBzdHlsZT0iY29sb3I6I2ZmZjsiIGhyZWY9Ii9jZXJlYnJvLyMvb3ZlcnZpZXc/aG9zdD1odHRwOiUyRiUyRmxvY2FsaG9zdDo5MjAwIj5DZXJlYnJvPC9hPic7CiAgICBzdWJfZmlsdGVyX29uY2Ugb2ZmOwogIH0KCiAgbG9jYXRpb24gfiBeL2tpYmFuYSguKikkIHsKICAgIHByb3h5X2h0dHBfdmVyc2lvbiAxLjE7CiAgICBwcm94eV9zZXRfaGVhZGVyIFVwZ3JhZGUgJGh0dHBfdXBncmFkZTsKICAgIHByb3h5X3NldF9oZWFkZXIgQ29ubmVjdGlvbiAndXBncmFkZSc7CiAgICBwcm94eV9zZXRfaGVhZGVyIEhvc3QgJGhvc3Q7CiAgICBwcm94eV9jYWNoZV9ieXBhc3MgJGh0dHBfdXBncmFkZTsKICAgIHByb3h5X3Bhc3MgIGh0dHA6Ly9sb2NhbGhvc3Q6NTYwMTsKICAgIHJld3JpdGUgXi9raWJhbmEvKC4qKSQgLyQxIGJyZWFrOwogICAgcmV3cml0ZSBeL2tpYmFuYSQgL2tpYmFuYS87CiAgICBhdXRoX2Jhc2ljICJSZXN0cmljdGVkIENvbnRlbnQiOwogICAgYXV0aF9iYXNpY191c2VyX2ZpbGUgL2V0Yy9uZ2lueC8ua2liYW5hX2F1dGg7CiAgfQoKICBsb2NhdGlvbiAvY2VyZWJyby8gewogICAgcHJveHlfcGFzcyBodHRwOi8vbG9jYWxob3N0OjkwMDAvOwogICAgcHJveHlfc2V0X2hlYWRlciBIb3N0ICRob3N0OwogICAgYXV0aF9iYXNpYyAiUmVzdHJpY3RlZCBDb250ZW50IjsKICAgIGF1dGhfYmFzaWNfdXNlcl9maWxlIC9ldGMvbmdpbngvLmNlcmVicm9fYXV0aDsKICB9Cn0K"
+
+# Check for and remove old version of nginx setup files
+old_configs=("/etc/nginx/sites-available/cerebro" "/etc/nginx/sites-available/kibana" "/etc/nginx/sites-available/timesketch")
+for i in "${old_configs[@]}"
+do
+  sudo rm -f -- $i
+done
+
+# Configure default site
+echo $nginx_conf |base64 -d |sudo tee /etc/nginx/sites-available/default
 
 # Add domain name (if changed) and enable basic auth
 if [[ ! -z "$new_domain" ]]; then
