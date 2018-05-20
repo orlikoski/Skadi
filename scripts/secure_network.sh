@@ -1,5 +1,4 @@
 #!/bin/bash
-
 echo "Installing Skadi Pack: Secure Networking"
 echo "This installation will do the following:"
 echo "  - Disable IPv6"
