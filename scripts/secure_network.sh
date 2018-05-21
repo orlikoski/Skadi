@@ -1,5 +1,4 @@
-#!/bin/bash 
-
+#!/bin/bash
 echo "Installing Skadi Pack: Secure Networking"
 echo "This installation will do the following:"
 echo "  - Disable IPv6"
@@ -10,16 +9,15 @@ echo ""
 echo "In order to continue a domain name needs to provided and the Kibana, Cerebro, and TimeSketch websites will be setup as sub-domains"
 echo "For testing and home/student use it is recommended to use a 'xip.io' domain. Read more about it here: http://xip.io/"
 echo ""
+echo ""
 echo "Example Domain: 'mydomain.com'"
 echo "Results in the following: "
-echo "   - 'kibana.mydomain.com'"
-echo "   - 'cerebro.mydomain.com'"
-echo "   - 'timesketch.mydomain.com'"
+echo "   - 'mydomain.com'"
+echo "   - 'mydomain.com/kibana'"
+echo "   - 'mydomain.com/cerebro'"
 echo ""
-echo "All of this can be changed in the following files:"
-echo "   - /etc/nginx/sites-available/kibana"
-echo "   - /etc/nginx/sites-available/cerebro"
-echo "   - /etc/nginx/sites-available/timesketch"
+echo "All of this can be changed in the following file:"
+echo "   - /etc/nginx/sites-available/default"
 echo ""
 echo ""
 echo "All usernames and passwords are made dynamically at run time"
@@ -32,22 +30,30 @@ echo ""
 read -n 1 -r -s -p "Press any key to continue... or CTRL+C to exit (nothing has been installed)"
 echo ""
 echo ""
-
-# Ask for and validate domain name to use
-echo ""
-echo ""
-read -p "Please enter the domain name to use: " new_domain
-
-if [ -z "$new_domain" ]; then
-        echo "ERROR: Domain cannot be empty or Null. Exiting"
-        exit 1
-fi
-
 # Disable IPv6
 echo "net.ipv6.conf.all.disable_ipv6 = 1" | sudo tee -a /etc/sysctl.d/99-sysctl.conf
 echo "net.ipv6.conf.default.disable_ipv6 = 1" | sudo tee -a /etc/sysctl.d/99-sysctl.conf
 echo "net.ipv6.conf.lo.disable_ipv6 = 1" | sudo tee -a /etc/sysctl.d/99-sysctl.conf
 sudo sysctl -p
+
+# Ask for and validate domain name to use
+echo ""
+echo ""
+read -p "Please enter the hostname name to use (leave blank if not using a FQDN or routable hostname): " new_domain
+
+if [ -z "$new_domain" ]; then
+  echo "Warning: Domain entered was Null or empty"
+  echo "Using '_' for server name which will listen to all incoming requests"
+  echo "The server name can be changed later in /etc/nginx/sites-available/default"
+fi
+
+# Install gunicorn
+sudo pip2 install gunicorn
+
+# Update Kibana to work with forwarding
+sudo systemctl stop kibana
+sudo sed -i "s@\#server.basePath: \"\"@server.basePath: \"/kibana\"@g" /etc/kibana/kibana.yml
+sudo systemctl start kibana
 
 # Install Nginx and web utils
 sudo apt install nginx apache2-utils -y
@@ -56,37 +62,33 @@ sudo ufw allow 'OpenSSH'
 sudo ufw --force enable
 
 # Configure Nginx for Kibana, Cerebro, and TimeSketch
-old_domain="10.1.0.43.xip.io"
+nginx_conf="c2VydmVyIHsKICBsaXN0ZW4gODA7CiAgc2VydmVyX25hbWUgXzsKICBjbGllbnRfbWF4X2JvZHlfc2l6ZSA3NU07CiAgcHJveHlfY29ubmVjdF90aW1lb3V0IDkwMHM7CiAgcHJveHlfcmVhZF90aW1lb3V0IDkwMHM7CiAgcm9vdCAgICAgICAgIC91c3Ivc2hhcmUvbmdpbngvaHRtbDsKICBlcnJvcl9wYWdlIDQwNCAvNDA0Lmh0bWw7CiAgICBsb2NhdGlvbiA9IC80MDQuaHRtbCB7fQogIGVycm9yX3BhZ2UgNTAwIDUwMiA1MDMgNTA0IC81MHguaHRtbDsKICAgIGxvY2F0aW9uID0gLzUweC5odG1sIHt9CgogIGVycm9yX2xvZyAgIC92YXIvbG9nL25naW54L2Vycm9yLmxvZzsKICBhY2Nlc3NfbG9nICAvdmFyL2xvZy9uZ2lueC9hY2Nlc3MubG9nOwoKICBsb2NhdGlvbiAvIHsKICAgIHByb3h5X3Bhc3MgaHR0cDovL2xvY2FsaG9zdDo1MDAwOwogICAgcHJveHlfaHR0cF92ZXJzaW9uIDEuMTsKICAgIHByb3h5X3NldF9oZWFkZXIgVXBncmFkZSAkaHR0cF91cGdyYWRlOwogICAgcHJveHlfc2V0X2hlYWRlciBDb25uZWN0aW9uICd1cGdyYWRlJzsKICAgIHByb3h5X3NldF9oZWFkZXIgSG9zdCAkaG9zdDsKICAgIHByb3h5X2NhY2hlX2J5cGFzcyAkaHR0cF91cGdyYWRlOwogICAgc3ViX2ZpbHRlciAnTG9nb3V0PC9hPicgJ0xvZ291dDwvYT48YnI+Jm5ic3A7Jm5ic3A7Jm5ic3A7PGEgdGFyZ2V0PSJfYmxhbmsiIHN0eWxlPSJjb2xvcjojZmZmOyIgaHJlZj0iL2tpYmFuYS8iPktpYmFuYTwvYT4mbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDs8YSB0YXJnZXQ9Il9ibGFuayIgc3R5bGU9ImNvbG9yOiNmZmY7IiBocmVmPSIvY2VyZWJyby8jL292ZXJ2aWV3P2hvc3Q9aHR0cDolMkYlMkZsb2NhbGhvc3Q6OTIwMCI+Q2VyZWJybzwvYT4nOwogICAgc3ViX2ZpbHRlciAnU2lnbiBpbjwvYnV0dG9uPicgJ1NpZ24gaW48L2J1dHRvbj48YnI+PGJyPjxhIHRhcmdldD0iX2JsYW5rIiBzdHlsZT0iY29sb3I6I2ZmZjsiIGhyZWY9Ii9raWJhbmEvIj5LaWJhbmE8L2E+PGJyPjxhIHRhcmdldD0iX2JsYW5rIiBzdHlsZT0iY29sb3I6I2ZmZjsiIGhyZWY9Ii9jZXJlYnJvLyMvb3ZlcnZpZXc/aG9zdD1odHRwOiUyRiUyRmxvY2FsaG9zdDo5MjAwIj5DZXJlYnJvPC9hPic7CiAgICBzdWJfZmlsdGVyX29uY2Ugb2ZmOwogIH0KCiAgbG9jYXRpb24gfiBeL2tpYmFuYSguKikkIHsKICAgIHByb3h5X2h0dHBfdmVyc2lvbiAxLjE7CiAgICBwcm94eV9zZXRfaGVhZGVyIFVwZ3JhZGUgJGh0dHBfdXBncmFkZTsKICAgIHByb3h5X3NldF9oZWFkZXIgQ29ubmVjdGlvbiAndXBncmFkZSc7CiAgICBwcm94eV9zZXRfaGVhZGVyIEhvc3QgJGhvc3Q7CiAgICBwcm94eV9jYWNoZV9ieXBhc3MgJGh0dHBfdXBncmFkZTsKICAgIHByb3h5X3Bhc3MgIGh0dHA6Ly9sb2NhbGhvc3Q6NTYwMTsKICAgIHJld3JpdGUgXi9raWJhbmEvKC4qKSQgLyQxIGJyZWFrOwogICAgcmV3cml0ZSBeL2tpYmFuYSQgL2tpYmFuYS87CiAgICBhdXRoX2Jhc2ljICJSZXN0cmljdGVkIENvbnRlbnQiOwogICAgYXV0aF9iYXNpY191c2VyX2ZpbGUgL2V0Yy9uZ2lueC8ua2liYW5hX2F1dGg7CiAgfQoKICBsb2NhdGlvbiAvY2VyZWJyby8gewogICAgcHJveHlfcGFzcyBodHRwOi8vbG9jYWxob3N0OjkwMDAvOwogICAgcHJveHlfc2V0X2hlYWRlciBIb3N0ICRob3N0OwogICAgYXV0aF9iYXNpYyAiUmVzdHJpY3RlZCBDb250ZW50IjsKICAgIGF1dGhfYmFzaWNfdXNlcl9maWxlIC9ldGMvbmdpbngvLmNlcmVicm9fYXV0aDsKICB9Cn0K"
 
-# Cerebro config and basic_auth user creation
-cerebro_conf="c2VydmVyIHsKICBsaXN0ZW4gODA7CiAgICBzZXJ2ZXJfbmFtZSBjZXJlYnJvLjEwLjEuMC40My54aXAuaW8gd3d3LmNlcmVicm8uMTAuMS4wLjQzLnhpcC5pbzsKCiAgZXJyb3JfbG9nICAgL3Zhci9sb2cvbmdpbngvY2VyZWJyby5lcnJvci5sb2c7CiAgYWNjZXNzX2xvZyAgL3Zhci9sb2cvbmdpbngvY2VyZWJyby5hY2Nlc3MubG9nOwoKCiAgbG9jYXRpb24gLyB7CiAgICBwcm94eV9wYXNzIGh0dHA6Ly9sb2NhbGhvc3Q6OTAwMDsKICAgIGF1dGhfYmFzaWMgIkNlcmVicm8gTG9naW4iOwogICAgYXV0aF9iYXNpY191c2VyX2ZpbGUgL2V0Yy9uZ2lueC8uY2VyZWJyb19hdXRoOwogIH0KfQo="
-c_user="ceruser_$(openssl rand -base64 3)"
-c_pass=$(openssl rand -base64 32)
-echo $c_pass | sudo htpasswd -i -c /etc/nginx/.cerebro_auth $c_user
+# Check for and remove old version of nginx setup files
+old_configs=("/etc/nginx/sites-available/cerebro" "/etc/nginx/sites-available/kibana" "/etc/nginx/sites-available/timesketch")
+for i in "${old_configs[@]}"
+do
+  sudo rm -f -- $i
+done
 
-echo $cerebro_conf |base64 -d | sudo tee /etc/nginx/sites-available/cerebro
-sudo sed -i "s/$old_domain/$new_domain/g" /etc/nginx/sites-available/cerebro
-sudo ln -s /etc/nginx/sites-available/cerebro /etc/nginx/sites-enabled/cerebro
+# Configure default site
+echo $nginx_conf |base64 -d |sudo tee /etc/nginx/sites-available/default
 
-# TimeSketch config and basic_auth user creation
-timeksetch_conf="c2VydmVyIHsKICBsaXN0ZW4gODA7CiAgICBzZXJ2ZXJfbmFtZSB0aW1lc2tldGNoLjEwLjEuMC40My54aXAuaW8gd3d3LnRpbWVza2V0Y2guMTAuMS4wLjQzLnhpcC5pbzsKCiAgZXJyb3JfbG9nICAgL3Zhci9sb2cvbmdpbngvdGltZXNrZXRjaC5lcnJvci5sb2c7CiAgYWNjZXNzX2xvZyAgL3Zhci9sb2cvbmdpbngvdGltZXNrZXRjaC5hY2Nlc3MubG9nOwoKICBsb2NhdGlvbiAvIHsKICAgIHByb3h5X3Bhc3MgaHR0cDovL2xvY2FsaG9zdDo1MDAwOwogICAgYXV0aF9iYXNpYyAiVGltZVNrZXRjaCBMb2dpbiI7CiAgICBhdXRoX2Jhc2ljX3VzZXJfZmlsZSAvZXRjL25naW54Ly50aW1lc2tldGNoX2F1dGg7CiAgfQp9Cg=="
-t_user="tsuser_$(openssl rand -base64 3)"
-t_pass=$(openssl rand -base64 32)
-echo $t_pass | sudo htpasswd -i -c /etc/nginx/.timesketch_auth $t_user
+# Add domain name (if changed) and enable basic auth
+if [[ ! -z "$new_domain" ]]; then
+  echo "Replacing default server name '_' with '$new_domain'"
+  sudo sed -i "s/_\;/$new_domain\;/g" /etc/nginx/sites-available/default
+fi
 
-echo $timeksetch_conf |base64 -d | sudo tee /etc/nginx/sites-available/timesketch
-sudo sed -i "s@$old_domain@$new_domain@g" /etc/nginx/sites-available/timesketch
-sudo ln -s /etc/nginx/sites-available/timesketch /etc/nginx/sites-enabled/timesketch
-
-# Kibana config and basic_auth user creation
-kibana_conf="c2VydmVyIHsKICBsaXN0ZW4gODA7CiAgICBzZXJ2ZXJfbmFtZSBraWJhbmEuMTAuMS4wLjQzLnhpcC5pbyB3d3cua2liYW5hLjEwLjEuMC40My54aXAuaW87CgogIGVycm9yX2xvZyAgIC92YXIvbG9nL25naW54L2tpYmFuYS5lcnJvci5sb2c7CiAgYWNjZXNzX2xvZyAgL3Zhci9sb2cvbmdpbngva2liYW5hLmFjY2Vzcy5sb2c7CgogIGxvY2F0aW9uIC8gewogICAgcHJveHlfcGFzcyBodHRwOi8vbG9jYWxob3N0OjU2MDE7CiAgICBhdXRoX2Jhc2ljICJLaWJhbmEgTG9naW4iOwogICAgYXV0aF9iYXNpY191c2VyX2ZpbGUgL2V0Yy9uZ2lueC8ua2liYW5hX2F1dGg7CiAgfQp9Cg=="
+# Configure Kibana Credentials
 k_user="kibuser_$(openssl rand -base64 3)"
 k_pass=$(openssl rand -base64 32)
 echo $k_pass | sudo htpasswd -i -c /etc/nginx/.kibana_auth $k_user
 
-echo $kibana_conf |base64 -d | sudo tee /etc/nginx/sites-available/kibana
-sudo sed -i "s@$old_domain@$new_domain@g" /etc/nginx/sites-available/kibana
-sudo ln -s /etc/nginx/sites-available/kibana /etc/nginx/sites-enabled/kibana
+# Configure Cerebro Credentials
+c_user="ceruser_$(openssl rand -base64 3)"
+c_pass=$(openssl rand -base64 32)
+echo $c_pass | sudo htpasswd -i -c /etc/nginx/.cerebro_auth $c_user
 
 sudo systemctl restart nginx
 sudo systemctl enable nginx
@@ -104,23 +106,31 @@ echo ""
 echo ""
 echo ""
 echo "Nginx reverse proxy setup is complete with the following:"
-echo "Domain: '$new_domain'"
+if [[ ! -z "$new_domain" ]]; then
+  echo "Domain: '$new_domain'"
+else
+  echo "Domain: <not set so listening to all requests>"
+  new_domain="exampledomain.com"
+fi
 echo "The following are now being reverse proxied with authentication at: "
-echo "   - 'http://kibana.$new_domain'"
-echo "       - Username: $k_user"
-echo "       - Password: $k_pass"
 echo ""
-echo "   - 'http://cerebro.$new_domain'"
-echo "       - Username: $c_user"
-echo "       - Password: $c_pass"
+echo "  TimeSketch:"
+echo "   - 'http://$new_domain'"
 echo ""
-echo "   - 'http://timesketch.$new_domain'"
-echo "       - Username: $t_user"
-echo "       - Password: $t_pass"
+echo "  Kibana:"
+echo "   - 'http://$new_domain/kibana'"
+echo "   - Username: $k_user"
+echo "   - Password: $k_pass"
+echo ""
+echo "  Cerebro"
+echo "   - 'http://$new_domain/cerebro'"
+echo "   - Username: $c_user"
+echo "   - Password: $c_pass"
+echo ""
 echo ""
 echo "WARNING!!! Encryption is not enabled and it is strongly recommended to enable it"
 echo ""
 echo ""
-echo "Letsencrypt is installed and able to encrypt these sites. It is not enabled by default"
+echo "Letsencrypt is installed and able to encrypt these sites if a valid, internet routable FQDN is used. It is not enabled by default"
 echo "To start the Letsencrypt setup process type the following and follow the installation prompts:"
 echo "sudo certbot --nginx"
