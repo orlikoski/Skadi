@@ -47,8 +47,16 @@ if [ -z "$new_domain" ]; then
   echo "The server name can be changed later in /etc/nginx/sites-available/default"
 fi
 
-# Install gunicorn
+# Install and configure gunicorn
 sudo pip2 install gunicorn
+sudo systemctl stop timesketch
+timesketch_service="W1VuaXRdCkRlc2NyaXB0aW9uPVRpbWVTa2V0Y2ggU2VydmljZQpBZnRlcj1uZXR3b3JrLnRhcmdldAoKW1NlcnZpY2VdClVzZXI9dGltZXNrZXRjaApHcm91cD10aW1lc2tldGNoCkV4ZWNTdGFydD0vdXNyL2xvY2FsL2Jpbi9ndW5pY29ybiAtLXdvcmtlcnMgNCAtLWJpbmQgMTI3LjAuMC4xOjUwMDAgdGltZXNrZXRjaC53c2dpCgpbSW5zdGFsbF0KV2FudGVkQnk9bXVsdGktdXNlci50YXJnZXQK"
+echo $timesketch_service |base64 -d | sudo tee /etc/systemd/system/timesketch.service
+sudo systemctl daemon-reload
+sudo systemctl restart timesketch.service
+
+
+
 
 # Update Kibana to work with forwarding
 sudo systemctl stop kibana

@@ -1,0 +1,769 @@
+[
+  {
+    "_id": "AWOV9XJlylatT0I1Go5E",
+    "_type": "dashboard",
+    "_source": {
+      "title": "Anti-Virus",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"size_x\":12,\"size_y\":5,\"panelIndex\":1,\"type\":\"visualization\",\"id\":\"Anti-Virus\",\"col\":1,\"row\":1}]",
+      "optionsJSON": "{\"darkTheme\":false}",
+      "uiStateJSON": "{\"P-1\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"match_all\":{}}}],\"highlightAll\":true,\"version\":true}"
+      }
+    }
+  },
+  {
+    "_id": "AWOV91rKylatT0I1IPiJ",
+    "_type": "dashboard",
+    "_source": {
+      "title": "Appcompat",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"col\":1,\"id\":\"Appcompat\",\"panelIndex\":1,\"row\":1,\"size_x\":12,\"size_y\":4,\"type\":\"visualization\"}]",
+      "optionsJSON": "{\"darkTheme\":false}",
+      "uiStateJSON": "{\"P-1\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":1,\"direction\":\"desc\"}}}}}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"match_all\":{}}}],\"highlightAll\":true,\"version\":true}"
+      }
+    }
+  },
+  {
+    "_id": "AWOV-OO1ylatT0I1Jf8A",
+    "_type": "dashboard",
+    "_source": {
+      "title": "Firewall",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"size_x\":12,\"size_y\":4,\"panelIndex\":1,\"type\":\"visualization\",\"id\":\"Firewall\",\"col\":1,\"row\":1}]",
+      "optionsJSON": "{\"darkTheme\":false}",
+      "uiStateJSON": "{\"P-1\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"match_all\":{}}}],\"highlightAll\":true,\"version\":true}"
+      }
+    }
+  },
+  {
+    "_id": "AWOV_N5CylatT0I1MYuE",
+    "_type": "dashboard",
+    "_source": {
+      "title": "Internet History",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"col\":1,\"id\":\"Internet-History\",\"panelIndex\":1,\"row\":1,\"size_x\":12,\"size_y\":4,\"type\":\"visualization\"}]",
+      "optionsJSON": "{\"darkTheme\":false}",
+      "uiStateJSON": "{\"P-1\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":2,\"direction\":\"desc\"}}}}}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"match_all\":{}}}],\"highlightAll\":true,\"version\":true}"
+      }
+    }
+  },
+  {
+    "_id": "AWOV_XClylatT0I1MoHc",
+    "_type": "dashboard",
+    "_source": {
+      "title": "Linux Items",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"size_x\":12,\"size_y\":4,\"panelIndex\":1,\"type\":\"visualization\",\"id\":\"Linux\",\"col\":1,\"row\":1}]",
+      "optionsJSON": "{\"darkTheme\":false}",
+      "uiStateJSON": "{\"P-1\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"match_all\":{}}}],\"highlightAll\":true,\"version\":true}"
+      }
+    }
+  },
+  {
+    "_id": "AWOV_vdMylatT0I1NRav",
+    "_type": "dashboard",
+    "_source": {
+      "title": "Parser Details",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"size_x\":12,\"size_y\":4,\"panelIndex\":1,\"type\":\"visualization\",\"id\":\"3184b570-3604-11e8-abe3-892c2e94b163\",\"col\":1,\"row\":1},{\"size_x\":12,\"size_y\":4,\"panelIndex\":2,\"type\":\"visualization\",\"id\":\"Parser-Results\",\"col\":1,\"row\":5}]",
+      "optionsJSON": "{\"darkTheme\":false}",
+      "uiStateJSON": "{\"P-2\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"match_all\":{}}}],\"highlightAll\":true,\"version\":true}"
+      }
+    }
+  },
+  {
+    "_id": "AWOV_9HtylatT0I1NnqE",
+    "_type": "dashboard",
+    "_source": {
+      "title": "Torrents",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"size_x\":12,\"size_y\":6,\"panelIndex\":1,\"type\":\"visualization\",\"id\":\"dfa77640-35ca-11e8-b33b-ff969cd97ce8\",\"col\":1,\"row\":1}]",
+      "optionsJSON": "{\"darkTheme\":false}",
+      "uiStateJSON": "{\"P-1\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"match_all\":{}}}],\"highlightAll\":true,\"version\":true}"
+      }
+    }
+  },
+  {
+    "_id": "AWOV_1TyylatT0I1Na8v",
+    "_type": "dashboard",
+    "_source": {
+      "title": "Persistence",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"size_x\":12,\"size_y\":6,\"panelIndex\":1,\"type\":\"visualization\",\"id\":\"Persistence\",\"col\":1,\"row\":1}]",
+      "optionsJSON": "{\"darkTheme\":false}",
+      "uiStateJSON": "{\"P-1\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"match_all\":{}}}],\"highlightAll\":true,\"version\":true}"
+      }
+    }
+  },
+  {
+    "_id": "AWOV_iauylatT0I1M7bE",
+    "_type": "dashboard",
+    "_source": {
+      "title": "Mac Items",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"size_x\":12,\"size_y\":5,\"panelIndex\":1,\"type\":\"visualization\",\"id\":\"MAC\",\"col\":1,\"row\":1}]",
+      "optionsJSON": "{\"darkTheme\":false}",
+      "uiStateJSON": "{\"P-1\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"match_all\":{}}}],\"highlightAll\":true,\"version\":true}"
+      }
+    }
+  },
+  {
+    "_id": "AWOWArYlylatT0I1QMcN",
+    "_type": "dashboard",
+    "_source": {
+      "title": "Prefetch",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"size_x\":12,\"size_y\":4,\"panelIndex\":1,\"type\":\"visualization\",\"id\":\"Prefetch\",\"col\":1,\"row\":1}]",
+      "optionsJSON": "{\"darkTheme\":false}",
+      "uiStateJSON": "{\"P-1\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"match_all\":{}}}],\"highlightAll\":true,\"version\":true}"
+      }
+    }
+  },
+  {
+    "_id": "AWOWCDIOylatT0I1Umdl",
+    "_type": "dashboard",
+    "_source": {
+      "title": "Windows System and User Information",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"col\":7,\"id\":\"User-Information\",\"panelIndex\":1,\"row\":1,\"size_x\":6,\"size_y\":3,\"type\":\"visualization\"},{\"size_x\":6,\"size_y\":3,\"panelIndex\":2,\"type\":\"visualization\",\"id\":\"AWOWDze0ylatT0I1Z9lC\",\"col\":1,\"row\":1}]",
+      "optionsJSON": "{\"darkTheme\":false}",
+      "uiStateJSON": "{\"P-1\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}},\"P-2\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"match_all\":{}}}],\"highlightAll\":true,\"version\":true}"
+      }
+    }
+  },
+  {
+    "_id": "Anti-Virus",
+    "_type": "search",
+    "_source": {
+      "title": "Anti-Virus",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "_source"
+      ],
+      "sort": [
+        "datetime",
+        "desc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"AWOVz90VaOby_OCrdJKD\",\"filter\":[],\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"require_field_match\":false,\"fragment_size\":2147483647},\"query\":{\"query_string\":{\"query\":\"parser:mcafee_protection* OR parser:symantec_scanlog* OR parser:winfirewall* OR parser:ccleaner*\",\"analyze_wildcard\":true}},\"highlightAll\":true,\"version\":true}"
+      }
+    }
+  },
+  {
+    "_id": "Mac",
+    "_type": "search",
+    "_source": {
+      "title": "Mac",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "message",
+        "parser"
+      ],
+      "sort": [
+        "datetime",
+        "desc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"AWOVz90VaOby_OCrdJKD\",\"filter\":[],\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"require_field_match\":false,\"fragment_size\":2147483647},\"query\":{\"query_string\":{\"query\":\"parser:airport* OR parser:apple_id* OR parser:bash* OR parser:bash_history* OR parser:bsm_log* OR parser:cron* OR parser:cups_ipp* OR parser:dockerjson* OR parser:dpkg* OR parser:fsevents* OR parser:google_drive* OR parser:hachoir* OR parser:imessage* OR parser:ipod_device* OR parser:java_idx* OR parser:mac_document_versions* OR parser:mac_keychain* OR parser:mac_securityd* OR parser:mackeeper_cache* OR parser:macosx_bluetooth* OR parser:macosx_install_history* OR parser:mactime* OR parser:macuser* OR parser:macwifi* OR parser:maxos_software_update* OR parser:mcafee_protection* OR parser:olecf* OR parser:openxml* OR parser:pe* OR parser:plist* OR parser:plist_default* OR parser:popularity_contest* OR parser:selinux* OR parser:spotlight* OR parser:sqlite* OR parser:ssh* OR parser:syslog* OR parser:systemd_journal* OR parser:time_machine* OR parser:utmp* OR parser:xchatlog* OR parser:xchatscrollback* OR parser:zeitgeist* OR parser:zsh_extended_history*\",\"analyze_wildcard\":true}},\"highlightAll\":true,\"version\":true}"
+      }
+    }
+  },
+  {
+    "_id": "Linux",
+    "_type": "search",
+    "_source": {
+      "title": "Linux",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "parser",
+        "message"
+      ],
+      "sort": [
+        "datetime",
+        "desc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"AWOVz90VaOby_OCrdJKD\",\"filter\":[],\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"require_field_match\":false,\"fragment_size\":2147483647},\"query\":{\"query_string\":{\"query\":\"parser:bash* OR parser:binary_cookies* OR parser:bsm_log* OR parser:cron* OR parser:cups_ipp* OR parser:dockerjson* OR parser:dpkg* OR parser:fsevents* OR parser:google_drive* OR parser:hachoir* OR parser:imessage* OR parser:java_idx* OR parser:olecf* OR parser:openxml* OR parser:pe* OR parser:popularity_contest* OR parser:selinux* OR parser:sqlite* OR parser:ssh OR parser:syslog* OR parser:systemd_journal* OR parser:utmp* OR parser:utmpx* OR parser:xchatlog* OR parser:xchatscrollback* OR parser:zsh_extended_history*\",\"analyze_wildcard\":true}},\"highlightAll\":true,\"version\":true}"
+      }
+    }
+  },
+  {
+    "_id": "Internet-History",
+    "_type": "search",
+    "_source": {
+      "title": "Internet History",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "message",
+        "parser"
+      ],
+      "sort": [
+        "datetime",
+        "desc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"AWOVz90VaOby_OCrdJKD\",\"filter\":[],\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"require_field_match\":false,\"fragment_size\":2147483647},\"query\":{\"query_string\":{\"query\":\"parser:bencode* OR parser:binary_cookies* OR parser:chrome_* OR parser:firefox_* OR parser:google_drive* OR parser:java_idx* OR parser:msiecf* OR parser:opera_* OR parser:safari_* OR parser:sqlite* OR parser:windows_typed_urls*\",\"analyze_wildcard\":true}},\"highlightAll\":true,\"version\":true}"
+      }
+    }
+  },
+  {
+    "_id": "Firewall",
+    "_type": "search",
+    "_source": {
+      "title": "Firewall",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "_source"
+      ],
+      "sort": [
+        "datetime",
+        "desc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"AWOVz90VaOby_OCrdJKD\",\"filter\":[],\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"require_field_match\":false,\"fragment_size\":2147483647},\"query\":{\"query_string\":{\"query\":\"parser:winfirewall* OR parser:mac_appfirewall_log*\",\"analyze_wildcard\":true}},\"highlightAll\":true,\"version\":true}"
+      }
+    }
+  },
+  {
+    "_id": "File-System",
+    "_type": "search",
+    "_source": {
+      "title": "File System",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "_source"
+      ],
+      "sort": [
+        "datetime",
+        "desc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"AWOVz90VaOby_OCrdJKD\",\"filter\":[],\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"require_field_match\":false,\"fragment_size\":2147483647},\"query\":{\"query_string\":{\"query\":\"parser:filestat OR parser:recycle_bin*\",\"analyze_wildcard\":true}},\"highlightAll\":true,\"version\":true}"
+      }
+    }
+  },
+  {
+    "_id": "Appcompatcache",
+    "_type": "search",
+    "_source": {
+      "title": "Appcompatcache",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "_source"
+      ],
+      "sort": [
+        "datetime",
+        "desc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"AWOVz90VaOby_OCrdJKD\",\"filter\":[],\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"require_field_match\":false,\"fragment_size\":2147483647},\"query\":{\"query_string\":{\"query\":\"parser:appcompatcache\",\"analyze_wildcard\":true}},\"highlightAll\":true,\"version\":true}"
+      }
+    }
+  },
+  {
+    "_id": "MFT-Results",
+    "_type": "search",
+    "_source": {
+      "title": "MFT",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "_source"
+      ],
+      "sort": [
+        "datetime",
+        "desc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"AWOVz90VaOby_OCrdJKD\",\"query\":{\"query_string\":{\"query\":\"parser:mft\",\"analyze_wildcard\":true}},\"filter\":[],\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"require_field_match\":false,\"fragment_size\":2147483647},\"highlightAll\":true,\"version\":true}"
+      }
+    }
+  },
+  {
+    "_id": "System-Information",
+    "_type": "search",
+    "_source": {
+      "title": "System Information",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "_source"
+      ],
+      "sort": [
+        "datetime",
+        "desc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"AWOVz90VaOby_OCrdJKD\",\"filter\":[],\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"require_field_match\":false,\"fragment_size\":2147483647},\"query\":{\"query_string\":{\"query\":\"parser:dockerjson* OR parser:dpkg* OR parser:explorer_* OR parser:fsevents* OR parser:mac_keychain* OR parser:mac_securityd* OR parser:mackeeper_cache* OR parser:macosx_bluetooth* OR parser:macosx_install_history* OR parser:mactime* OR parser:macuser* OR parser:macwifi* OR parser:network_drives* OR parser:rplog* OR parser:windows_shutdown* OR parser:windows_timezone* OR parser:windows_usb_devices* OR parser:windows_usbstor_devices* OR parser:windows_version*\",\"analyze_wildcard\":true}},\"highlightAll\":true,\"version\":true}"
+      }
+    }
+  },
+  {
+    "_id": "Persistence",
+    "_type": "search",
+    "_source": {
+      "title": "Persistence",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "_source"
+      ],
+      "sort": [
+        "datetime",
+        "desc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"AWOVz90VaOby_OCrdJKD\",\"filter\":[],\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"require_field_match\":false,\"fragment_size\":2147483647},\"query\":{\"query_string\":{\"query\":\"bagmru* OR parser:bencode* OR parser:mrulist* OR parser:msie_zone* OR parser:mstsc_rdp* OR parser:userassist* OR parser:windows_bootwindows_run* OR parser:windows_sam_users* OR parser:windows_services* OR parser:winrar_mru*\",\"analyze_wildcard\":true}},\"highlightAll\":true,\"version\":true}"
+      }
+    }
+  },
+  {
+    "_id": "Scheduled-Tasks",
+    "_type": "search",
+    "_source": {
+      "title": "Scheduled Tasks",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "_source"
+      ],
+      "sort": [
+        "datetime",
+        "desc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"AWOVz90VaOby_OCrdJKD\",\"filter\":[],\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"require_field_match\":false,\"fragment_size\":2147483647},\"query\":{\"query_string\":{\"query\":\"parser:winjob* OR parser:windows_task_cache* OR parser:cron*\",\"analyze_wildcard\":true}},\"highlightAll\":true,\"version\":true}"
+      }
+    }
+  },
+  {
+    "_id": "Windows-Event-Logs",
+    "_type": "search",
+    "_source": {
+      "title": "Windows Event Logs",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "_source"
+      ],
+      "sort": [
+        "datetime",
+        "desc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"AWOVz90VaOby_OCrdJKD\",\"filter\":[],\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"require_field_match\":false,\"fragment_size\":2147483647},\"query\":{\"query_string\":{\"query\":\"parser:winevt*\",\"analyze_wildcard\":true}},\"highlightAll\":true,\"version\":true}"
+      }
+    }
+  },
+  {
+    "_id": "Prefetch",
+    "_type": "search",
+    "_source": {
+      "title": "Prefetch",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "_source"
+      ],
+      "sort": [
+        "datetime",
+        "desc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"AWOVz90VaOby_OCrdJKD\",\"filter\":[],\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"require_field_match\":false,\"fragment_size\":2147483647},\"query\":{\"query_string\":{\"query\":\"parser:prefetch\",\"analyze_wildcard\":true}},\"highlightAll\":true,\"version\":true}"
+      }
+    }
+  },
+  {
+    "_id": "Registry",
+    "_type": "search",
+    "_source": {
+      "title": "Registry",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "_source"
+      ],
+      "sort": [
+        "datetime",
+        "desc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"AWOVz90VaOby_OCrdJKD\",\"filter\":[],\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"require_field_match\":false,\"fragment_size\":2147483647},\"query\":{\"query_string\":{\"query\":\"parser:winreg*\",\"analyze_wildcard\":true}},\"highlightAll\":true,\"version\":true}"
+      }
+    }
+  },
+  {
+    "_id": "USNJRNL",
+    "_type": "search",
+    "_source": {
+      "title": "USNJRNL",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "_source"
+      ],
+      "sort": [
+        "datetime",
+        "desc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"AWOVz90VaOby_OCrdJKD\",\"filter\":[],\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"require_field_match\":false,\"fragment_size\":2147483647},\"query\":{\"query_string\":{\"query\":\"parser:usnjrnl*\",\"analyze_wildcard\":true}},\"highlightAll\":true,\"version\":true}"
+      }
+    }
+  },
+  {
+    "_id": "781db980-35ca-11e8-b33b-ff969cd97ce8",
+    "_type": "search",
+    "_source": {
+      "title": "Torrents",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "message"
+      ],
+      "sort": [
+        "datetime",
+        "desc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"AWOVz90VaOby_OCrdJKD\",\"highlightAll\":true,\"version\":true,\"query\":{\"query_string\":{\"query\":\"parser:bencode*\",\"analyze_wildcard\":true}},\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "_id": "7a9bca50-35f5-11e8-bb5c-418087d19514",
+    "_type": "search",
+    "_source": {
+      "title": "OS Version",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "product_name"
+      ],
+      "sort": [
+        "datetime",
+        "desc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"AWOVz90VaOby_OCrdJKD\",\"highlightAll\":true,\"version\":true,\"query\":{\"query_string\":{\"query\":\"parser:windows_version*\",\"analyze_wildcard\":true}},\"filter\":[{\"meta\":{\"negate\":false,\"index\":\"AWOVz90VaOby_OCrdJKD\",\"type\":\"exists\",\"key\":\"product_name\",\"value\":\"exists\",\"disabled\":false,\"alias\":null},\"exists\":{\"field\":\"product_name\"},\"$state\":{\"store\":\"appState\"}}]}"
+      }
+    }
+  },
+  {
+    "_id": "3184b570-3604-11e8-abe3-892c2e94b163",
+    "_type": "visualization",
+    "_source": {
+      "title": "Parser Graph",
+      "visState": "{\"title\":\"Parser Graph\",\"type\":\"pie\",\"params\":{\"type\":\"pie\",\"addTooltip\":true,\"addLegend\":true,\"legendPosition\":\"right\",\"isDonut\":true,\"labels\":{\"show\":true,\"values\":true,\"last_level\":true,\"truncate\":100}},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{\"customLabel\":\"Number of Events\"}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"segment\",\"params\":{\"field\":\"parser.keyword\",\"size\":1000,\"order\":\"desc\",\"orderBy\":\"_term\",\"customLabel\":\"Parser Information\"}}],\"listeners\":{}}",
+      "uiStateJSON": "{\"vis\":{\"legendOpen\":true}}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"AWOVz90VaOby_OCrdJKD\",\"filter\":[],\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}}}"
+      }
+    }
+  },
+  {
+    "_id": "Internet-History",
+    "_type": "visualization",
+    "_source": {
+      "title": "Internet History",
+      "visState": "{\"title\":\"Internet History\",\"type\":\"table\",\"params\":{\"perPage\":100,\"showPartialRows\":false,\"showMeticsAtAllLevels\":false,\"sort\":{\"columnIndex\":2,\"direction\":\"desc\"},\"showTotal\":false,\"totalFunc\":\"sum\",\"type\":\"table\"},\"aggs\":[{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"message.keyword\",\"size\":10000,\"order\":\"desc\",\"orderBy\":\"_term\",\"customLabel\":\"Internet History Messages (Up to  1,000 entries shown)\"}},{\"id\":\"4\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"parser.keyword\",\"size\":5,\"order\":\"desc\",\"orderBy\":\"_term\",\"customLabel\":\"Parser\"}},{\"id\":\"5\",\"enabled\":true,\"type\":\"max\",\"schema\":\"metric\",\"params\":{\"field\":\"datetime\",\"customLabel\":\"Latest Activity\"}},{\"id\":\"6\",\"enabled\":true,\"type\":\"min\",\"schema\":\"metric\",\"params\":{\"field\":\"datetime\",\"customLabel\":\"Earliest Activity\"}}],\"listeners\":{}}",
+      "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":2,\"direction\":\"desc\"}}}}",
+      "description": "",
+      "savedSearchId": "Internet-History",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "_id": "Linux",
+    "_type": "visualization",
+    "_source": {
+      "title": "Linux",
+      "visState": "{\"title\":\"Linux\",\"type\":\"table\",\"params\":{\"perPage\":100,\"showPartialRows\":false,\"showMeticsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\",\"type\":\"table\"},\"aggs\":[{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"message.keyword\",\"size\":1000,\"order\":\"desc\",\"orderBy\":\"_term\",\"customLabel\":\"Linux Messages (Up to  1,000 entries shown)\"}},{\"id\":\"4\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"parser.keyword\",\"size\":5,\"order\":\"desc\",\"orderBy\":\"_term\",\"customLabel\":\"Parser\"}},{\"id\":\"5\",\"enabled\":true,\"type\":\"max\",\"schema\":\"metric\",\"params\":{\"field\":\"datetime\",\"customLabel\":\"Latest Activity\"}},{\"id\":\"6\",\"enabled\":true,\"type\":\"min\",\"schema\":\"metric\",\"params\":{\"field\":\"datetime\",\"customLabel\":\"Earliest Activity\"}}],\"listeners\":{}}",
+      "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}",
+      "description": "",
+      "savedSearchId": "Linux",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "_id": "MAC",
+    "_type": "visualization",
+    "_source": {
+      "title": "MacOS",
+      "visState": "{\"title\":\"MacOS\",\"type\":\"table\",\"params\":{\"perPage\":100,\"showPartialRows\":false,\"showMeticsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\",\"type\":\"table\"},\"aggs\":[{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"message.keyword\",\"size\":1000,\"order\":\"desc\",\"orderBy\":\"_term\",\"customLabel\":\"MacOS Messages (Up to  1,000 entries shown)\"}},{\"id\":\"4\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"parser.keyword\",\"size\":5,\"order\":\"desc\",\"orderBy\":\"_term\",\"customLabel\":\"Parser\"}},{\"id\":\"5\",\"enabled\":true,\"type\":\"max\",\"schema\":\"metric\",\"params\":{\"field\":\"datetime\",\"customLabel\":\"Latest Activity\"}},{\"id\":\"6\",\"enabled\":true,\"type\":\"min\",\"schema\":\"metric\",\"params\":{\"field\":\"datetime\",\"customLabel\":\"Earliest Activity\"}}],\"listeners\":{}}",
+      "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}",
+      "description": "",
+      "savedSearchId": "Mac",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "_id": "Anti-Virus",
+    "_type": "visualization",
+    "_source": {
+      "title": "Anti-Virus",
+      "visState": "{\"title\":\"Anti-Virus\",\"type\":\"table\",\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMeticsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\",\"type\":\"table\"},\"aggs\":[{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"message.keyword\",\"size\":1000,\"order\":\"desc\",\"orderBy\":\"_term\",\"customLabel\":\"Anti-Virus Message (Up to  1,000 entries shown)\"}},{\"id\":\"3\",\"enabled\":true,\"type\":\"max\",\"schema\":\"metric\",\"params\":{\"field\":\"datetime\",\"customLabel\":\"Latest Activity\"}},{\"id\":\"4\",\"enabled\":true,\"type\":\"min\",\"schema\":\"metric\",\"params\":{\"field\":\"datetime\",\"customLabel\":\"Earliest Activity\"}}],\"listeners\":{}}",
+      "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}",
+      "description": "",
+      "savedSearchId": "Anti-Virus",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "_id": "Firewall",
+    "_type": "visualization",
+    "_source": {
+      "title": "Firewall",
+      "visState": "{\"title\":\"Firewall\",\"type\":\"table\",\"params\":{\"perPage\":100,\"showPartialRows\":false,\"showMeticsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\",\"type\":\"table\"},\"aggs\":[{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"message.keyword\",\"size\":1000,\"order\":\"desc\",\"orderBy\":\"_term\",\"customLabel\":\"Firewall Messages  (Up to  1,000 entries shown)\"}},{\"id\":\"3\",\"enabled\":true,\"type\":\"max\",\"schema\":\"metric\",\"params\":{\"field\":\"datetime\",\"customLabel\":\"Latest Activity\"}},{\"id\":\"4\",\"enabled\":true,\"type\":\"min\",\"schema\":\"metric\",\"params\":{\"field\":\"datetime\",\"customLabel\":\"Earliest Activity\"}}],\"listeners\":{}}",
+      "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}",
+      "description": "",
+      "savedSearchId": "Firewall",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "_id": "Appcompat",
+    "_type": "visualization",
+    "_source": {
+      "title": "Appcompat",
+      "visState": "{\"title\":\"Appcompat\",\"type\":\"table\",\"params\":{\"perPage\":100,\"showPartialRows\":false,\"showMeticsAtAllLevels\":false,\"sort\":{\"columnIndex\":1,\"direction\":\"desc\"},\"showTotal\":false,\"totalFunc\":\"sum\",\"type\":\"table\"},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"max\",\"schema\":\"metric\",\"params\":{\"field\":\"datetime\",\"customLabel\":\"Last Modified DateTime\"}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"message.keyword\",\"size\":1000,\"order\":\"desc\",\"orderBy\":\"_term\",\"customLabel\":\"Appcompat Messages (Up to  1,000 entries shown)\"}}],\"listeners\":{}}",
+      "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":1,\"direction\":\"desc\"}}}}",
+      "description": "",
+      "savedSearchId": "Appcompatcache",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "_id": "User-Information",
+    "_type": "visualization",
+    "_source": {
+      "title": "User Information",
+      "visState": "{\"title\":\"User Information\",\"type\":\"table\",\"params\":{\"perPage\":100,\"showPartialRows\":false,\"showMeticsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\",\"type\":\"table\"},\"aggs\":[{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"user_sid.keyword\",\"size\":1000,\"order\":\"desc\",\"orderBy\":\"_term\",\"customLabel\":\"User SID (Up to  1,000 entries shown)\"}},{\"id\":\"3\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"username.keyword\",\"size\":1000,\"order\":\"desc\",\"orderBy\":\"_term\",\"customLabel\":\"Username (if parsed)\"}},{\"id\":\"4\",\"enabled\":true,\"type\":\"max\",\"schema\":\"metric\",\"params\":{\"field\":\"datetime\",\"customLabel\":\"Latest Activity\"}},{\"id\":\"5\",\"enabled\":true,\"type\":\"min\",\"schema\":\"metric\",\"params\":{\"field\":\"datetime\",\"customLabel\":\"Earliest Activity\"}},{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{\"customLabel\":\"Number of Associated Logs\"}}],\"listeners\":{}}",
+      "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"AWOVz90VaOby_OCrdJKD\",\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "_id": "dfa77640-35ca-11e8-b33b-ff969cd97ce8",
+    "_type": "visualization",
+    "_source": {
+      "title": "Torrents",
+      "visState": "{\"title\":\"Torrents\",\"type\":\"table\",\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMeticsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\",\"type\":\"table\"},\"aggs\":[{\"id\":\"2\",\"enabled\":true,\"type\":\"max\",\"schema\":\"metric\",\"params\":{\"field\":\"datetime\",\"customLabel\":\"Latest Activity\"}},{\"id\":\"3\",\"enabled\":true,\"type\":\"min\",\"schema\":\"metric\",\"params\":{\"field\":\"datetime\",\"customLabel\":\"Earliest Activity\"}},{\"id\":\"4\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"message.keyword\",\"size\":1000,\"order\":\"desc\",\"orderBy\":\"2\",\"customLabel\":\"Torrent Messages (Up to  1,000 entries shown)\"}}],\"listeners\":{}}",
+      "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}",
+      "description": "",
+      "savedSearchId": "781db980-35ca-11e8-b33b-ff969cd97ce8",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "_id": "Scheduled-Tasks",
+    "_type": "visualization",
+    "_source": {
+      "title": "Scheduled Tasks",
+      "visState": "{\"title\":\"Scheduled Tasks\",\"type\":\"table\",\"params\":{\"perPage\":100,\"showPartialRows\":false,\"showMeticsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\",\"type\":\"table\"},\"aggs\":[{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"message.keyword\",\"size\":1000,\"order\":\"desc\",\"orderBy\":\"_term\",\"customLabel\":\"Scheduled Task Messages (Up to  1,000 entries shown)\"}},{\"id\":\"4\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"parser.keyword\",\"size\":5,\"order\":\"desc\",\"orderBy\":\"_term\",\"customLabel\":\"Parser\"}},{\"id\":\"5\",\"enabled\":true,\"type\":\"max\",\"schema\":\"metric\",\"params\":{\"field\":\"datetime\",\"customLabel\":\"Latest Activity\"}},{\"id\":\"6\",\"enabled\":true,\"type\":\"min\",\"schema\":\"metric\",\"params\":{\"field\":\"datetime\",\"customLabel\":\"Earliest Activity\"}}],\"listeners\":{}}",
+      "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}",
+      "description": "",
+      "savedSearchId": "Scheduled-Tasks",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "_id": "Persistence",
+    "_type": "visualization",
+    "_source": {
+      "title": "Persistence",
+      "visState": "{\"title\":\"Persistence\",\"type\":\"table\",\"params\":{\"perPage\":100,\"showPartialRows\":false,\"showMeticsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\",\"type\":\"table\"},\"aggs\":[{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"message.keyword\",\"size\":1000000,\"order\":\"desc\",\"orderBy\":\"_term\",\"customLabel\":\"Persistence Messages (Up to  1,000 entries shown)\"}},{\"id\":\"4\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"parser.keyword\",\"size\":5,\"order\":\"desc\",\"orderBy\":\"_term\",\"customLabel\":\"Parser\"}},{\"id\":\"5\",\"enabled\":true,\"type\":\"max\",\"schema\":\"metric\",\"params\":{\"field\":\"datetime\",\"customLabel\":\"Latest Activity\"}},{\"id\":\"6\",\"enabled\":true,\"type\":\"min\",\"schema\":\"metric\",\"params\":{\"field\":\"datetime\",\"customLabel\":\"Earliest Activity\"}}],\"listeners\":{}}",
+      "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}",
+      "description": "",
+      "savedSearchId": "Persistence",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "_id": "Registry",
+    "_type": "visualization",
+    "_source": {
+      "title": "Registry",
+      "visState": "{\"title\":\"Registry\",\"type\":\"table\",\"params\":{\"perPage\":100,\"showMeticsAtAllLevels\":false,\"showPartialRows\":false,\"showTotal\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"totalFunc\":\"sum\",\"type\":\"table\"},\"aggs\":[{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"message.keyword\",\"size\":1000,\"order\":\"desc\",\"orderBy\":\"_term\",\"customLabel\":\"Registry Messages (Up to  1,000 entries shown)\"}},{\"id\":\"4\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"parser.keyword\",\"size\":5,\"order\":\"desc\",\"orderBy\":\"_term\",\"customLabel\":\"Parser\"}},{\"id\":\"5\",\"enabled\":true,\"type\":\"max\",\"schema\":\"metric\",\"params\":{\"field\":\"datetime\",\"customLabel\":\"Latest Activity\"}},{\"id\":\"6\",\"enabled\":true,\"type\":\"min\",\"schema\":\"metric\",\"params\":{\"field\":\"datetime\",\"customLabel\":\"Earliest Activity\"}}],\"listeners\":{}}",
+      "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}",
+      "description": "",
+      "savedSearchId": "Registry",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "_id": "Parser-Results",
+    "_type": "visualization",
+    "_source": {
+      "title": "Parser Results",
+      "visState": "{\"title\":\"Parser Results\",\"type\":\"table\",\"params\":{\"perPage\":100,\"showPartialRows\":false,\"showMeticsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\",\"type\":\"table\"},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{\"customLabel\":\"Number of Records\"}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"parser.keyword\",\"size\":1000,\"order\":\"desc\",\"orderBy\":\"_term\",\"customLabel\":\"Parser Name\"}},{\"id\":\"3\",\"enabled\":true,\"type\":\"max\",\"schema\":\"metric\",\"params\":{\"field\":\"datetime\",\"customLabel\":\"Latest Activity\"}},{\"id\":\"4\",\"enabled\":true,\"type\":\"min\",\"schema\":\"metric\",\"params\":{\"field\":\"datetime\",\"customLabel\":\"Earliest Activity\"}}],\"listeners\":{}}",
+      "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"AWOVz90VaOby_OCrdJKD\",\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "_id": "Prefetch",
+    "_type": "visualization",
+    "_source": {
+      "title": "Prefetch",
+      "visState": "{\"title\":\"Prefetch\",\"type\":\"table\",\"params\":{\"perPage\":100,\"showPartialRows\":false,\"showMeticsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\",\"type\":\"table\"},\"aggs\":[{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"message.keyword\",\"size\":1000,\"order\":\"desc\",\"orderBy\":\"_term\",\"customLabel\":\"Prefetch Messages (Up to  1,000 entries shown)\"}},{\"id\":\"3\",\"enabled\":true,\"type\":\"max\",\"schema\":\"metric\",\"params\":{\"field\":\"datetime\",\"customLabel\":\"Latest Activity\"}},{\"id\":\"4\",\"enabled\":true,\"type\":\"min\",\"schema\":\"metric\",\"params\":{\"field\":\"datetime\",\"customLabel\":\"Earliest Activity\"}}],\"listeners\":{}}",
+      "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}",
+      "description": "",
+      "savedSearchId": "Prefetch",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "_id": "File-System",
+    "_type": "visualization",
+    "_source": {
+      "title": "File System",
+      "visState": "{\"title\":\"File System\",\"type\":\"table\",\"params\":{\"perPage\":100,\"showMeticsAtAllLevels\":false,\"showPartialRows\":false,\"showTotal\":false,\"sort\":{\"columnIndex\":1,\"direction\":\"desc\"},\"totalFunc\":\"sum\",\"type\":\"table\"},\"aggs\":[{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"message.keyword\",\"size\":1000,\"order\":\"desc\",\"orderBy\":\"_term\",\"customLabel\":\"File System Messages (Up to  1,000 entries shown)\"}},{\"id\":\"3\",\"enabled\":true,\"type\":\"max\",\"schema\":\"metric\",\"params\":{\"field\":\"datetime\",\"customLabel\":\"Latest Activity\"}},{\"id\":\"4\",\"enabled\":true,\"type\":\"min\",\"schema\":\"metric\",\"params\":{\"field\":\"datetime\",\"customLabel\":\"Earliest Activity\"}},{\"id\":\"5\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"is_allocated\",\"size\":5,\"order\":\"desc\",\"orderBy\":\"3\",\"customLabel\":\"Is Allocated\"}}],\"listeners\":{}}",
+      "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":1,\"direction\":\"desc\"}}}}",
+      "description": "",
+      "savedSearchId": "File-System",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "_id": "AWOWDze0ylatT0I1Z9lC",
+    "_type": "visualization",
+    "_source": {
+      "title": "OS Version",
+      "visState": "{\"title\":\"OS Version\",\"type\":\"table\",\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMeticsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\",\"type\":\"table\"},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{\"customLabel\":\"Number or Associated Records\"}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"product_name.keyword\",\"size\":1000,\"order\":\"desc\",\"orderBy\":\"1\",\"customLabel\":\"OS Version\"}}],\"listeners\":{}}",
+      "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}",
+      "description": "",
+      "savedSearchId": "7a9bca50-35f5-11e8-bb5c-418087d19514",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[]}"
+      }
+    }
+  }
+]

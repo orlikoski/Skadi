@@ -44,7 +44,7 @@ sudo sed -i "s/$oldhostname/$newhostname/g" /etc/hosts >/dev/null 2>&1
 echo skadi |sudo tee /etc/hostname >/dev/null 2>&1
 sudo systemctl restart systemd-logind.service >/dev/null 2>&1
 
-# Install dependancies: 
+# Install dependancies:
 sudo sed -i 's/deb cdrom/#deb cdrom/g' /etc/apt/sources.list
 sudo apt update -y
 sudo apt dist-upgrade -y
@@ -72,7 +72,7 @@ sudo apt install mono-devel -y
 
 #Install and Configure Elasticsearch
 wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
-echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-6.x.list
+echo "deb https://artifacts.elastic.co/packages/5.5/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-6.x.list
 sudo add-apt-repository ppa:webupd8team/java -y
 sudo apt update -y
 sudo apt dist-upgrade -y
@@ -123,8 +123,8 @@ sudo systemctl enable neo4j
 sudo apt install kibana logstash -y
 sudo sed -i 's@#server.host\: \"localhost\"@server.host\: \"0.0.0.0\"@g' /etc/kibana/kibana.yml
 sudo systemctl daemon-reload
-sudo systemctl restart kibana 
-sudo systemctl enable kibana 
+sudo systemctl restart kibana
+sudo systemctl enable kibana
 
 # Configure Celery
 celery_service="W1VuaXRdCkRlc2NyaXB0aW9uPUNlbGVyeSBTZXJ2aWNlCkFmdGVyPW5ldHdvcmsudGFyZ2V0CgpbU2VydmljZV0KVHlwZT1mb3JraW5nClVzZXI9Y2VsZXJ5Ckdyb3VwPWNlbGVyeQpQSURGaWxlPS9vcHQvY2VsZXJ5L2NlbGVyeS5waWRsb2NrCgpFeGVjU3RhcnQ9L3Vzci9sb2NhbC9iaW4vY2VsZXJ5IG11bHRpIHN0YXJ0IHNpbmdsZS13b3JrZXIgLUEgdGltZXNrZXRjaC5saWIudGFza3Mgd29ya2VyIC0tbG9nbGV2ZWw9aW5mbyAtLWxvZ2ZpbGU9L3Zhci9sb2cvY2VsZXJ5X3dvcmtlciAtLXBpZGZpbGU9L29wdC9jZWxlcnkvY2VsZXJ5LnBpZGxvY2sKRXhlY1N0b3A9L3Vzci9sb2NhbC9iaW4vY2VsZXJ5IG11bHRpIHN0b3B3YWl0IHNpbmdsZS13b3JrZXIgLS1waWRmaWxlPS9vcHQvY2VsZXJ5L2NlbGVyeS5waWRsb2NrIC0tbG9nZmlsZT0vdmFyL2xvZy9jZWxlcnlfd29ya2VyCkV4ZWNSZWxvYWQ9L3Vzci9sb2NhbC9iaW4vY2VsZXJ5IG11bHRpIHJlc3RhcnQgc2luZ2xlLXdvcmtlciAtLXBpZGZpbGU9L29wdC9jZWxlcnkvY2VsZXJ5LnBpZGxvY2sgLS1sb2dmaWxlPS92YXIvbG9nL2NlbGVyeV93b3JrZXIKCgpbSW5zdGFsbF0KV2FudGVkQnk9bXVsdGktdXNlci50YXJnZXQK"
@@ -291,9 +291,7 @@ echo "    sudo systemctl restart logstash automation_grpc_service"
 echo "    sudo systemctl enable logstash automation_grpc_service"
 echo ""
 echo ""
-echo "TimeSketch Initial User Information (reset with 'tsctl add_user -u $timesketchuser -p <password>')"
-echo "Username: $timesketchuser"
-echo "Password: $timesketchpassword"
+echo "Now installing secure networking pack"
+wget -O /tmp/secure_network.sh https://raw.githubusercontent.com/orlikoski/Skadi/master/scripts/secure_network.sh
+bash /tmp/secure_network.sh
 exec bash
-
-
