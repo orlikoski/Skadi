@@ -1,6 +1,10 @@
 #!/bin/bash
+set -e
 # This script converts Skadi 2018.1 to 2018.2
 # NOTE: All of the data in the ELK stack will be lost
+sudo cp /etc/elasticsearch/scripts/add_label.groovy /tmp/
+sudo cp /etc/elasticsearch/scripts/toggle_label.groovy /tmp/
+
 sudo apt purge elasticsearch kibana logstash -y
 sudo rm -rf /var/lib/elasticsearch /etc/elasticsearch /var/lib/kibana
 sudo -H pip install --upgrade pip
@@ -12,21 +16,38 @@ echo "deb https://artifacts.elastic.co/packages/5.x/apt stable main" | sudo tee 
 sudo apt update && sudo apt dist-upgrade -y
 sudo apt autoremove -y
 
-sudo -H pip install --upgrade botocore
-sudo -H pip install --upgrade boto3
-
-sudo wget -O /etc/elasticsearch/scripts/add_label.groovy https://raw.githubusercontent.com/google/timesketch/master/contrib/add_label.groovy
-sudo wget -O /etc/elasticsearch/scripts/toggle_label.groovy https://raw.githubusercontent.com/google/timesketch/master/contrib/toggle_label.groovy
-
 sudo apt install elasticsearch kibana logstash -y
+sudo cp /tmp/add_label.groovy /etc/elasticsearch/scripts/
+sudo cp /tmp/toggle_label.groovy /etc/elasticsearch/scripts/
+
+sudo -H pip install --upgrade botocore boto3 gunicorn
+
 sudo systemctl stop elasticsearch logstash kibana cerebro timesketch
 sudo sed -i 's@#server.host\: \"localhost\"@server.host\: \"0.0.0.0\"@g' /etc/kibana/kibana.yml
 sudo sed -i 's/#network.host\: 192.168.0.1/network.host\: localhost/g' /etc/elasticsearch/elasticsearch.yml
+
+# Assign jvm.options to 2GB
+# Default Values
+# -Xms1g
+# -Xmx1g
+sudo sed -i "s/-Xms1/-Xms2/g" /etc/elasticsearch/jvm.options
+sudo sed -i "s/-Xmx1/-Xmx2/g" /etc/elasticsearch/jvm.options
+
+timesketch_service="W1VuaXRdCkRlc2NyaXB0aW9uPVRpbWVTa2V0Y2ggU2VydmljZQpBZnRlcj1uZXR3b3JrLnRhcmdldAoKW1NlcnZpY2VdClVzZXI9dGltZXNrZXRjaApHcm91cD10aW1lc2tldGNoCkV4ZWNTdGFydD0vdXNyL2xvY2FsL2Jpbi9ndW5pY29ybiAtLXdvcmtlcnMgNCAtLWJpbmQgMTI3LjAuMC4xOjUwMDAgdGltZXNrZXRjaC53c2dpIAoKW0luc3RhbGxdCldhbnRlZEJ5PW11bHRpLXVzZXIudGFyZ2V0Cg=="
+echo $timesketch_service |base64 -d | sudo tee /etc/systemd/system/timesketch.service
+sudo systemctl daemon-reload
+sudo systemctl restart timesketch
 
 sudo systemctl restart elasticsearch logstash kibana cerebro timesketch
 sudo /bin/systemctl daemon-reload &&
 sudo /bin/systemctl enable elasticsearch logstash kibana &&
 sudo /bin/systemctl start elasticsearch logstash kibana
+
+
+# Install Networking pack
+echo "Now installing secure networking pack"
+wget -O /tmp/secure_network.sh https://raw.githubusercontent.com/orlikoski/Skadi/master/scripts/secure_network.sh
+bash /tmp/secure_network.sh
 
 curl -X PUT "localhost:9200/_template/all" -H 'Content-Type: application/json' -d'
 {
