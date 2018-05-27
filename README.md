@@ -16,7 +16,9 @@ There is a Slack community setup for developers and users of the Skadi ecosystem
   
 ## Latest Releases!!
 [Skadi Server 2018.2](https://drive.google.com/open?id=1hLkFoHIcb9C39aQsGN4i235GZnTHmxm9): Headless server ~2GB in size  
-[Skadi Desktop 2018.2](https://drive.google.com/open?id=1iIf-bGBwu0xZoZMTOQma8RIppsjMf6iu): Server plus Ubuntu's Default Desktop ~3GB in size
+[Skadi Desktop 2018.2](https://drive.google.com/open?id=1iIf-bGBwu0xZoZMTOQma8RIppsjMf6iu): Server plus Ubuntu's Default Desktop ~3GB in size  
+  
+[Latest Release Notes](https://github.com/orlikoski/Skadi/releases/tag/2018.2)  
 
 ### Previous Versions
 Skadi Server  
