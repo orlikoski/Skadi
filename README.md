@@ -21,7 +21,7 @@ There is a Slack community setup for developers and users of the Skadi ecosystem
 [Latest Release Notes](https://github.com/orlikoski/Skadi/releases/tag/2018.3)  
 
 ### Previous Versions
-Skadi Server
+Skadi Server  
 [Skadi Server 2018.2](https://drive.google.com/open?id=1hLkFoHIcb9C39aQsGN4i235GZnTHmxm9)  
 [Skadi Server 2018.1](https://drive.google.com/open?id=16DNRbr-uvwi9YrUeWT5HyyVd6O2eKMwe)  
 
