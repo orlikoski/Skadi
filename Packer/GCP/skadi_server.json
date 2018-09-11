@@ -1,0 +1,16 @@
+{
+  "builders": [
+    {
+      "type": "googlecompute",
+      "account_file": "../auth_files/creds.json",
+      "project_id": "skadi-216101",
+      "source_image": "ubuntu-1604-xenial-v20180831",
+      "ssh_username": "vagrant",
+      "image_name": "skadi-server",
+      "image_family": "skadi-server",
+      "disk_size": "10",
+      "disk_type": "pd-standard",
+      "zone": "us-central1-a"
+    }
+  ]
+}
