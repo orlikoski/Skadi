@@ -5,7 +5,8 @@ Vagrant.configure("2") do |config|
 
   config.vm.box = "skadivm/skadi_server"
   config.vm.define "skadi_server"
-  config.vm.box_version = "2018.3"
+  # Uncomment this line to choose specific version
+  # config.vm.box_version = "2018.3"
   config.vm.network "forwarded_port", guest: 80, host: 80
   # These are examples of how to expose more ports and add to VM networks
   # config.vm.network "forwarded_port", guest: 443, host: 8443
