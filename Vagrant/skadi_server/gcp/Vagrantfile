@@ -14,7 +14,7 @@ Vagrant.configure("2") do |config|
     google.name = "skadi-server"
     google.google_project_id = "enter GCP project id here"
     google.google_client_email = "enter service account email here"
-    google.google_json_key_location = "..\\..\\auth_files\\creds_gcp.json"
+    google.google_json_key_location = "../../auth_files/creds_gcp.json"
 
     google.instance_ready_timeout = '90'
     google.image_family = 'skadi-server'
@@ -22,7 +22,7 @@ Vagrant.configure("2") do |config|
     google.disk_type = 'pd-standard'
     google.machine_type = 'n1-standard-4'
     override.ssh.username = "alan"
-    override.ssh.private_key_path = "C:\\Users\\asorl\\.ssh\\google_compute_engine"
+    override.ssh.private_key_path = "C:/Users/asorl/.ssh/google_compute_engine"
     #override.ssh.private_key_path = "~/.ssh/id_rsa"
     #override.ssh.private_key_path = "~/.ssh/google_compute_engine"
   end
