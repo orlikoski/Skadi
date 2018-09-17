@@ -3,8 +3,8 @@
   "builders": [
     {
       "type": "googlecompute",
-      "account_file": "../auth_files/creds_gcp.json",
-      "project_id": "skadi-216101",
+      "account_file": "../auth_files/template_creds.json",
+      "project_id": "insert GCP project_id here",
       "source_image": "ubuntu-1604-xenial-v20180831",
       "ssh_username": "vagrant",
       "image_name": "skadi-server",
