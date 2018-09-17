@@ -70,7 +70,7 @@ sudo systemctl enable elasticsearch
 
 # Create a template in ES that sets the number of replicas for all indexes to 0
 sleep 60 # Give ES time to start
-curl -XPUT 'localhost:9200/my_index/_settings' -d '{"index.number_of_replicas" : 0}'
+curl -XPUT 'localhost:9200/_template/number_of_replicas' -d '{"template": "*","settings": {"number_of_replicas": 0}}'
 
 # Install Redis
 sudo add-apt-repository ppa:chris-lea/redis-server -y
