@@ -12,8 +12,8 @@ Vagrant.configure("2") do |config|
   # Change the following to align with resources available
   config.vm.provider :google do |google, override|
     google.name = "skadi-server"
-    google.google_project_id = "skadi-216101"
-    google.google_client_email = "vagrant@skadi-216101.iam.gserviceaccount.com"
+    google.google_project_id = "enter GCP project id here"
+    google.google_client_email = "enter service account email here"
     google.google_json_key_location = "..\\..\\auth_files\\creds_gcp.json"
 
     google.instance_ready_timeout = '90'
