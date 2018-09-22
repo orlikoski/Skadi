@@ -17,7 +17,10 @@ There is a Slack community setup for developers and users of the Skadi ecosystem
 ## Latest Releases!!
 [Skadi Server 2018.3](https://drive.google.com/open?id=160zmZzR2ULwz3SxLa2d4yZYiSHywuzq_): Headless server ~2GB in size  
 [Skadi Desktop 2018.3](https://drive.google.com/open?id=1x1M1-3ShYaKgHnRAbGIJ1CFs010nJ5zB): Server plus Ubuntu 16.04 Default Desktop ~3GB in size  
-[Vagrant Skadi Server 2018.3](https://app.vagrantup.com/skadivm/boxes/skadi_server): Headless Skadi server available through Vagrant. Install Vagrant and VirtualBox and then use this [Skadi Wiki for using Vagrant](https://github.com/orlikoski/Skadi/wiki/Vagrant-Information) to get started
+[Vagrant Skadi Server 2018.3](https://app.vagrantup.com/skadivm/boxes/skadi_server): Headless Skadi server available through Vagrant  
+[Vagrant Skadi Desktop 2018.3](https://app.vagrantup.com/skadivm/boxes/skadi_desktop): Skadi Desktop available through Vagrant
+   * Install Vagrant and VirtualBox and then use this [Skadi Wiki for using Vagrant](https://github.com/orlikoski/Skadi/wiki/Vagrant-Information) to get started
+
 
 [Skadi Portable 2018.3 ISO Image](https://drive.google.com/open?id=1SM-_Z4F-fnctERycEI0R6Hk-F8M7_WZ0): Live Boot ISO that runs Skadi from a USB drive and can install Skadi from USB drive to the host hardware (no networking or virtualization required)
 
