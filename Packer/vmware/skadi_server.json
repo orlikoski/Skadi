@@ -1,5 +1,5 @@
 {
-  "_comment": "Build with `packer build skadi_server.json`",
+  "_comment": "Build with `packer build skadi_server_newbuild.json`",
   "builders": [
     {
       "boot_command": [
@@ -85,41 +85,8 @@
         "../script/sshd.sh",
         "../script/virtualbox.sh",
         "../script/motd.sh",
-        "../script/desktop.sh",
         "../{{user `custom_script`}}",
         "../script/cleanup.sh"
-      ],
-      "type": "shell",
-      "expect_disconnect": "true"
-    },
-    {
-      "type": "file",
-      "source": "../../objects/images/Background.jpg",
-      "destination": "/tmp/SkadiBackground.jpg"
-    },
-    {
-      "type": "file",
-      "source": "../../objects/bookmarks/places.sqlite",
-      "destination": "/tmp/places.sqlite"
-    },
-    {
-      "environment_vars": [
-        "CLEANUP_PAUSE={{user `cleanup_pause`}}",
-        "DEBIAN_FRONTEND=noninteractive",
-        "DESKTOP={{user `desktop`}}",
-        "UPDATE={{user `update`}}",
-        "INSTALL_VAGRANT_KEY={{user `install_vagrant_key`}}",
-        "SSH_USERNAME={{user `ssh_username`}}",
-        "SSH_PASSWORD={{user `ssh_password`}}",
-        "http_proxy={{user `http_proxy`}}",
-        "https_proxy={{user `https_proxy`}}",
-        "ftp_proxy={{user `ftp_proxy`}}",
-        "rsync_proxy={{user `rsync_proxy`}}",
-        "no_proxy={{user `no_proxy`}}"
-      ],
-      "execute_command": "echo '{{ user `ssh_password` }}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
-      "scripts": [
-        "script/filemoves.sh"
       ],
       "type": "shell",
       "expect_disconnect": "true"
@@ -129,9 +96,9 @@
     "boot_command_prefix": "<enter><wait><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
     "cleanup_pause": "",
     "cpus": "4",
-    "memory": "8192",
+    "memory": "8196",
     "custom_script": "script/skadibuild.sh",
-    "desktop": "true",
+    "desktop": "false",
     "disk_size": "10240",
     "ftp_proxy": "{{env `ftp_proxy`}}",
     "headless": "false",
@@ -153,10 +120,10 @@
     "ssh_password": "vagrant",
     "ssh_username": "vagrant",
     "update": "false",
-    "vagrantfile_template": "../../Vagrant/skadi_desktop/virtualbox/Vagrantfile",
-    "version": "2018.3.1",
+    "vagrantfile_template": "../../Vagrant/skadi_server/virtualbox/Vagrantfile",
+    "version": "2018.3.2",
     "virtualbox_guest_os_type": "Ubuntu_64",
-    "vm_name": "skadi_desktop",
+    "vm_name": "skadi_server",
     "vmware_guest_os_type": "ubuntu-64"
   }
 }
