@@ -1,22 +1,23 @@
 #!/bin/bash
 
 echo "Updating OS"
-sudo apt -y update
-sudo apt -y install wget curl
-sudo apt -y dist-upgrade
-sudo apt -y autoremove
+sudo apt-get -y update
+sudo apt-get -y install wget curl
+sudo apt-get -y dist-upgrade
+sudo apt-get -y autoremove
 
+# Installs and Configures CDQR and CyLR
 echo "Updating CDQR"
-wget -O /tmp/cdqr.py https://raw.githubusercontent.com/rough007/CDQR/master/src/cdqr.py
+wget -O /tmp/cdqr.py https://raw.githubusercontent.com/orlikoski/CDQR/master/src/cdqr.py
 chmod a+x /tmp/cdqr.py
 sudo mv /tmp/cdqr.py /usr/local/bin/cdqr.py
+echo "CDQR is in /usr/local/bin/cdqr.py"
 
 echo "Updating CyLR"
 #Building the CyLR link
-LATEST_RELEASE=$(curl -L -s -H 'Accept: application/json' https://github.com/rough007/CyLR/releases/latest)
+LATEST_RELEASE=$(curl -L -s -H 'Accept: application/json' https://github.com/orlikoski/CyLR/releases/latest)
 LATEST_VERSION=$(echo $LATEST_RELEASE | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/')
-ARTIFACT_URL="https://github.com/rough007/CyLR/releases/download/$LATEST_VERSION/CyLR.zip"
-
+ARTIFACT_URL="https://github.com/orlikoski/CyLR/releases/download/$LATEST_VERSION/CyLR.zip"
 
 wget -O /tmp/CyLR.zip $ARTIFACT_URL
 if [ ! -d "/opt/CyLR" ]; then
@@ -37,9 +38,17 @@ else
   sudo apt install unzip -y
   unzip /tmp/CyLR.zip -d /opt/CyLR/
   if [ $? -ne 0 ]; then
-    echo "Update failed, exiting"
-    exit 1
+    echo "CyLR Update failed"
+  else
+    echo "CyLR is in /opt/CyLR/"
   fi
+fi
+
+# If CyLR.exe is on the Desktop, update it
+if [ -f /home/skadi/Desktop/CyLR.exe ]; then
+    sudo rm /home/skadi/Desktop/CyLR.exe
+    sudo cp /opt/CyLR/CyLR/CyLR.exe /home/skadi/Desktop/CyLR.exe
+    sudo chown skadi:skadi /home/skadi/Desktop/CyLR.exe
 fi
 
 rm /tmp/CyLR.zip
