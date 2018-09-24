@@ -1,0 +1,29 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "skadivm/skadi_desktop"
+  config.vm.define "skadi_desktop"
+  # Uncomment this line to choose specific version
+  # config.vm.box_version = "2018.3"
+
+  # Change the following to align with resources available
+  config.vm.provider :virtualbox do |v|
+    v.name = "skadi_desktop"
+    v.gui = true
+    v.customize ["modifyvm", :id, "--memory", 12288]
+    v.customize ["modifyvm", :id, "--cpus", 6]
+    v.customize ["modifyvm", :id, "--vram", "256"]
+    v.customize ["setextradata", "global", "GUI/MaxGuestResolution", "any"]
+    v.customize ["setextradata", :id, "CustomVideoMode1", "1024x768x32"]
+    v.customize ["modifyvm", :id, "--ioapic", "on"]
+    v.customize ["modifyvm", :id, "--rtcuseutc", "on"]
+    v.customize ["modifyvm", :id, "--accelerate3d", "on"]
+    v.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
+  end
+  # Uncomment the following lines to run the update script each time the VM is created
+  # config.vm.provision "shell", inline: <<-SHELL
+  #   /opt/skadi/update.sh
+  #   SHELL
+end
