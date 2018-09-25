@@ -15,12 +15,16 @@ There is a Slack community setup for developers and users of the Skadi ecosystem
 [Join the Skadi Community Slack](http://skadicommunity.herokuapp.com/)  
 
 ## Latest Releases!!
-[Skadi Server 2018.3](https://drive.google.com/open?id=160zmZzR2ULwz3SxLa2d4yZYiSHywuzq_): Headless server ~2GB in size  
-[Skadi Desktop 2018.3](https://drive.google.com/open?id=1x1M1-3ShYaKgHnRAbGIJ1CFs010nJ5zB): Server plus Ubuntu 16.04 Default Desktop ~3GB in size  
-[Vagrant Skadi Server 2018.3](https://app.vagrantup.com/skadivm/boxes/skadi_server): Headless Skadi server available through Vagrant  
-[Vagrant Skadi Desktop 2018.3](https://app.vagrantup.com/skadivm/boxes/skadi_desktop): Skadi Desktop available through Vagrant
-   * Install Vagrant and VirtualBox and then use this [Skadi Wiki for using Vagrant](https://github.com/orlikoski/Skadi/wiki/Vagrant-Information) to get started
+Skadi Server: Headless server ~2GB in size  
+ - [OVF Skadi Server 2018.4](https://drive.google.com/open?id=1QKvu7QwbBpG5DomKTV4tusmWFXYHLhbv)
+ - [Vagrant Skadi Server 2018.4](https://app.vagrantup.com/skadivm/boxes/skadi_server)
 
+Skadi Desktop: Server Features plus Ubuntu 16.04 Default Desktop ~3GB in size
+ - [OVF Skadi Desktop 2018.4](https://drive.google.com/open?id=1GiAocQhMAVpCb26vsTyGuRE8kYQLhhmW)
+ - [Vagrant Skadi Desktop 2018.4](https://app.vagrantup.com/skadivm/boxes/skadi_desktop)
+
+Installers:
+ - [Digitally Signed Installer Script](https://github.com/orlikoski/Skadi/wiki/Installation:-OpenSSL-Signed-Installation-Guide)
 
 [Skadi Portable 2018.3 ISO Image](https://drive.google.com/open?id=1SM-_Z4F-fnctERycEI0R6Hk-F8M7_WZ0): Live Boot ISO that runs Skadi from a USB drive and can install Skadi from USB drive to the host hardware (no networking or virtualization required)
 
@@ -28,13 +32,8 @@ There is a Slack community setup for developers and users of the Skadi ecosystem
 [Latest Release Notes](https://github.com/orlikoski/Skadi/releases/tag/2018.3)  
 
 ### Previous Versions
-Skadi Server  
-[Skadi Server 2018.2](https://drive.google.com/open?id=1hLkFoHIcb9C39aQsGN4i235GZnTHmxm9)  
-[Skadi Server 2018.1](https://drive.google.com/open?id=16DNRbr-uvwi9YrUeWT5HyyVd6O2eKMwe)  
-
-Skadi Desktop  
-[Skadi Desktop 2018.1](https://drive.google.com/open?id=1eq9ZVQAS8WUCNDMhQdjP9mFXdn75ekId)  
-[Skadi Desktop 2018.2](https://drive.google.com/open?id=1iIf-bGBwu0xZoZMTOQma8RIppsjMf6iu)  
+[Skadi Server 2018.3](https://drive.google.com/open?id=160zmZzR2ULwz3SxLa2d4yZYiSHywuzq_)  
+[Skadi Desktop 2018.3](https://drive.google.com/open?id=1x1M1-3ShYaKgHnRAbGIJ1CFs010nJ5zB)
 
 ### Kibana, TimeSketch, Cerebro Included
   ![](/objects/images/desk_tools.jpg?)  
@@ -49,7 +48,6 @@ Skadi Desktop
 
 ### Skadi Desktop (NEW!)
   ![](/objects/images/desktop.jpg?)  
-
 
 ## Skadi Add-on Packs  
 Skadi add-on packs are installed on top of the base Skadi VM to provide extra functionality  

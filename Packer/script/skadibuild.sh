@@ -1,5 +1,13 @@
 #!/bin/bash
-set -ex
+set -e
+# Set Hostname to skadi
+newhostname='skadi'
+oldhostname=$(</etc/hostname)
+sudo hostname $newhostname >/dev/null 2>&1
+sudo sed -i "s/$oldhostname/$newhostname/g" /etc/hosts >/dev/null 2>&1
+echo skadi |sudo tee /etc/hostname >/dev/null 2>&1
+sudo systemctl restart systemd-logind.service >/dev/null 2>&1
+
 # Create Skadi user
 SKADI_USER="skadi"
 SKADI_PASS="skadi"
@@ -17,7 +25,7 @@ echo "==> Giving ${SKADI_USER} sudo powers"
 echo "${SKADI_USER}        ALL=(ALL)       NOPASSWD: ALL" > /etc/sudoers.d/$SKADI_USER
 chmod 440 /etc/sudoers.d/$SKADI_USER
 
-sudo apt-get install curl wget -y
+sudo apt-get install curl wget software-properties-common -y
 
 # Add Repositories required:
 sudo sed -i 's/deb cdrom/#deb cdrom/g' /etc/apt/sources.list
@@ -31,15 +39,11 @@ echo "deb http://download.mono-project.com/repo/ubuntu stable-xenial main" | sud
 
 # Add Repositories for Elasticsearch
 wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
-echo "deb https://artifacts.elastic.co/packages/5.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-5.x.list
+echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-6.x.list
 sudo add-apt-repository ppa:webupd8team/java -y
 
 # Install Redis
 sudo add-apt-repository ppa:chris-lea/redis-server -y
-
-# Add Repositories for Neo4j
-wget -O - https://debian.neo4j.org/neotechnology.gpg.key | sudo apt-key add -
-echo 'deb http://debian.neo4j.org/repo stable/' | sudo tee -a /etc/apt/sources.list.d/neo4j.list
 
 # Add Repositories for Neo4j
 wget -O - https://debian.neo4j.org/neotechnology.gpg.key | sudo apt-key add -
@@ -54,7 +58,7 @@ sudo apt-get dist-upgrade -y
 sudo apt-get autoremove -y
 
 # Install Most Of The Things
-sudo apt-get install -y vim openssh-server software-properties-common unzip htop ca-certificates apt-transport-https docker-ce python-software-properties python-plaso plaso-tools mono-devel redis-server neo4j postgresql python-psycopg2 python-pip python-dev libffi-dev nginx apache2-utils python-certbot-nginx
+sudo apt-get install -y vim screen openssh-server unzip htop ca-certificates apt-transport-https docker-ce python-software-properties python-plaso plaso-tools mono-devel redis-server neo4j postgresql python-psycopg2 python-pip python-dev libffi-dev nginx apache2-utils python-certbot-nginx
 
 # Install Java and ELK
 echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
@@ -83,8 +87,8 @@ sudo systemctl restart elasticsearch
 sudo systemctl enable elasticsearch
 
 # Create a template in ES that sets the number of replicas for all indexes to 0
-sleep 10 # Give ES time to start
-curl -XPUT 'localhost:9200/_template/number_of_replicas' -d '{"template": "*","settings": {"number_of_replicas": 0}}'
+sleep 30 # Give ES time to start
+curl -XPUT 'localhost:9200/_template/number_of_replicas' -d '{"template": "*","settings": {"number_of_replicas": 0}}' -H'Content-Type: application/json'
 
 # Configure/Enable Redis
 sudo systemctl restart redis-server
@@ -107,10 +111,6 @@ sudo systemctl enable kibana
 # Configure TimeSketch
 SECRET_KEY="$(openssl rand -base64 32 | sha256sum)"
 psql_pw=$(openssl rand -base64 32 | sha256sum)
-
-sudo mkdir -p /etc/elasticsearch/scripts
-sudo wget -O /etc/elasticsearch/scripts/add_label.groovy https://raw.githubusercontent.com/google/timesketch/master/contrib/add_label.groovy
-sudo wget -O /etc/elasticsearch/scripts/toggle_label.groovy https://raw.githubusercontent.com/google/timesketch/master/contrib/toggle_label.groovy
 
 echo "local all timesketch md5"|sudo tee -a /etc/postgresql/9.5/main/pg_hba.conf
 sudo systemctl restart postgresql.service
@@ -224,7 +224,13 @@ fi
 rm /tmp/CyLR.zip
 echo ""
 echo ""
-
+echo "Adding Skadi /opt/skadi/update.sh script"
+sudo mkdir -p /opt/skadi
+sudo wget -O /opt/skadi/update.sh https://raw.githubusercontent.com/orlikoski/Skadi/master/scripts/update.sh
+sudo chown -R skadi:skadi /opt/skadi
+sudo chmod +x /opt/skadi/update.sh
+echo ""
+echo ""
 # Disable IPv6
 echo "net.ipv6.conf.all.disable_ipv6 = 1" | sudo tee -a /etc/sysctl.d/99-sysctl.conf
 echo "net.ipv6.conf.default.disable_ipv6 = 1" | sudo tee -a /etc/sysctl.d/99-sysctl.conf

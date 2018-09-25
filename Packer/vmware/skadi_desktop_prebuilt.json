@@ -3,10 +3,23 @@
   "builders": [
     {
       "type": "vmware-vmx",
-      "source_path": "C:/Path/To/Skadi Desktop 2018.3/Skadi Desktop 2018.3.vmx",
-      "ssh_username": "vagrant",
+      "source_path": "F:/VMWARE/Skadi Desktop 2018.4/Skadi Desktop 2018.4.vmx",
+      "ssh_username": "root",
       "ssh_password": "vagrant",
       "shutdown_command": "sudo shutdown -P now"
+    }
+  ],
+  "provisioners": [
+    {
+      "execute_command": "echo '{{ user `ssh_password` }}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
+      "scripts": [
+        "../script/vagrant.sh",
+        "../script/sshd.sh",
+        "../script/motd.sh",
+        "../script/cleanup.sh"
+      ],
+      "type": "shell",
+      "expect_disconnect": "true"
     }
   ],
   "post-processors": [
@@ -19,7 +32,8 @@
   ],
   "variables": {
     "vagrantfile_template": "../../Vagrant/skadi_desktop/vmware/Vagrantfile",
-    "version": "2018.3",
-    "vm_name": "skadi_desktop"
+    "version": "2018.4",
+    "vm_name": "skadi_desktop",
+    "install_vagrant_key": "true"
   }
 }

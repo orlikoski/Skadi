@@ -1,6 +1,6 @@
 #!/bin/bash -eux
 
-SSH_USER=${SSH_USERNAME:-vagrant}
+SSH_USER="skadi"
 DISK_USAGE_BEFORE_CLEANUP=$(df -h)
 
 # Make sure udev does not block our network - http://6.ptmc.org/?p=164
@@ -30,8 +30,6 @@ apt-get -y autoremove --purge
 apt-get -y clean
 apt-get -y autoclean
 
-echo "==> Installed packages"
-dpkg --get-selections | grep -v deinstall
 
 # Remove Bash history
 unset HISTFILE
@@ -47,11 +45,6 @@ echo "==> Clearing last login information"
 >/var/log/btmp
 
 # Whiteout /boot
-count=$(df --sync -kP /boot | tail -n1 | awk -F ' ' '{print $4}')
-let count--
-dd if=/dev/zero of=/boot/whitespace bs=1024 count=$count
-rm /boot/whitespace
-
 echo '==> Clear out swap and disable until reboot'
 set +e
 swapuuid=$(/sbin/blkid -o value -l -s UUID -t TYPE=swap)
@@ -60,18 +53,19 @@ case "$?" in
     *) exit 1 ;;
 esac
 set -e
-if [ "x${swapuuid}" != "x" ]; then
-    # Whiteout the swap partition to reduce box size
-    # Swap is disabled till reboot
-    swappart=$(readlink -f /dev/disk/by-uuid/$swapuuid)
-    /sbin/swapoff "${swappart}"
-    dd if=/dev/zero of="${swappart}" bs=1M || echo "dd exit code $? is suppressed"
-    /sbin/mkswap -U "${swapuuid}" "${swappart}"
-fi
+# if [ "x${swapuuid}" != "x" ]; then
+#     # Whiteout the swap partition to reduce box size
+#     # Swap is disabled till reboot
+#     swappart=$(readlink -f /dev/disk/by-uuid/$swapuuid)
+#     /sbin/swapoff "${swappart}"
+#     dd if=/dev/zero of="${swappart}" bs=1M || echo "dd exit code $? is suppressed"
+#     /sbin/mkswap -U "${swapuuid}" "${swappart}"
+# fi
 
 # Disable Swap on reboot
 sudo sed -i '/ swap / s/^/#/' /etc/fstab
 
+echo '==> Zero out free space on root partition /'
 # Zero out the free space to save space in the final image
 dd if=/dev/zero of=/EMPTY bs=1M  || echo "dd exit code $? is suppressed"
 rm -f /EMPTY
