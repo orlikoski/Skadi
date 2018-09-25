@@ -1,12 +1,12 @@
 {
-  "_comment": "Build with `packer build skadi_server.json`",
+  "_comment": "Build with `packer build skadi_desktop_prebuilt.json`",
   "builders": [
     {
-      "type": "vmware-vmx",
-      "source_path": "F:/VMWARE/Skadi 2018.4/Skadi 2018.4.vmx",
+      "type": "virtualbox-ovf",
+      "source_path": "F:/VirtualBox/OVF/Skadi Desktop 2018.4.ova",
       "ssh_username": "root",
       "ssh_password": "vagrant",
-      "shutdown_command": "sudo shutdown -P now"
+      "shutdown_command": "shutdown -P now"
     }
   ],
   "provisioners": [
@@ -16,6 +16,7 @@
         "../script/vagrant.sh",
         "../script/sshd.sh",
         "../script/motd.sh",
+        "../script/virtualbox.sh",
         "../script/cleanup.sh"
       ],
       "type": "shell",
@@ -31,8 +32,9 @@
     }
   ],
   "variables": {
-    "vagrantfile_template": "../../Vagrant/skadi_server/vmware/Vagrantfile",
+    "vagrantfile_template": "../../Vagrant/skadi_desktop/vmware/Vagrantfile",
     "version": "2018.4",
-    "vm_name": "skadi_server"
+    "vm_name": "skadi_desktop",
+    "install_vagrant_key": "true"
   }
 }
