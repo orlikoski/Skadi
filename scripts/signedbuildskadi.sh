@@ -281,15 +281,16 @@ echo ""
 echo ""
 clear
 echo "Installed Software Version Checks (Where it is supported)"
-/usr/bin/log2timeline.py --version
-/usr/local/bin/cdqr.py --version
+/usr/bin/log2timeline.py --version 2>&1 >/dev/null |awk '{ printf "Plaso Version %s\n", $5 }'
+/usr/local/bin/cdqr.py --version |awk '{split($0,a,":");printf "%s%s\n", a[1], a[2]}'
 mono /opt/CyLR/CyLR.exe --version |grep Version
-docker --version
-echo "ELK Version: $(curl --silent -XGET 'localhost:9200' |awk '/number/{print substr($3, 1, length($3)-1)}')"
-redis-server --version
-neo4j --version
-echo "Celery version: $(celery --version)"
-echo "Cerebro version: $cerebro_version"
+docker --version |awk '{split($3,a,",");printf "%s Version %s\n", $1, a[1]}'
+echo "ELK Version $(curl --silent -XGET 'localhost:9200' |awk '/number/{print substr($3, 2, length($3)-3)}')"
+pip show timesketch |grep Version:|awk '{split($0,a,":");printf "TimeSketch %s%s\n", a[1], a[2]}'
+redis-server --version|awk '{ split($3,a, "=");printf "%s Version %s\n", $1, a[2] }'
+neo4j --version |awk '{printf "Neo4j Version %s\n", $2}'
+echo "Celery Version $(celery --version |awk '{print$1}')"
+echo "Cerebro Version $cerebro_version"
 echo ""
 echo ""
 
