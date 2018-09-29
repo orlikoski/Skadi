@@ -3,7 +3,8 @@
 (pronounced “SKAHD-ee”) is a giantess and goddess of hunting in Norse mythology  
 _**Note: Skadi was formerly known as CCF-VM**_  
 
-# Version 2018.4 Rollback
+# Use Version 2018.3.x For Now
+## Version 2018.4 has been taken offline for now
  - Due to issues with the pip release version of TimeSketch not supporting ELK 6.x I pulled Skadi 2018.4 back and use 2018.3
  - As soon as the pip stable release of TS is available I'll release 2018.4.1
  - This was hard for me to do but having all the components  work out of the box is more important than having ELK 6.x installed
