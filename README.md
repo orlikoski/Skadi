@@ -16,12 +16,12 @@ There is a Slack community setup for developers and users of the Skadi ecosystem
 
 ## Latest Releases!!
 Skadi Server: Headless server ~2GB in size  
- - [OVF Skadi Server 2018.4](https://drive.google.com/open?id=1QKvu7QwbBpG5DomKTV4tusmWFXYHLhbv)
- - [Vagrant Skadi Server 2018.4](https://app.vagrantup.com/skadivm/boxes/skadi_server)
+ - [OVF Skadi Server 2018.3](https://drive.google.com/open?id=160zmZzR2ULwz3SxLa2d4yZYiSHywuzq_)
+ - [Vagrant Skadi Server 2018.3](https://app.vagrantup.com/skadivm/boxes/skadi_server)
 
 Skadi Desktop: Server Features plus Ubuntu 16.04 Default Desktop ~3GB in size
- - [OVF Skadi Desktop 2018.4](https://drive.google.com/open?id=1GiAocQhMAVpCb26vsTyGuRE8kYQLhhmW)
- - [Vagrant Skadi Desktop 2018.4](https://app.vagrantup.com/skadivm/boxes/skadi_desktop)
+ - [OVF Skadi Desktop 2018.3](https://drive.google.com/open?id=1x1M1-3ShYaKgHnRAbGIJ1CFs010nJ5zB)
+ - [Vagrant Skadi Desktop 2018.3](https://app.vagrantup.com/skadivm/boxes/skadi_desktop)
 
 Installers:
  - [Digitally Signed Installer](https://github.com/orlikoski/Skadi/wiki/Installation:-OpenSSL-Signed-Installation-Guide)
@@ -31,9 +31,6 @@ Installers:
 
 [Latest Release Notes](https://github.com/orlikoski/Skadi/releases/tag/2018.3)  
 
-### Previous Versions
-[Skadi Server 2018.3](https://drive.google.com/open?id=160zmZzR2ULwz3SxLa2d4yZYiSHywuzq_)  
-[Skadi Desktop 2018.3](https://drive.google.com/open?id=1x1M1-3ShYaKgHnRAbGIJ1CFs010nJ5zB)
 
 ### Kibana, TimeSketch, Cerebro Included
   ![](/objects/images/desk_tools.jpg?)  
