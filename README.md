@@ -12,6 +12,19 @@ _**Note: Skadi was formerly known as CCF-VM**_
 ## Purpose
 Skadi is a free, open source collection of tools that enables the collection, processing and advanced analysis of forensic artifacts and images. It scales to work effectively on laptops, desktops, servers, the cloud, and can be installed on top of hardened / gold disk images.   
 
+## Included Tools
+The following tools are combined into one platform that all work together to provide everyone with the ability to collect data, convert the bits and bytes to words and numbers, and analyse the results quickly and easily. All of this enables the ability to rapidly hunt for host based evidence of a malicious activities.  
+
+ - Plaso  
+ - CDQR  
+ - CyLR  
+ - Docker  
+ - ElasticSearch, Logstash, Kibana (ELK)  
+ - Redis  
+ - Neo4j  
+ - Celery  
+ - Cerebro  
+
 ## Skadi Wiki Page
 The answers to common questions and information about how to get started with Skadi is stored in the [Skadi Wiki Pages](https://github.com/orlikoski/skadi/wiki).
 
@@ -37,6 +50,11 @@ Installers:
 
 [Latest Release Notes](https://github.com/orlikoski/Skadi/releases/tag/2018.3)  
 
+## Skadi Add-on Packs  
+Skadi add-on packs are installed on top of the base Skadi VM to provide extra functionality  
+*  [Skadi Pack 01: Automation](https://github.com/orlikoski/Skadi/wiki/Skadi-Pack-01:-Automation): Provides two methods of integrating with any Automation tool: gRPC API or using SSH  
+*  [Skadi Pack 02: Secure Networking](https://github.com/orlikoski/Skadi/wiki/Skadi-Pack-02:-Secure-Networking): Updates the firewall and authenticated reverse proxy for use in network deployment. Provides instructions for obtaining TLS/SSL certificates  
+
 
 ### Kibana, TimeSketch, Cerebro Included
   ![](/objects/images/desk_tools.jpg?)  
@@ -52,23 +70,6 @@ Installers:
 ### Skadi Desktop (NEW!)
   ![](/objects/images/desktop.jpg?)  
 
-## Skadi Add-on Packs  
-Skadi add-on packs are installed on top of the base Skadi VM to provide extra functionality  
-*  [Skadi Pack 01: Automation](https://github.com/orlikoski/Skadi/wiki/Skadi-Pack-01:-Automation): Provides two methods of integrating with any Automation tool: gRPC API or using SSH  
-*  [Skadi Pack 02: Secure Networking](https://github.com/orlikoski/Skadi/wiki/Skadi-Pack-02:-Secure-Networking): Updates the firewall and authenticated reverse proxy for use in network deployment. Provides instructions for obtaining TLS/SSL certificates  
-
-## Included Tools
-The following tools are combined into one platform that all work together to provide everyone with the ability to collect data, convert the bits and bytes to words and numbers, and analyse the results quickly and easily. All of this enables the ability to rapidly hunt for host based evidence of a malicious activities.  
-
- - Plaso  
- - CDQR  
- - CyLR  
- - Docker  
- - ElasticSearch, Logstash, Kibana (ELK)  
- - Redis  
- - Neo4j  
- - Celery  
- - Cerebro  
 
 ## Videos and Media
 *  [Alamo ISSA 2018](https://docs.google.com/presentation/d/1Rl_wF9mUDOkPlbHiWAt-hOiJ-_X8WzTsRfgyYQi9t6M/edit?usp=sharing) Slides: Reviews CCF-VM components, walkthrough of how to install GCP version and discuss automation possibilities and risks
