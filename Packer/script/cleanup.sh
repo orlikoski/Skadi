@@ -1,4 +1,4 @@
-#!/bin/bash -eux
+#!/bin/bash
 
 SSH_USER="skadi"
 DISK_USAGE_BEFORE_CLEANUP=$(df -h)
@@ -6,7 +6,7 @@ DISK_USAGE_BEFORE_CLEANUP=$(df -h)
 # Make sure udev does not block our network - http://6.ptmc.org/?p=164
 echo "==> Cleaning up udev rules"
 rm -rf /dev/.udev/
-rm /lib/udev/rules.d/75-persistent-net-generator.rules
+rm -rf /lib/udev/rules.d/75-persistent-net-generator.rules
 
 echo "==> Cleaning up leftover dhcp leases"
 # Ubuntu 10.04
