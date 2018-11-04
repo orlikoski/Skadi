@@ -3,7 +3,7 @@
   "builders": [
     {
       "type": "vmware-vmx",
-      "source_path": "F:/VMWARE/Skadi 2018.4/Skadi 2018.4.vmx",
+      "source_path": "F:/VMWARE/Skadi Server 2018.4/Skadi Server 2018.4.vmx",
       "ssh_username": "root",
       "ssh_password": "vagrant",
       "shutdown_command": "sudo shutdown -P now"
