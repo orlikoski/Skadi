@@ -1,5 +1,15 @@
 #!/bin/bash
 set -e
+
+default_skadi_passwords=${DEFAULT_PASSWORDS:-"false"}
+
+if [ $default_skadi_passwords = "false" ]
+  then
+    echo "Using random username and passwords for TimeSketch and Nginx proxy"
+else
+    echo "Using Skadi default username and password of skadi:skadi for TimeSketch and Nginx proxy"
+fi
+
 # Set Hostname to skadi
 newhostname='skadi'
 oldhostname=$(</etc/hostname)
@@ -16,7 +26,7 @@ SKADI_USER_HOME="/home/skadi"
 if ! id -u $SKADI_USER >/dev/null 2>&1; then
     echo "==> Creating $SKADI_USER user"
     /usr/sbin/groupadd $SKADI_USER
-    /usr/sbin/useradd $SKADI_USER -g $SKADI_USER -G sudo -d $SKADI_USER_HOME --create-home
+    /usr/sbin/useradd $SKADI_USER -g $SKADI_USER -G sudo -d $SKADI_USER_HOME --create-home -s "/bin/bash"
     echo "${SKADI_USER}:${SKADI_PASS}" | chpasswd
 fi
 
@@ -26,6 +36,9 @@ echo "${SKADI_USER}        ALL=(ALL)       NOPASSWD: ALL" > /etc/sudoers.d/$SKAD
 chmod 440 /etc/sudoers.d/$SKADI_USER
 
 sudo apt-get install curl wget software-properties-common -y
+
+# Set Timezone to UTC
+sudo timedatectl set-timezone UTC
 
 # Add Repositories required:
 sudo sed -i 's/deb cdrom/#deb cdrom/g' /etc/apt/sources.list
@@ -59,7 +72,7 @@ sudo apt-get autoremove -y
 
 # Install Most Of The Things
 # sudo apt-get install -y vim screen openssh-server unzip htop ca-certificates apt-transport-https docker-ce python-software-properties python-plaso plaso-tools mono-devel redis-server neo4j postgresql python-psycopg2 python-pip python-dev libffi-dev nginx apache2-utils python-certbot-nginx
-sudo apt-get install -y vim screen openssh-server unzip htop ca-certificates apt-transport-https docker-ce python-software-properties python-plaso plaso-tools redis-server neo4j postgresql python-psycopg2 python-pip python-dev libffi-dev nginx apache2-utils python-certbot-nginx
+sudo apt-get install -y vim screen openssh-server unzip htop ca-certificates apt-transport-https docker-ce python-software-properties redis-server neo4j postgresql python-psycopg2 python-pip python-dev libffi-dev nginx apache2-utils python-certbot-nginx npm
 
 # Install Java and ELK
 echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
@@ -69,9 +82,16 @@ sudo apt-get install -y elasticsearch kibana logstash
 # Update pip
 sudo -H pip install --upgrade pip
 
-# Run pip Installers
-sudo -H pip install timesketch
+# Install Gunicorn, TimeSketch, and Plaso
+# sudo -H pip install timesketch
 sudo -H pip install gunicorn
+git clone https://github.com/google/timesketch.git
+cd timesketch/
+sudo -H pip install . --upgrade
+sudo apt-get install -y python-plaso plaso-tools
+
+
+
 
 sudo sed -i 's/#network.host\: 192.168.0.1/network.host\: localhost/g' /etc/elasticsearch/elasticsearch.yml
 # Assign jvm.options to 1/2 the allocated memory at run time
@@ -88,7 +108,9 @@ sudo systemctl restart elasticsearch
 sudo systemctl enable elasticsearch
 
 # Create a template in ES that sets the number of replicas for all indexes to 0
-sleep 30 # Give ES time to start
+echo "Waiting 60 seconds for Elasticsearch to initialize"
+sleep 60 # Give ES time to start
+echo "Setting the default number of replicas to 0"
 curl -XPUT 'localhost:9200/_template/number_of_replicas' -d '{"template": "*","settings": {"number_of_replicas": 0}}' -H'Content-Type: application/json'
 
 # Configure/Enable Redis
@@ -126,8 +148,13 @@ sudo sed -i "s@NEO4J_PASSWORD = u'<N4J_PASSWORD>'@NEO4J_PASSWORD = u'$neo4jpassw
 sudo sed -i "s/UPLOAD_ENABLED = False/UPLOAD_ENABLED = True/g" /etc/timesketch.conf
 sudo sed -i "s/GRAPH_BACKEND_ENABLED = False/GRAPH_BACKEND_ENABLED = True/g" /etc/timesketch.conf
 
-timesketchpassword=$(openssl rand -base64 32)
-timesketchuser="skadi_$(openssl rand -base64 3)"
+if [ $default_skadi_passwords = "false" ]; then
+  timesketchpassword=$(openssl rand -base64 32)
+  timesketchuser="skadi_$(openssl rand -base64 3)"
+else
+  timesketchpassword="skadi"
+  timesketchuser="skadi"
+fi
 tsctl add_user -u "$timesketchuser" -p "$timesketchpassword"
 sudo useradd -r -s /bin/false timesketch
 
@@ -254,16 +281,33 @@ sudo ufw allow 'OpenSSH'
 sudo ufw --force enable
 
 # Configure Nginx for Kibana, Cerebro, and TimeSketch
-nginx_conf="c2VydmVyIHsKICBsaXN0ZW4gODA7CiAgc2VydmVyX25hbWUgXzsKICBjbGllbnRfbWF4X2JvZHlfc2l6ZSAxMjI4OE07CiAgcHJveHlfY29ubmVjdF90aW1lb3V0IDkwMDBzOwogIHByb3h5X3JlYWRfdGltZW91dCA5MDAwczsKICByb290ICAgICAgICAgL3Vzci9zaGFyZS9uZ2lueC9odG1sOwogIGVycm9yX3BhZ2UgNDA0IC80MDQuaHRtbDsKICAgIGxvY2F0aW9uID0gLzQwNC5odG1sIHt9CiAgZXJyb3JfcGFnZSA1MDAgNTAyIDUwMyA1MDQgLzUweC5odG1sOwogICAgbG9jYXRpb24gPSAvNTB4Lmh0bWwge30KCiAgZXJyb3JfbG9nICAgL3Zhci9sb2cvbmdpbngvZXJyb3IubG9nOwogIGFjY2Vzc19sb2cgIC92YXIvbG9nL25naW54L2FjY2Vzcy5sb2c7CgogIGxvY2F0aW9uIC8gewogICAgcHJveHlfcGFzcyBodHRwOi8vbG9jYWxob3N0OjUwMDA7CiAgICBwcm94eV9odHRwX3ZlcnNpb24gMS4xOwogICAgcHJveHlfc2V0X2hlYWRlciBVcGdyYWRlICRodHRwX3VwZ3JhZGU7CiAgICBwcm94eV9zZXRfaGVhZGVyIENvbm5lY3Rpb24gJ3VwZ3JhZGUnOwogICAgcHJveHlfc2V0X2hlYWRlciBIb3N0ICRob3N0OwogICAgcHJveHlfY2FjaGVfYnlwYXNzICRodHRwX3VwZ3JhZGU7CiAgICBzdWJfZmlsdGVyICdMb2dvdXQ8L2E+JyAnTG9nb3V0PC9hPjxicj4mbmJzcDsmbmJzcDsmbmJzcDs8YSB0YXJnZXQ9Il9ibGFuayIgc3R5bGU9ImNvbG9yOiNmZmY7IiBocmVmPSIva2liYW5hLyI+S2liYW5hPC9hPiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOzxhIHRhcmdldD0iX2JsYW5rIiBzdHlsZT0iY29sb3I6I2ZmZjsiIGhyZWY9Ii9jZXJlYnJvLyMvb3ZlcnZpZXc/aG9zdD1odHRwOiUyRiUyRmxvY2FsaG9zdDo5MjAwIj5DZXJlYnJvPC9hPjs8YSB0YXJnZXQ9Il9ibGFuayIgc3R5bGU9ImNvbG9yOiNmZmY7IiBocmVmPSIvY3liZXJjaGVmLyI+Q3liZXJDaGVmPC9hPic7CiAgICBzdWJfZmlsdGVyICdTaWduIGluPC9idXR0b24+JyAnU2lnbiBpbjwvYnV0dG9uPjxicj48YnI+PGEgdGFyZ2V0PSJfYmxhbmsiIHN0eWxlPSJjb2xvcjojZmZmOyIgaHJlZj0iL2tpYmFuYS8iPktpYmFuYTwvYT48YnI+PGEgdGFyZ2V0PSJfYmxhbmsiIHN0eWxlPSJjb2xvcjojZmZmOyIgaHJlZj0iL2NlcmVicm8vIy9vdmVydmlldz9ob3N0PWh0dHA6JTJGJTJGbG9jYWxob3N0OjkyMDAiPkNlcmVicm88L2E+PGJyPjxhIHRhcmdldD0iX2JsYW5rIiBzdHlsZT0iY29sb3I6I2ZmZjsiIGhyZWY9Ii9jeWJlcmNoZWYvIj5DeWJlckNoZWY8L2E+JzsKICAgIHN1Yl9maWx0ZXJfb25jZSBvZmY7CiAgfQoKICBsb2NhdGlvbiB+IF4va2liYW5hKC4qKSQgewogICAgcHJveHlfaHR0cF92ZXJzaW9uIDEuMTsKICAgIHByb3h5X3NldF9oZWFkZXIgVXBncmFkZSAkaHR0cF91cGdyYWRlOwogICAgcHJveHlfc2V0X2hlYWRlciBDb25uZWN0aW9uICd1cGdyYWRlJzsKICAgIHByb3h5X3NldF9oZWFkZXIgSG9zdCAkaG9zdDsKICAgIHByb3h5X2NhY2hlX2J5cGFzcyAkaHR0cF91cGdyYWRlOwogICAgcHJveHlfcGFzcyAgaHR0cDovL2xvY2FsaG9zdDo1NjAxOwogICAgcmV3cml0ZSBeL2tpYmFuYS8oLiopJCAvJDEgYnJlYWs7CiAgICByZXdyaXRlIF4va2liYW5hJCAva2liYW5hLzsKICAgIGF1dGhfYmFzaWMgIlJlc3RyaWN0ZWQgQ29udGVudCI7CiAgICBhdXRoX2Jhc2ljX3VzZXJfZmlsZSAvZXRjL25naW54Ly5za2FkaV9hdXRoOwogIH0KCiAgbG9jYXRpb24gL2NlcmVicm8vIHsKICAgIHByb3h5X3Bhc3MgaHR0cDovL2xvY2FsaG9zdDo5MDAwLzsKICAgIHByb3h5X3NldF9oZWFkZXIgSG9zdCAkaG9zdDsKICAgIGF1dGhfYmFzaWMgIlJlc3RyaWN0ZWQgQ29udGVudCI7CiAgICBhdXRoX2Jhc2ljX3VzZXJfZmlsZSAvZXRjL25naW54Ly5za2FkaV9hdXRoOwogIH0KICBsb2NhdGlvbiAvY3liZXJjaGVmLyB7CiAgICBwcm94eV9wYXNzIGh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC87CiAgICBwcm94eV9zZXRfaGVhZGVyIEhvc3QgJGhvc3Q7CiAgICBhdXRoX2Jhc2ljICJSZXN0cmljdGVkIENvbnRlbnQiOwogICAgYXV0aF9iYXNpY191c2VyX2ZpbGUgL2V0Yy9uZ2lueC8uc2thZGlfYXV0aDsKICB9Cn0K
-"
+nginx_conf="c2VydmVyIHsKICBsaXN0ZW4gODA7CiAgc2VydmVyX25hbWUgXzsKICBjbGllbnRfbWF4X2JvZHlfc2l6ZSAxMjI4OE07CiAgcHJveHlfY29ubmVjdF90aW1lb3V0IDkwMDBzOwogIHByb3h5X3JlYWRfdGltZW91dCA5MDAwczsKICByb290ICAgICAgICAgL3Vzci9zaGFyZS9uZ2lueC9odG1sOwogIGVycm9yX3BhZ2UgNDA0IC80MDQuaHRtbDsKICAgIGxvY2F0aW9uID0gLzQwNC5odG1sIHt9CiAgZXJyb3JfcGFnZSA1MDAgNTAyIDUwMyA1MDQgLzUweC5odG1sOwogICAgbG9jYXRpb24gPSAvNTB4Lmh0bWwge30KCiAgZXJyb3JfbG9nICAgL3Zhci9sb2cvbmdpbngvZXJyb3IubG9nOwogIGFjY2Vzc19sb2cgIC92YXIvbG9nL25naW54L2FjY2Vzcy5sb2c7CgogIGxvY2F0aW9uIC8gewogICAgcHJveHlfcGFzcyBodHRwOi8vbG9jYWxob3N0OjUwMDA7CiAgICBwcm94eV9odHRwX3ZlcnNpb24gMS4xOwogICAgcHJveHlfc2V0X2hlYWRlciBVcGdyYWRlICRodHRwX3VwZ3JhZGU7CiAgICBwcm94eV9zZXRfaGVhZGVyIENvbm5lY3Rpb24gJ3VwZ3JhZGUnOwogICAgcHJveHlfc2V0X2hlYWRlciBIb3N0ICRob3N0OwogICAgcHJveHlfY2FjaGVfYnlwYXNzICRodHRwX3VwZ3JhZGU7CiAgICBzdWJfZmlsdGVyICdMb2dvdXQ8L2E+JyAnTG9nb3V0PC9hPjxicj4mbmJzcDsmbmJzcDsmbmJzcDs8YSB0YXJnZXQ9Il9ibGFuayIgc3R5bGU9ImNvbG9yOiNmZmY7IiBocmVmPSIva2liYW5hLyI+S2liYW5hPC9hPiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOzxhIHRhcmdldD0iX2JsYW5rIiBzdHlsZT0iY29sb3I6I2ZmZjsiIGhyZWY9Ii9jZXJlYnJvLyMvb3ZlcnZpZXc/aG9zdD1odHRwOiUyRiUyRmxvY2FsaG9zdDo5MjAwIj5DZXJlYnJvPC9hPiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOzxhIHRhcmdldD0iX2JsYW5rIiBzdHlsZT0iY29sb3I6I2ZmZjsiIGhyZWY9Ii9jeWJlcmNoZWYvIj5DeWJlckNoZWY8L2E+JzsKICAgIHN1Yl9maWx0ZXIgJ1NpZ24gaW48L2J1dHRvbj4nICdTaWduIGluPC9idXR0b24+PGJyPjxicj48YSB0YXJnZXQ9Il9ibGFuayIgc3R5bGU9ImNvbG9yOiNmZmY7IiBocmVmPSIva2liYW5hLyI+S2liYW5hPC9hPjxicj48YSB0YXJnZXQ9Il9ibGFuayIgc3R5bGU9ImNvbG9yOiNmZmY7IiBocmVmPSIvY2VyZWJyby8jL292ZXJ2aWV3P2hvc3Q9aHR0cDolMkYlMkZsb2NhbGhvc3Q6OTIwMCI+Q2VyZWJybzwvYT48YnI+PGEgdGFyZ2V0PSJfYmxhbmsiIHN0eWxlPSJjb2xvcjojZmZmOyIgaHJlZj0iL2N5YmVyY2hlZi8iPkN5YmVyQ2hlZjwvYT4nOwogICAgc3ViX2ZpbHRlcl9vbmNlIG9mZjsKICB9CgogIGxvY2F0aW9uIH4gXi9raWJhbmEoLiopJCB7CiAgICBwcm94eV9odHRwX3ZlcnNpb24gMS4xOwogICAgcHJveHlfc2V0X2hlYWRlciBVcGdyYWRlICRodHRwX3VwZ3JhZGU7CiAgICBwcm94eV9zZXRfaGVhZGVyIENvbm5lY3Rpb24gJ3VwZ3JhZGUnOwogICAgcHJveHlfc2V0X2hlYWRlciBIb3N0ICRob3N0OwogICAgcHJveHlfY2FjaGVfYnlwYXNzICRodHRwX3VwZ3JhZGU7CiAgICBwcm94eV9wYXNzICBodHRwOi8vbG9jYWxob3N0OjU2MDE7CiAgICByZXdyaXRlIF4va2liYW5hLyguKikkIC8kMSBicmVhazsKICAgIHJld3JpdGUgXi9raWJhbmEkIC9raWJhbmEvOwogICAgYXV0aF9iYXNpYyAiUmVzdHJpY3RlZCBDb250ZW50IjsKICAgIGF1dGhfYmFzaWNfdXNlcl9maWxlIC9ldGMvbmdpbngvLnNrYWRpX2F1dGg7CiAgfQoKICBsb2NhdGlvbiAvY2VyZWJyby8gewogICAgcHJveHlfcGFzcyBodHRwOi8vbG9jYWxob3N0OjkwMDAvOwogICAgcHJveHlfc2V0X2hlYWRlciBIb3N0ICRob3N0OwogICAgYXV0aF9iYXNpYyAiUmVzdHJpY3RlZCBDb250ZW50IjsKICAgIGF1dGhfYmFzaWNfdXNlcl9maWxlIC9ldGMvbmdpbngvLnNrYWRpX2F1dGg7CiAgfQogIGxvY2F0aW9uIC9jeWJlcmNoZWYvIHsKICAgIHByb3h5X3Bhc3MgaHR0cDovL2xvY2FsaG9zdDo4MDAwLzsKICAgIHByb3h5X3NldF9oZWFkZXIgSG9zdCAkaG9zdDsKICAgIGF1dGhfYmFzaWMgIlJlc3RyaWN0ZWQgQ29udGVudCI7CiAgICBhdXRoX2Jhc2ljX3VzZXJfZmlsZSAvZXRjL25naW54Ly5za2FkaV9hdXRoOwogIH0KfQo="
 
 # Configure default site
 echo $nginx_conf |base64 -d |sudo tee /etc/nginx/sites-available/default
 
 # Configure Nginx proxy Credentials
-n_user="skadi_$(openssl rand -base64 3)"
-n_pass=$(openssl rand -base64 32)
-echo $n_pass | sudo htpasswd -i -c /etc/nginx/.skadi_auth $n_user
+if [ $default_skadi_passwords = "false" ]; then
+  n_user="skadi_$(openssl rand -base64 3)"
+  n_pass=$(openssl rand -base64 32)
+else
+  n_user="skadi"
+  n_pass="skadi"
+fi
+  echo $n_pass | sudo htpasswd -i -c /etc/nginx/.skadi_auth $n_user
+
+# Configure Kibana Credentials
+# k_user="kibuser_$(openssl rand -base64 3)"
+# k_pass=$(openssl rand -base64 32)
+# echo $k_pass | sudo htpasswd -i -c /etc/nginx/.kibana_auth $k_user
+
+# Configure Cerebro Credentials
+# c_user="ceruser_$(openssl rand -base64 3)"
+# c_pass=$(openssl rand -base64 32)
+# echo $c_pass | sudo htpasswd -i -c /etc/nginx/.cerebro_auth $c_user
+
+echo "Installing Cyberchef Docker"
+sudo docker run --name cyberchef --restart unless-stopped -d -p 127.0.0.1:8000:8000 mpepping/cyberchef:v8.8.5
 
 sudo systemctl restart nginx
 sudo systemctl enable nginx
@@ -282,7 +326,6 @@ echo "    sudo systemctl restart logstash"
 echo "    sudo systemctl enable logstash"
 echo ""
 echo ""
-clear
 echo "Installed Software Version Checks (Where it is supported)"
 /usr/bin/log2timeline.py --version 2>&1 >/dev/null |awk '{ printf "Plaso Version %s\n", $5 }'
 /usr/local/bin/cdqr.py --version |awk '{split($0,a,":");printf "%s%s\n", a[1], a[2]}'
