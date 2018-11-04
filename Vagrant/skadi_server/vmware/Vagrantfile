@@ -18,8 +18,7 @@ Vagrant.configure("2") do |config|
       v.name = "skadi_server"
       v.gui = true
       v.vmx["memsize"] = "8196"
-      v.vmx["numvcpus"] = "1"
-      v.vmx["cpuid.coresPerSocket"] = "4"
+      v.vmx["numvcpus"] = "4"
     end
   end
   # Uncomment the following lines to run the update script each time the VM is created
