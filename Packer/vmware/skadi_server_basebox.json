@@ -19,13 +19,12 @@
         "passwd/username={{ user `ssh_username` }} ",
         "-- <enter>"
       ],
+      "disk_adapter_type": "sata",
       "disk_size": "{{ user `disk_size` }}",
       "floppy_files": [
         "http/{{ user `preseed` }}"
       ],
-      "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
-      "guest_os_type": "{{ user `virtualbox_guest_os_type` }}",
-      "hard_drive_interface": "sata",
+      "guest_os_type": "{{ user `vmware_guest_os_type` }}",
       "headless": "{{ user `headless` }}",
       "iso_checksum": "{{ user `iso_checksum` }}",
       "iso_checksum_type": "{{ user `iso_checksum_type` }}",
@@ -34,24 +33,16 @@
         "{{ user `iso_url` }}"
       ],
       "output_directory": "output-{{ user `vm_name` }}-virtualbox-iso",
-      "post_shutdown_delay": "1m",
+      "shutdown_timeout": "1m",
       "shutdown_command": "echo '{{ user `ssh_password` }}'|sudo -S shutdown -P now",
       "ssh_password": "{{ user `ssh_password` }}",
       "ssh_username": "{{ user `ssh_username` }}",
       "ssh_wait_timeout": "10000s",
-      "type": "virtualbox-iso",
-      "vboxmanage": [
-        [
-          "modifyvm", "{{.Name}}", "--nictype1", "virtio"
-        ],
-        [
-          "modifyvm", "{{.Name}}", "--memory", "{{ user `memory` }}"
-        ],
-        [
-          "modifyvm", "{{.Name}}", "--cpus", "{{ user `cpus` }}"
-        ]
-      ],
-      "virtualbox_version_file": ".vbox_version",
+      "type": "vmware-iso",
+      "vmx_data": {
+        "memsize": "8196",
+        "numvcpus": "4"
+      },
       "vm_name": "{{user `vm_name`}}"
     }
   ],
@@ -77,15 +68,17 @@
         "https_proxy={{user `https_proxy`}}",
         "ftp_proxy={{user `ftp_proxy`}}",
         "rsync_proxy={{user `rsync_proxy`}}",
-        "no_proxy={{user `no_proxy`}}"
+        "no_proxy={{user `no_proxy`}}",
+        "DEFAULT_PASSWORDS={{user `skadi_default_passwords`}}"
       ],
       "execute_command": "echo '{{ user `ssh_password` }}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
       "scripts": [
         "../script/vagrant.sh",
         "../script/sshd.sh",
-        "../script/virtualbox.sh",
+        "../script/vmware.sh",
         "../script/motd.sh",
-        "../{{user `custom_script`}}",
+        "../script/update.sh",
+        "{{user `custom_script`}}",
         "../script/cleanup.sh"
       ],
       "type": "shell",
@@ -93,13 +86,14 @@
     }
   ],
   "variables": {
+    "skadi_default_passwords": "true",
     "boot_command_prefix": "<enter><wait><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
     "cleanup_pause": "",
     "cpus": "4",
     "memory": "8196",
-    "custom_script": "script/skadibuild.sh",
+    "custom_script": "../../scripts/signedbuildskadi.sh",
     "desktop": "false",
-    "disk_size": "10240",
+    "disk_size": "102400",
     "ftp_proxy": "{{env `ftp_proxy`}}",
     "headless": "false",
     "http_proxy": "{{env `http_proxy`}}",
@@ -120,10 +114,10 @@
     "ssh_password": "vagrant",
     "ssh_username": "vagrant",
     "update": "false",
-    "vagrantfile_template": "../../Vagrant/skadi_server/virtualbox/Vagrantfile",
-    "version": "2018.3.2",
+    "vagrantfile_template": "../../Vagrant/skadi_server/vmware/Vagrantfile",
+    "version": "2018.4",
     "virtualbox_guest_os_type": "Ubuntu_64",
-    "vm_name": "skadi_server",
+    "vm_name": "skadi_basebox",
     "vmware_guest_os_type": "ubuntu-64"
   }
 }
