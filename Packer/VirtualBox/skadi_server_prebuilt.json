@@ -3,7 +3,7 @@
   "builders": [
     {
       "type": "virtualbox-ovf",
-      "source_path": "F:/VirtualBox/OVF/Skadi 2018.4.ova",
+      "source_path": "F:/VirtualBox/OVA/Skadi Server 2018.4.ova",
       "ssh_username": "root",
       "ssh_password": "vagrant",
       "shutdown_command": "shutdown -P now"
@@ -16,7 +16,6 @@
         "../script/vagrant.sh",
         "../script/sshd.sh",
         "../script/motd.sh",
-        "../script/virtualbox.sh",
         "../script/cleanup.sh"
       ],
       "type": "shell",
