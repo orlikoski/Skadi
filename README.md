@@ -3,9 +3,20 @@
 (pronounced “SKAHD-ee”) is a giantess and goddess of hunting in Norse mythology  
 _**Note: Skadi was formerly known as CCF-VM**_  
 
-# Version 2018.4.1 is Back and Better Than Ever
-## 2018.4.1 System Changes
- - Now includes CyberChef
+# Download Latest Release
+[Click Here For Latest Release](https://github.com/orlikoski/Skadi/releases/latest)
+
+# How to Get Started and Support
+## Skadi Wiki Page
+The answers to common questions and information about how to get started with Skadi is stored in the [Skadi Wiki Pages](https://github.com/orlikoski/skadi/wiki).
+
+## Skadi Community
+There is a Slack community setup for developers and users of the Skadi ecosystem. It is a safe place to ask questions and share information.  
+
+[Join the Skadi Community Slack](http://skadicommunity.herokuapp.com/) 
+
+# Version 2018.4 is Back and Better Than Ever
+- Now includes CyberChef
  - Now uses ELK 6.x
  - TimeSketch and Nginx configurations updated to now support larger Uploads
  - TimeSketch was built from Master branch instead of pypi release in order to be compatible with ELK 6.x
@@ -30,31 +41,6 @@ The following tools are combined into one platform that all work together to pro
  - Neo4j  
  - Celery  
  - Cerebro  
-
-## Skadi Wiki Page
-The answers to common questions and information about how to get started with Skadi is stored in the [Skadi Wiki Pages](https://github.com/orlikoski/skadi/wiki).
-
-## Skadi Community
-There is a Slack community setup for developers and users of the Skadi ecosystem. It is a safe place to ask questions and share information.  
-
-[Join the Skadi Community Slack](http://skadicommunity.herokuapp.com/)  
-
-## Latest Releases!!
-Skadi Server: Headless server ~2GB in size  
- - [OVF Skadi Server 2018.4](https://drive.google.com/open?id=1QKvu7QwbBpG5DomKTV4tusmWFXYHLhbv)
- - [Vagrant Skadi Server 2018.4](https://app.vagrantup.com/skadivm/boxes/skadi_server)
-
-Skadi Desktop: Server Features plus Ubuntu 16.04 Default Desktop ~3GB in size
- - [OVF Skadi Desktop 2018.4](https://drive.google.com/open?id=1GiAocQhMAVpCb26vsTyGuRE8kYQLhhmW)
- - [Vagrant Skadi Desktop 2018.4](https://app.vagrantup.com/skadivm/boxes/skadi_desktop)
-
-Installers:
- - [Digitally Signed Installer](https://github.com/orlikoski/Skadi/wiki/Installation:-OpenSSL-Signed-Installation-Guide)
-
-[Skadi Portable 2018.4 ISO Image](https://drive.google.com/open?id=1L4i7Igh6TLrnHnOAS3PuDzV37CaJB27g): Live Boot ISO that runs Skadi from a USB drive and can install Skadi from USB drive to the host hardware (no networking or virtualization required)
-
-
-[Latest Release Notes](https://github.com/orlikoski/Skadi/releases/tag/2018.4)  
 
 ## Skadi Add-on Packs  
 Skadi add-on packs are installed on top of the base Skadi VM to provide extra functionality  
