@@ -1,0 +1,152 @@
+version: '3'
+services:
+
+  timesketch:
+    image: timesketch:latest
+    container_name: timesketch
+    links:
+      - elasticsearch
+      - postgres
+      - redis
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_ADDRESS=postgres
+      - POSTGRES_PORT=5432
+      - ELASTIC_ADDRESS=elasticsearch
+      - ELASTIC_PORT=9200
+      - REDIS_ADDRESS=redis
+      - REDIS_PORT=6379
+      - NEO4J_ADDRESS=neo4j
+      - NEO4J_PORT=7474
+      - TIMESKETCH_USER=${TIMESKETCH_USER}
+      - TIMESKETCH_PASSWORD=${TIMESKETCH_PASSWORD}
+    networks:
+      - esnet
+    ports:
+      - 127.0.0.1:5000:80
+    restart: always
+
+  postgres:
+    image: postgres:10
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - esnet
+    restart: always
+
+  redis:
+    image: redis:5
+    container_name: redis
+    volumes:
+      - /var/lib/redis:/data
+    networks:
+      - esnet
+    restart: always
+
+  neo4j:
+    image: neo4j:3.5
+    container_name: neo4j
+    environment:
+      - NEO4J_AUTH=none
+    volumes:
+      - neo4jdata:/var/lib/neo4j/data
+    networks:
+      - esnet
+    restart: always
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.5.1
+    container_name: elasticsearch
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata1:/usr/share/elasticsearch/data
+    ports:
+      - 127.0.0.1:9200:9200
+      - 127.0.0.1:9300:9300
+    networks:
+      - esnet
+    restart: always
+
+  elasticsearch2:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.5.1
+    container_name: elasticsearch2
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "discovery.zen.ping.unicast.hosts=elasticsearch"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata2:/usr/share/elasticsearch/data
+    networks:
+      - esnet
+    restart: always
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.5.1
+    container_name: kibana
+    ports:
+      - 127.0.0.1:5601:5601
+    environment:
+      SERVER_BASEPATH: /kibana
+    networks:
+      - esnet
+    restart: always
+
+  cerebro:
+    image: lmenezes/cerebro:0.8.1
+    container_name: cerebro
+    ports:
+      - 127.0.0.1:9000:9000
+    networks:
+      - esnet
+    restart: always
+
+  cyberchef:
+    image: cyberchef:latest
+    container_name: cyberchef
+    ports:
+      - 8000:8000
+    networks:
+      - esnet
+    restart: always
+
+  nginx:
+    image: nginx:1.15
+    container_name: nginx
+    volumes:
+      - /etc/nginx/conf.d:/etc/nginx/conf.d
+      - /etc/nginx/.skadi_auth:/etc/nginx/.skadi_auth
+    network_mode: "host"
+    ports:
+      - 80:80
+      - 443:443
+    restart: always
+
+volumes:
+  esdata1:
+    driver: local
+  esdata2:
+    driver: local
+  neo4jdata:
+    driver: local
+  pgdata:
+    driver: local
+
+networks:
+  esnet:
