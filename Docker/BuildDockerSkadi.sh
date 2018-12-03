@@ -54,7 +54,7 @@ sudo docker build -t cyberchef -f ./cyberchef/Dockerfile ./cyberchef/
 
 # Build TimeSketch Docker Image
 git clone https://github.com/google/timesketch.git
-sudo docker build -t timesketch -f ./timesketch/docker/Dockerfile ./timesketch/timesketch
+sudo docker build -t timesketch -f ./timesketch/docker/Dockerfile ./timesketch/
 
 # Deploy all the things
 sudo docker-compose up -d
