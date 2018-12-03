@@ -53,6 +53,7 @@ sudo cp ./nginx/skadi_default.conf /etc/nginx/conf.d
 sudo docker build -t cyberchef -f ./cyberchef/Dockerfile ./cyberchef/
 
 # Build TimeSketch Docker Image
+rm -rf ./timesketch
 git clone https://github.com/google/timesketch.git
 sudo docker build -t timesketch -f ./timesketch/docker/Dockerfile ./timesketch/
 
