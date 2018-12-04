@@ -57,6 +57,9 @@ rm -rf ./timesketch
 git clone https://github.com/google/timesketch.git
 sudo docker build -t timesketch -f ./timesketch/docker/Dockerfile ./timesketch/
 
+# Install TimeSketch on host (needed for psort -o timesketch)
+sudo -H pip2 install timesketch
+
 # Deploy all the things
 sudo docker-compose up -d
 
