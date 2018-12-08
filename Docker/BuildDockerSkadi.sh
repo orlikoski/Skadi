@@ -5,10 +5,11 @@ sudo apt-get update
 sudo apt-get dist-upgrade -y
 
 # Install deps
-sudo apt-get install apt-transport-https ca-certificates curl software-properties-common python-pip python3-pip unzip vim htop -y
+sudo apt-get install apt-transport-https ca-certificates curl software-properties-common python-pip python3-pip psycopg2 unzip vim htop -y
 
 # Update pip
-sudo -H pip install --upgrade pip && sudo -H pip3 install --upgrade pip
+sudo -H pip install pip==9.0.3
+#sudo -H pip install --upgrade pip
 
 # Disable Swap
 sudo swapoff -a
@@ -31,14 +32,14 @@ sudo apt-get -y clean
 sudo apt-get -y autoclean
 
 # Add skadi to docker usergroup
- sudo usermod -aG docker skadi
+sudo usermod -aG docker skadi
 
- # Install Docker-Compose
- sudo -H pip install docker-compose
+# Install Docker-Compose
+sudo -H pip install docker-compose
 
- # Set the vm.max_map_count kernel setting needs to be set to at least 262144 for production use
- sudo sysctl -w vm.max_map_count=262144
- echo vm.max_map_count=262144 | sudo tee -a /etc/sysctl.conf
+# Set the vm.max_map_count kernel setting needs to be set to at least 262144 for production use
+sudo sysctl -w vm.max_map_count=262144
+echo vm.max_map_count=262144 | sudo tee -a /etc/sysctl.conf
 
 # Create needed folders
 sudo mkdir -p /opt/skadi/CyLR
@@ -52,16 +53,86 @@ sudo cp ./nginx/skadi_default.conf /etc/nginx/conf.d
 # Build CyberChef Docker Image
 sudo docker build -t cyberchef -f ./cyberchef/Dockerfile ./cyberchef/
 
-# Build TimeSketch Docker Image
-rm -rf ./timesketch
-git clone https://github.com/google/timesketch.git
-sudo docker build -t timesketch -f ./timesketch/docker/Dockerfile ./timesketch/
-
 # Install TimeSketch on host (needed for psort -o timesketch)
-sudo -H pip2 install timesketch
+# sudo -H pip install timesketch --ignore-installed PyYAML
 
 # Deploy all the things
 sudo docker-compose up -d
+
+
+# Install Celery
+# Configure Celery
+celery_service="W1VuaXRdCkRlc2NyaXB0aW9uPUNlbGVyeSBTZXJ2aWNlCkFmdGVyPW5ldHdvcmsudGFyZ2V0CgpbU2VydmljZV0KVHlwZT1mb3JraW5nClVzZXI9Y2VsZXJ5Ckdyb3VwPWNlbGVyeQpQSURGaWxlPS9vcHQvY2VsZXJ5L2NlbGVyeS5waWRsb2NrCgpFeGVjU3RhcnQ9L3Vzci9sb2NhbC9iaW4vY2VsZXJ5IG11bHRpIHN0YXJ0IHNpbmdsZS13b3JrZXIgLUEgdGltZXNrZXRjaC5saWIudGFza3Mgd29ya2VyIC0tbG9nbGV2ZWw9aW5mbyAtLWxvZ2ZpbGU9L3Zhci9sb2cvY2VsZXJ5X3dvcmtlciAtLXBpZGZpbGU9L29wdC9jZWxlcnkvY2VsZXJ5LnBpZGxvY2sKRXhlY1N0b3A9L3Vzci9sb2NhbC9iaW4vY2VsZXJ5IG11bHRpIHN0b3B3YWl0IHNpbmdsZS13b3JrZXIgLS1waWRmaWxlPS9vcHQvY2VsZXJ5L2NlbGVyeS5waWRsb2NrIC0tbG9nZmlsZT0vdmFyL2xvZy9jZWxlcnlfd29ya2VyCkV4ZWNSZWxvYWQ9L3Vzci9sb2NhbC9iaW4vY2VsZXJ5IG11bHRpIHJlc3RhcnQgc2luZ2xlLXdvcmtlciAtLXBpZGZpbGU9L29wdC9jZWxlcnkvY2VsZXJ5LnBpZGxvY2sgLS1sb2dmaWxlPS92YXIvbG9nL2NlbGVyeV93b3JrZXIKCgpbSW5zdGFsbF0KV2FudGVkQnk9bXVsdGktdXNlci50YXJnZXQK"
+sudo useradd -r -s /bin/false celery
+sudo mkdir -p /opt/celery
+sudo touch /var/log/celery_worker
+sudo touch /opt/celery/celery.pidlock
+sudo chown -R celery:celery /opt/celery
+sudo chown -R celery:celery /opt/celery/celery.pidlock
+
+sudo chown -R celery:celery /var/log/celery_worker
+echo $celery_service |base64 -d | sudo tee /etc/systemd/system/celery.service
+sudo chmod g+w /etc/systemd/system/celery.service
+sudo systemctl daemon-reload
+sudo systemctl restart celery
+sudo systemctl enable celery
+
+
+# Install Gunicorn and TimeSketch
+sudo -H pip install timesketch
+# sudo -H pip install gunicorn
+
+# Configure TimeSketch
+# Set Credentials
+SECRET_KEY="$(openssl rand -base64 32 | sha256sum)"
+SKADI_USER="skadi"
+SKADI_PASSWORD="skadi"
+POSTGRES_USER="timesketch"
+psql_pw=$(openssl rand -base64 32 | sha256sum)
+neo4juser='neo4j'
+neo4jpassword=$(openssl rand -base64 32)
+
+# Write Creds to .env file for All Dockers
+echo "TIMESKETCH_USER=$SKADI_USER" > ./.env
+echo "TIMESKETCH_PASSWORD=$SKADI_PASSWORD" >> ./.env
+echo "POSTGRES_USER=$POSTGRES_USER" >> ./.env
+echo "POSTGRES_PASSWORD=$psql_pw" >> ./.env
+echo "NEO4J_USER"=$neo4juser >> ./.env
+echo "NEO4J_PASSWORD"=$neo4jpassword >> ./.env
+
+
+# Write TimeSketch config file on host for each TS Docker to use
+sudo cp /usr/local/share/timesketch/timesketch.conf /etc/
+sudo sed -i "s@SECRET_KEY = u'<KEY_GOES_HERE>'@SECRET_KEY = u'$SECRET_KEY'@g" /etc/timesketch.conf
+sudo sed -i "s@<USERNAME>\:<PASSWORD>@$POSTGRES_USER\:$psql_pw@g" /etc/timesketch.conf
+sudo sed -i "s@NEO4J_USERNAME = u'neo4j'@NEO4J_USERNAME = u'$neo4juser'@g" /etc/timesketch.conf
+sudo sed -i "s@NEO4J_PASSWORD = u'<N4J_PASSWORD>'@NEO4J_PASSWORD = u'$neo4jpassword'@g" /etc/timesketch.conf
+sudo sed -i "s/UPLOAD_ENABLED = False/UPLOAD_ENABLED = True/g" /etc/timesketch.conf
+sudo sed -i "s/GRAPH_BACKEND_ENABLED = False/GRAPH_BACKEND_ENABLED = True/g" /etc/timesketch.conf
+
+tsctl add_user -u "$SKADI_USER" -p "$SKADI_PASSWORD"
+sudo useradd -r -s /bin/false timesketch
+
+
+timesketch_service="W1VuaXRdCkRlc2NyaXB0aW9uPVRpbWVTa2V0Y2ggU2VydmljZQpBZnRlcj1uZXR3b3JrLnRhcmdldAoKW1NlcnZpY2VdClVzZXI9dGltZXNrZXRjaApHcm91cD10aW1lc2tldGNoCkV4ZWNTdGFydD0vdXNyL2xvY2FsL2Jpbi9ndW5pY29ybiAtLXdvcmtlcnMgNCAtLWJpbmQgMTI3LjAuMC4xOjUwMDAgdGltZXNrZXRjaC53c2dpCgpbSW5zdGFsbF0KV2FudGVkQnk9bXVsdGktdXNlci50YXJnZXQK"
+echo $timesketch_service |base64 -d | sudo tee /etc/systemd/system/timesketch.service
+sudo chmod g+w /etc/systemd/system/timesketch.service
+sudo systemctl daemon-reload
+sudo systemctl restart timesketch.service
+sudo systemctl enable timesketch.service
+
+
+# # Build TimeSketch Docker Image
+# rm -rf ./timesketch
+# git clone https://github.com/google/timesketch.git
+# sudo docker build -t timesketch -f ./timesketch/docker/Dockerfile ./timesketch/
+
+# git clone https://github.com/google/timesketch.git
+# cd timesketch/
+# sudo -H pip install . --upgrade
+
+
+
 
 # Installs and Configures CDQR and CyLR
 echo "Updating CDQR"
