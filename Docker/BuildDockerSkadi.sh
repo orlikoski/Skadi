@@ -106,9 +106,6 @@ $SKADI_USER
 echo "TIMESKETCH_PASSWORD" | docker secret create TIMESKETCH_PASSWORD -
 $SKADI_PASSWORD
 
-
-
-
 # Write TimeSketch config file on host for each TS Docker to use
 sudo cp /usr/local/share/timesketch/timesketch.conf /etc/
 sudo sed -i "s@SECRET_KEY = u'<KEY_GOES_HERE>'@SECRET_KEY = u'$SKADI_USER'@g" /etc/timesketch.conf
@@ -131,7 +128,7 @@ sudo systemctl enable timesketch.service
 
 
 # Build TimeSketch Docker Image
-sudo docker build -t timesketch -f ./timesketch/docker/Dockerfile ./timesketch/
+sudo docker build -t timesketch ./timesketch/
 
 # git clone https://github.com/google/timesketch.git
 # cd timesketch/

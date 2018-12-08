@@ -1,0 +1,15 @@
+version: '3'
+services:
+  glances:
+    image: glances:latest-alpine
+    container_name: glances
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - 127.0.0.1:61208-61209:61208-61209
+    networks:
+      - ccne
+    restart: always
+
+networks:
+  ccne:
