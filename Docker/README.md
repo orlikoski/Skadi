@@ -6,5 +6,3 @@ git clone https://github.com/orlikoski/Skadi.git
 cd Skadi/Docker
 sudo bash BuildDockerSkadi.sh
 ```
-
-May need `git submodule update --init --recursive` but still testing

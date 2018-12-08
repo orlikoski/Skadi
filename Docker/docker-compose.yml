@@ -1,5 +1,30 @@
 version: '3'
 services:
+  timesketch:
+    image: timsketch:latest
+    ports:
+      - "5000:5000"
+    links:
+      - elasticsearch
+      - postgres
+      - redis
+    environment:
+      - POSTGRES_USER=timesketch
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_ADDRESS=postgres
+      - POSTGRES_PORT=5432
+      - ELASTIC_ADDRESS=elasticsearch
+      - ELASTIC_PORT=9200
+      - REDIS_ADDRESS=redis
+      - REDIS_PORT=6379
+      - NEO4J_ADDRESS=neo4j
+      - NEO4J_PORT=7474
+      - TIMESKETCH_USER=${TIMESKETCH_USER}
+      - TIMESKETCH_PASSWORD=${TIMESKETCH_PASSWORD}
+    volumes:
+      - /var/lib/redis:/
+    restart: always
+
   postgres:
     image: postgres:10
     ports:
@@ -17,7 +42,6 @@ services:
   redis:
     image: redis:5
     ports:
-      - 127.0.0.1:6379:6379
     container_name: redis
     volumes:
       - /var/lib/redis:/data
@@ -29,8 +53,6 @@ services:
     image: neo4j:3.5
     container_name: neo4j
     ports:
-      - 127.0.0.1:7474:7474
-      - 127.0.0.1:7687:7687
     environment:
       - NEO4J_AUTH=none
     volumes:
