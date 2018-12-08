@@ -1,7 +1,8 @@
 version: '3'
 services:
   timesketch:
-    image: timsketch:latest
+    image: timesketch:latest
+    container_name: timesketch
     ports:
       - "5000:5000"
     links:
@@ -9,8 +10,8 @@ services:
       - postgres
       - redis
     environment:
-      - POSTGRES_USER=timesketch
-      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_ADDRESS=postgres
       - POSTGRES_PORT=5432
       - ELASTIC_ADDRESS=elasticsearch
@@ -21,14 +22,12 @@ services:
       - NEO4J_PORT=7474
       - TIMESKETCH_USER=${TIMESKETCH_USER}
       - TIMESKETCH_PASSWORD=${TIMESKETCH_PASSWORD}
-    volumes:
-      - /var/lib/redis:/
+    networks:
+      - esnet
     restart: always
 
   postgres:
     image: postgres:10
-    ports:
-      - 127.0.0.1:5432:5432
     container_name: postgres
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
@@ -41,10 +40,9 @@ services:
 
   redis:
     image: redis:5
-    ports:
     container_name: redis
     volumes:
-      - /var/lib/redis:/data
+      - redisdata:/var/lib/redis
     networks:
       - esnet
     restart: always
@@ -52,7 +50,6 @@ services:
   neo4j:
     image: neo4j:3.5
     container_name: neo4j
-    ports:
     environment:
       - NEO4J_AUTH=none
     volumes:
@@ -74,9 +71,6 @@ services:
         hard: -1
     volumes:
       - esdata1:/usr/share/elasticsearch/data
-    ports:
-      - 127.0.0.1:9200:9200
-      - 127.0.0.1:9300:9300
     networks:
       - esnet
     restart: always
@@ -125,7 +119,7 @@ services:
     ports:
       - 127.0.0.1:8000:8000
     networks:
-      - esnet
+      - ccnet
     restart: always
 
   nginx:
@@ -149,6 +143,9 @@ volumes:
     driver: local
   pgdata:
     driver: local
+  redisdata:
+    driver: local
 
 networks:
   esnet:
+  ccnet:

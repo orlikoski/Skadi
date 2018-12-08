@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 set -xe
 # Update
-sudo apt-get update
-sudo apt-get dist-upgrade -y
+sudo apt-get update && sudo apt-get dist-upgrade -y
 
 # Install deps
-sudo apt-get install apt-transport-https ca-certificates curl software-properties-common python-pip python3-pip psycopg2 unzip vim htop -y
+sudo apt-get install apt-transport-https ca-certificates curl software-properties-common python-pip psycopg2 unzip vim htop -y
 
 # Update pip
 sudo -H pip install pip==9.0.3
@@ -100,10 +99,19 @@ echo "POSTGRES_PASSWORD=$psql_pw" >> ./.env
 echo "NEO4J_USER"=$neo4juser >> ./.env
 echo "NEO4J_PASSWORD"=$neo4jpassword >> ./.env
 
+# Post Creds to Docker Secrets
+echo "TIMESKETCH_USER"| docker secret create TIMESKETCH_USER -
+$SKADI_USER
+
+echo "TIMESKETCH_PASSWORD" | docker secret create TIMESKETCH_PASSWORD -
+$SKADI_PASSWORD
+
+
+
 
 # Write TimeSketch config file on host for each TS Docker to use
 sudo cp /usr/local/share/timesketch/timesketch.conf /etc/
-sudo sed -i "s@SECRET_KEY = u'<KEY_GOES_HERE>'@SECRET_KEY = u'$SECRET_KEY'@g" /etc/timesketch.conf
+sudo sed -i "s@SECRET_KEY = u'<KEY_GOES_HERE>'@SECRET_KEY = u'$SKADI_USER'@g" /etc/timesketch.conf
 sudo sed -i "s@<USERNAME>\:<PASSWORD>@$POSTGRES_USER\:$psql_pw@g" /etc/timesketch.conf
 sudo sed -i "s@NEO4J_USERNAME = u'neo4j'@NEO4J_USERNAME = u'$neo4juser'@g" /etc/timesketch.conf
 sudo sed -i "s@NEO4J_PASSWORD = u'<N4J_PASSWORD>'@NEO4J_PASSWORD = u'$neo4jpassword'@g" /etc/timesketch.conf
@@ -122,10 +130,8 @@ sudo systemctl restart timesketch.service
 sudo systemctl enable timesketch.service
 
 
-# # Build TimeSketch Docker Image
-# rm -rf ./timesketch
-# git clone https://github.com/google/timesketch.git
-# sudo docker build -t timesketch -f ./timesketch/docker/Dockerfile ./timesketch/
+# Build TimeSketch Docker Image
+sudo docker build -t timesketch -f ./timesketch/docker/Dockerfile ./timesketch/
 
 # git clone https://github.com/google/timesketch.git
 # cd timesketch/
