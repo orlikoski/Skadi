@@ -26,9 +26,8 @@ RUN apt-get -y install software-properties-common
 RUN add-apt-repository ppa:gift/stable && apt-get update
 RUN apt-get update && apt-get -y install python-plaso plaso-tools nodejs yarn
 
-# Use pip to install Timesketch
-RUN pip install --upgrade pip
-ADD . /tmp/timesketch
+# Build and Install Timesketch from GitHub Master with Pip
+RUN git clone https://github.com/google/timesketch.git /tmp/timesketch
 RUN cd /tmp/timesketch && yarn install && yarn run build
 # Remove pyyaml from requirements.txt to avoid conflits with python-yaml ubuntu package
 RUN sed -i -e '/pyyaml/d' /tmp/timesketch/requirements.txt
@@ -38,7 +37,7 @@ RUN pip install /tmp/timesketch/
 RUN cp /usr/local/share/timesketch/timesketch.conf /etc
 
 # Copy the entrypoint script into the container
-COPY docker/docker-entrypoint.sh /
+COPY docker-entrypoint.sh /
 RUN chmod a+x /docker-entrypoint.sh
 
 # Expose the port used by Timesketch
