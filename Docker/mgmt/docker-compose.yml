@@ -1,15 +1,60 @@
 version: '3'
 services:
   glances:
-    image: glances:latest-alpine
+    image: nicolargo/glances:latest-alpine
     container_name: glances
+    environment:
+      - GLANCES_OPT=-w
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     ports:
       - 127.0.0.1:61208-61209:61208-61209
     networks:
-      - ccne
+      - mgmtnet
     restart: always
 
+  grafana:
+    image: grafana/grafana:5.4.0
+    container_name: grafana
+    environment:
+      - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s:%(http_port)s/grafana
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - grafdata:/var/lib/grafana
+    ports:
+      - 127.0.0.1:3000:3000
+    network_mode: "host"
+    restart: always
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - 127.0.0.1:9090:9090
+    network_mode: "host"
+    restart: always
+
+  # elasticsearch:
+  #   image: docker.elastic.co/elasticsearch/elasticsearch:6.5.1
+  #   container_name: graf_elasticsearch
+  #   environment:
+  #     - cluster.name=docker-cluster
+  #     - bootstrap.memory_lock=true
+  #     - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+  #   ulimits:
+  #     memlock:
+  #       soft: -1
+  #       hard: -1
+  #   volumes:
+  #     - grafesdata:/usr/share/elasticsearch/data
+  #   networks:
+  #     - mgmtnet
+  #   restart: always
+
 networks:
-  ccne:
+  mgmtnet:
+volumes:
+  grafdata:
+    driver: local
+  # grafesdata:
+  #   driver: local

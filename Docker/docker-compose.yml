@@ -4,31 +4,26 @@ services:
     image: timesketch:latest
     container_name: timesketch
     ports:
-      - "5000:5000"
+      - 127.0.0.1:5000:5000
     links:
       - elasticsearch
       - postgres
       - redis
+      - neo4j
     environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_ADDRESS=postgres
-      - POSTGRES_PORT=5432
-      - ELASTIC_ADDRESS=elasticsearch
-      - ELASTIC_PORT=9200
-      - REDIS_ADDRESS=redis
-      - REDIS_PORT=6379
-      - NEO4J_ADDRESS=neo4j
-      - NEO4J_PORT=7474
       - TIMESKETCH_USER=${TIMESKETCH_USER}
       - TIMESKETCH_PASSWORD=${TIMESKETCH_PASSWORD}
+    volumes:
+      - /etc/timesketch.conf:/etc/timesketch.conf
     networks:
       - esnet
-    restart: always
+    # restart: always
 
   postgres:
     image: postgres:10
     container_name: postgres
+    ports:
+      - 127.0.0.1:5432:5432
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -41,6 +36,8 @@ services:
   redis:
     image: redis:5
     container_name: redis
+    ports:
+      - 127.0.0.1:6379:6379
     volumes:
       - redisdata:/var/lib/redis
     networks:
@@ -50,8 +47,9 @@ services:
   neo4j:
     image: neo4j:3.5
     container_name: neo4j
-    environment:
-      - NEO4J_AUTH=none
+    ports:
+      - 127.0.0.1:7474:7474
+      - 127.0.0.1:7687:7687
     volumes:
       - neo4jdata:/var/lib/neo4j/data
     networks:
@@ -78,6 +76,8 @@ services:
   elasticsearch2:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.5.1
     container_name: elasticsearch2
+    ports:
+      - 127.0.0.1:9200:9200
     environment:
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
