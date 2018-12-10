@@ -54,13 +54,13 @@ sudo cp ./nginx/skadi_default.conf /etc/nginx/conf.d
 
 # Install Things Required for TimeSketch on Host
 # Set Credentials
-SECRET_KEY="$(openssl rand -base64 32 |sha256sum | sed 's/ //g')"
+SECRET_KEY=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
 TIMEKSETCH_USER="skadi"
 TIMEKSETCH_PASSWORD="skadi"
 POSTGRES_USER="timesketch"
-psql_pw= $(openssl rand -base64 32 |sha256sum | sed 's/ //g')
+psql_pw=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
 neo4juser='neo4j'
-neo4jpassword= $(openssl rand -base64 32 |sha256sum | sed 's/ //g')
+neo4jpassword=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
 
 # Write TS and Postgres creds to .env file
 echo TIMEKSETCH_USER=$TIMEKSETCH_USER > ./.env
@@ -74,9 +74,6 @@ echo 127.0.0.1       elasticsearch |sudo tee -a /etc/hosts
 echo 127.0.0.1       postgres |sudo tee -a /etc/hosts
 echo 127.0.0.1       neo4j |sudo tee -a /etc/hosts
 echo 127.0.0.1       redis |sudo tee -a /etc/hosts
-
-# Install Gunicorn and TimeSketch
-sudo -H pip install timesketch
 
 # Write TimeSketch config file on host
 sudo cp /usr/local/share/timesketch/timesketch.conf /etc/
@@ -106,6 +103,9 @@ sudo docker build -t cyberchef ./cyberchef/
 
 # Deploy all the things
 sudo docker-compose up -d
+
+# Install Gunicorn and TimeSketch on the Host
+sudo -H pip install timesketch
 
 # Installs and Configures CDQR and CyLR
 echo "Updating CDQR"
