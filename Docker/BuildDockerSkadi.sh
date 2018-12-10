@@ -53,6 +53,10 @@ sudo cp ./nginx/.skadi_auth /etc/nginx/
 sudo cp ./nginx/skadi_default.conf /etc/nginx/conf.d
 
 # Install Things Required for TimeSketch on Host
+
+# Install Gunicorn and TimeSketch on the Host
+sudo -H pip install timesketch
+
 # Set Credentials
 SECRET_KEY=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
 TIMEKSETCH_USER="skadi"
@@ -87,14 +91,6 @@ sudo sed -i "s/GRAPH_BACKEND_ENABLED = False/GRAPH_BACKEND_ENABLED = True/g" /et
 tsctl add_user -u "$TIMEKSETCH_USER" -p "$TIMEKSETCH_PASSWORD"
 sudo useradd -r -s /bin/false timesketch
 
-
-timesketch_service="W1VuaXRdCkRlc2NyaXB0aW9uPVRpbWVTa2V0Y2ggU2VydmljZQpBZnRlcj1uZXR3b3JrLnRhcmdldAoKW1NlcnZpY2VdClVzZXI9dGltZXNrZXRjaApHcm91cD10aW1lc2tldGNoCkV4ZWNTdGFydD0vdXNyL2xvY2FsL2Jpbi9ndW5pY29ybiAtLXdvcmtlcnMgNCAtLWJpbmQgMTI3LjAuMC4xOjUwMDAgdGltZXNrZXRjaC53c2dpCgpbSW5zdGFsbF0KV2FudGVkQnk9bXVsdGktdXNlci50YXJnZXQK"
-echo $timesketch_service |base64 -d | sudo tee /etc/systemd/system/timesketch.service
-sudo chmod g+w /etc/systemd/system/timesketch.service
-sudo systemctl daemon-reload
-sudo systemctl restart timesketch.service
-sudo systemctl enable timesketch.service
-
 # Build TimeSketch Docker Image
 sudo docker build -t timesketch ./timesketch/
 
@@ -103,9 +99,6 @@ sudo docker build -t cyberchef ./cyberchef/
 
 # Deploy all the things
 sudo docker-compose up -d
-
-# Install Gunicorn and TimeSketch on the Host
-sudo -H pip install timesketch
 
 # Installs and Configures CDQR and CyLR
 echo "Updating CDQR"
