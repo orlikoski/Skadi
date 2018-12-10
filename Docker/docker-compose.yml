@@ -1,4 +1,4 @@
-version: '3'
+version: '2.4'
 services:
   timesketch:
     image: timesketch:latest
@@ -13,15 +13,19 @@ services:
     environment:
       - TIMESKETCH_USER=${TIMESKETCH_USER}
       - TIMESKETCH_PASSWORD=${TIMESKETCH_PASSWORD}
+    cpus: 1
+    mem_reservation: 1gb
     volumes:
       - /etc/timesketch.conf:/etc/timesketch.conf
     networks:
       - esnet
-    # restart: always
+    restart: always
 
   postgres:
     image: postgres:10
     container_name: postgres
+    cpus: .1
+    mem_reservation: 100m
     ports:
       - 127.0.0.1:5432:5432
     environment:
@@ -36,6 +40,8 @@ services:
   redis:
     image: redis:5
     container_name: redis
+    cpus: .1
+    mem_reservation: 100m
     ports:
       - 127.0.0.1:6379:6379
     volumes:
@@ -47,9 +53,13 @@ services:
   neo4j:
     image: neo4j:3.5
     container_name: neo4j
+    cpus: .1
+    mem_reservation: 100m
     ports:
       - 127.0.0.1:7474:7474
       - 127.0.0.1:7687:7687
+    environment:
+      - NEO4J_AUTH=neo4j/${NEO4J_PASSWORD}
     volumes:
       - neo4jdata:/var/lib/neo4j/data
     networks:
@@ -59,6 +69,8 @@ services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.5.1
     container_name: elasticsearch
+    cpus: 2
+    mem_reservation: 1500m
     environment:
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
@@ -78,6 +90,8 @@ services:
     container_name: elasticsearch2
     ports:
       - 127.0.0.1:9200:9200
+    cpus: 2
+    mem_reservation: 1500m
     environment:
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
@@ -98,6 +112,8 @@ services:
     container_name: kibana
     ports:
       - 127.0.0.1:5601:5601
+    cpus: 1
+    mem_reservation: 1gb
     environment:
       SERVER_BASEPATH: /kibana
     networks:
@@ -109,6 +125,10 @@ services:
     container_name: cerebro
     ports:
       - 127.0.0.1:9000:9000
+    cpus: 1
+    mem_reservation: 500m
+    links:
+      - elasticsearch
     networks:
       - esnet
     restart: always
@@ -118,6 +138,8 @@ services:
     container_name: cyberchef
     ports:
       - 127.0.0.1:8000:8000
+    cpus: .1
+    mem_reservation: 100m
     networks:
       - ccnet
     restart: always
@@ -132,6 +154,8 @@ services:
     ports:
       - 80:80
       - 443:443
+    cpus: .5
+    mem_reservation: 100m
     restart: always
 
 volumes:

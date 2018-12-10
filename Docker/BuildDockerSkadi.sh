@@ -4,11 +4,10 @@ set -xe
 sudo apt-get update && sudo apt-get dist-upgrade -y
 
 # Install deps
-sudo apt-get install apt-transport-https ca-certificates curl software-properties-common python-pip python-psycopg2 glances unzip vim htop -y
+sudo apt-get install apt-transport-https ca-certificates curl software-properties-common python-pip glances unzip vim htop -y
 
-# Update pip
+# Ensure pip is on 9.0.3 for installation
 sudo -H pip install pip==9.0.3
-#sudo -H pip install --upgrade pip
 
 # Disable Swap
 sudo swapoff -a
@@ -22,7 +21,7 @@ sudo add-apt-repository ppa:gift/stable -y
 
 # Install Docker and Plaso
 sudo apt-get update
-sudo apt-get install docker-ce python-plaso plaso-tools -y
+sudo apt-get install docker-ce python-plaso plaso-tools python-psycopg2  -y
 sudo systemctl enable docker
 
 # Clean APT
@@ -34,7 +33,11 @@ sudo apt-get -y autoclean
 sudo usermod -aG docker skadi
 
 # Install Docker-Compose
-sudo -H pip install docker-compose
+# sudo -H pip install docker-compose
+sudo curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+sudo curl -L https://raw.githubusercontent.com/docker/compose/1.23.1/contrib/completion/bash/docker-compose -o /etc/bash_completion.d/docker-compose
+
 
 # Set the vm.max_map_count kernel setting needs to be set to at least 262144 for production use
 sudo sysctl -w vm.max_map_count=262144
@@ -49,46 +52,28 @@ sudo mkdir -p /etc/nginx/conf.d
 sudo cp ./nginx/.skadi_auth /etc/nginx/
 sudo cp ./nginx/skadi_default.conf /etc/nginx/conf.d
 
-# Build CyberChef Docker Image
-sudo docker build -t cyberchef -f ./cyberchef/Dockerfile ./cyberchef/
-
 # Install Things Required for TimeSketch on Host
 # Set Credentials
-SECRET_KEY="$(openssl rand -base64 32 | sha256sum)"
+SECRET_KEY="$(openssl rand -base64 32 |sha256sum | sed 's/ //g')"
 TIMEKSETCH_USER="skadi"
 TIMEKSETCH_PASSWORD="skadi"
 POSTGRES_USER="timesketch"
-psql_pw=$(openssl rand -base64 32 | sha256sum)
+psql_pw= $(openssl rand -base64 32 |sha256sum | sed 's/ //g')
 neo4juser='neo4j'
-neo4jpassword=$(openssl rand -base64 32)
+neo4jpassword= $(openssl rand -base64 32 |sha256sum | sed 's/ //g')
 
 # Write TS and Postgres creds to .env file
 echo TIMEKSETCH_USER=$TIMEKSETCH_USER > ./.env
 echo TIMEKSETCH_PASSWORD=$TIMEKSETCH_PASSWORD >> ./.env
 echo POSTGRES_USER=$POSTGRES_USER >> ./.env
 echo POSTGRES_PASSWORD=$psql_pw >> ./.env
+echo NEO4J_PASSWORD=$neo4neo4jpassword >> ./.env
 
-# Configure /etc/hosts file to use same names as TimeSketch Dockers
+# Configure /etc/hosts file so the host can use same names for each service as the TimeSketch Dockers
 echo 127.0.0.1       elasticsearch |sudo tee -a /etc/hosts
 echo 127.0.0.1       postgres |sudo tee -a /etc/hosts
 echo 127.0.0.1       neo4j |sudo tee -a /etc/hosts
 echo 127.0.0.1       redis |sudo tee -a /etc/hosts
-
-# Install and Configure Celery to run as a Service
-# celery_service="W1VuaXRdCkRlc2NyaXB0aW9uPUNlbGVyeSBTZXJ2aWNlCkFmdGVyPW5ldHdvcmsudGFyZ2V0CgpbU2VydmljZV0KVHlwZT1mb3JraW5nClVzZXI9Y2VsZXJ5Ckdyb3VwPWNlbGVyeQpQSURGaWxlPS9vcHQvY2VsZXJ5L2NlbGVyeS5waWRsb2NrCgpFeGVjU3RhcnQ9L3Vzci9sb2NhbC9iaW4vY2VsZXJ5IG11bHRpIHN0YXJ0IHNpbmdsZS13b3JrZXIgLUEgdGltZXNrZXRjaC5saWIudGFza3Mgd29ya2VyIC0tbG9nbGV2ZWw9aW5mbyAtLWxvZ2ZpbGU9L3Zhci9sb2cvY2VsZXJ5X3dvcmtlciAtLXBpZGZpbGU9L29wdC9jZWxlcnkvY2VsZXJ5LnBpZGxvY2sKRXhlY1N0b3A9L3Vzci9sb2NhbC9iaW4vY2VsZXJ5IG11bHRpIHN0b3B3YWl0IHNpbmdsZS13b3JrZXIgLS1waWRmaWxlPS9vcHQvY2VsZXJ5L2NlbGVyeS5waWRsb2NrIC0tbG9nZmlsZT0vdmFyL2xvZy9jZWxlcnlfd29ya2VyCkV4ZWNSZWxvYWQ9L3Vzci9sb2NhbC9iaW4vY2VsZXJ5IG11bHRpIHJlc3RhcnQgc2luZ2xlLXdvcmtlciAtLXBpZGZpbGU9L29wdC9jZWxlcnkvY2VsZXJ5LnBpZGxvY2sgLS1sb2dmaWxlPS92YXIvbG9nL2NlbGVyeV93b3JrZXIKCgpbSW5zdGFsbF0KV2FudGVkQnk9bXVsdGktdXNlci50YXJnZXQK"
-# sudo useradd -r -s /bin/false celery
-# sudo mkdir -p /opt/celery
-# sudo touch /var/log/celery_worker
-# sudo touch /opt/celery/celery.pidlock
-# sudo chown -R celery:celery /opt/celery
-# sudo chown -R celery:celery /opt/celery/celery.pidlock
-#
-# sudo chown -R celery:celery /var/log/celery_worker
-# echo $celery_service |base64 -d | sudo tee /etc/systemd/system/celery.service
-# sudo chmod g+w /etc/systemd/system/celery.service
-# sudo systemctl daemon-reload
-# sudo systemctl restart celery
-# sudo systemctl enable celery
 
 # Install Gunicorn and TimeSketch
 sudo -H pip install timesketch
@@ -113,18 +98,14 @@ sudo systemctl daemon-reload
 sudo systemctl restart timesketch.service
 sudo systemctl enable timesketch.service
 
+# Build TimeSketch Docker Image
+sudo docker build -t timesketch ./timesketch/
+
+# Build CyberChef Docker Image
+sudo docker build -t cyberchef ./cyberchef/
 
 # Deploy all the things
 sudo docker-compose up -d
-
-# Build TimeSketch Docker Image
-sudo docker build -t timesketch ./timesketch/
-# git clone https://github.com/google/timesketch.git
-# cd timesketch/
-# sudo -H pip install . --upgrade
-
-
-
 
 # Installs and Configures CDQR and CyLR
 echo "Updating CDQR"
