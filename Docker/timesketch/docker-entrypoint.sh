@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # Set up web credentials
 if [ -z ${TIMESKETCH_USER+x} ]; then
   TIMESKETCH_USER="admin"

@@ -98,7 +98,7 @@ sudo sed -i "s/NEO4J_HOST = u'127.0.0.1'/NEO4J_HOST = u'neo4j'/g" /etc/timesketc
 sudo useradd -r -s /bin/false timesketch
 
 # Build TimeSketch Docker Image
-sudo docker build -t timesketch ./timesketch/
+sudo docker build -t timesketch ./timesketch/docker/
 
 # Build CyberChef Docker Image
 sudo docker build -t cyberchef ./cyberchef/
