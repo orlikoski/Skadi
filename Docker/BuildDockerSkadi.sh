@@ -88,7 +88,13 @@ sudo sed -i "s@NEO4J_PASSWORD = u'<N4J_PASSWORD>'@NEO4J_PASSWORD = u'$neo4jpassw
 sudo sed -i "s/UPLOAD_ENABLED = False/UPLOAD_ENABLED = True/g" /etc/timesketch.conf
 sudo sed -i "s/GRAPH_BACKEND_ENABLED = False/GRAPH_BACKEND_ENABLED = True/g" /etc/timesketch.conf
 
-tsctl add_user -u "$TIMEKSETCH_USER" -p "$TIMEKSETCH_PASSWORD"
+sudo sed -i "s#@localhost/timesketch#@postgres/timesketch#g" /etc/timesketch.conf
+sudo sed -i "s/ELASTIC_HOST = u'127.0.0.1'/ELASTIC_HOST = u'elasticsearch'/g" /etc/timesketch.conf
+sudo sed -i "s@'redis://127.0.0.1:6379'@'redis://redis:6379'@g" /etc/timesketch.conf
+sudo sed -i "s/NEO4J_HOST = u'127.0.0.1'/NEO4J_HOST = u'neo4j'/g" /etc/timesketch.conf
+
+
+# tsctl add_user -u "$TIMEKSETCH_USER" -p "$TIMEKSETCH_PASSWORD"
 sudo useradd -r -s /bin/false timesketch
 
 # Build TimeSketch Docker Image
@@ -99,6 +105,14 @@ sudo docker build -t cyberchef ./cyberchef/
 
 # Deploy all the things
 sudo docker-compose up -d
+
+# Install Glances as a Service
+glances_service="W1VuaXRdCkRlc2NyaXB0aW9uPUdsYW5jZXMKQWZ0ZXI9bmV0d29yay50YXJnZXQKCltTZXJ2aWNlXQpFeGVjU3RhcnQ9L3Vzci9iaW4vZ2xhbmNlcyAtdwpSZXN0YXJ0PW9uLWFib3J0CgpbSW5zdGFsbF0KV2FudGVkQnk9bXVsdGktdXNlci50YXJnZXQK"
+echo $glances_service |base64 -d | sudo tee /etc/systemd/system/glances.service
+sudo chmod g+w /etc/systemd/system/glances.service
+sudo systemctl daemon-reload
+sudo systemctl restart glances
+sudo systemctl enable glances
 
 # Installs and Configures CDQR and CyLR
 echo "Updating CDQR"
