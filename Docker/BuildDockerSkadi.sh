@@ -59,8 +59,8 @@ sudo -H pip install timesketch
 
 # Set Credentials
 SECRET_KEY=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
-TIMEKSETCH_USER="skadi"
-TIMEKSETCH_PASSWORD="skadi"
+TIMESKETCH_USER="skadi"
+TIMESKETCH_PASSWORD="skadi"
 POSTGRES_USER="timesketch"
 psql_pw=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
 neo4juser='neo4j'
