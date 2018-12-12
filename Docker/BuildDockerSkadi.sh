@@ -94,7 +94,7 @@ sudo sed -i "s@'redis://127.0.0.1:6379'@'redis://redis:6379'@g" /etc/timesketch.
 sudo sed -i "s/NEO4J_HOST = u'127.0.0.1'/NEO4J_HOST = u'neo4j'/g" /etc/timesketch.conf
 
 
-# tsctl add_user -u "$TIMEKSETCH_USER" -p "$TIMEKSETCH_PASSWORD"
+# tsctl add_user -u "$TIMESKETCH_USER" -p "$TIMESKETCH_PASSWORD"
 sudo useradd -r -s /bin/false timesketch
 
 # Build TimeSketch Docker Image
