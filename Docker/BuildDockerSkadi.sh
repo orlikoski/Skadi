@@ -66,15 +66,6 @@ psql_pw=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
 neo4juser='neo4j'
 neo4jpassword=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
 
-# Set Credentials
-SECRET_KEY=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
-TIMESKETCH_USER="skadi"
-TIMESKETCH_PASSWORD="skadi"
-POSTGRES_USER="timesketch"
-psql_pw=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
-neo4juser='neo4j'
-neo4jpassword=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
-
 # Write TS and Postgres creds to .env file
 echo TIMEKSETCH_USER=$TIMEKSETCH_USER > ./.env
 echo TIMEKSETCH_PASSWORD=$TIMEKSETCH_PASSWORD >> ./.env
