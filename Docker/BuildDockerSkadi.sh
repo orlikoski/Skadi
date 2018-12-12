@@ -58,7 +58,7 @@ sudo cp ./nginx/skadi_default.conf /etc/nginx/conf.d
 sudo -H pip install timesketch
 
 # Set Credentials
-SECRET_KEY=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
+SECRET_KEY=$(openssl rand -base64 32 |sha256sum | sed 's/ //g') 
 TIMESKETCH_USER="skadi"
 TIMESKETCH_PASSWORD="skadi"
 POSTGRES_USER="timesketch"
