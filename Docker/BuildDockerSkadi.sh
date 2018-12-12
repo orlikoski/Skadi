@@ -67,8 +67,8 @@ neo4juser='neo4j'
 neo4jpassword=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
 
 # Write TS and Postgres creds to .env file
-echo TIMESKETCH_USER=$TIMEKSETCH_USER > ./.env
-echo TIMESKETCH_PASSWORD=$TIMEKSETCH_PASSWORD >> ./.env
+echo TIMESKETCH_USER=$TIMESKETCH_USER > ./.env
+echo TIMESKETCH_PASSWORD=$TIMESKETCH_PASSWORD >> ./.env
 echo POSTGRES_USER=$POSTGRES_USER >> ./.env
 echo POSTGRES_PASSWORD=$psql_pw >> ./.env
 echo NEO4J_PASSWORD=$neo4neo4jpassword >> ./.env
