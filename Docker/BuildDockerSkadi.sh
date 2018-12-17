@@ -95,10 +95,8 @@ sudo sed -i "s/NEO4J_HOST = u'127.0.0.1'/NEO4J_HOST = u'neo4j'/g" /etc/timesketc
 
 sudo useradd -r -s /bin/false timesketch
 
-# Build TimeSketch Docker Image (if no access to Docker Hub uncomment the following line)
+# To build TimeSketch and CyberChef Docker Images Locally, uncomment the following lines
 # sudo docker build -t aorlikoski/skadi_timesketch:1.0 ./timesketch/
-
-# Build CyberChef Docker Image
 # sudo docker build -t aorlikoski/skadi_cyberchef:1.0 ./cyberchef/
 
 # Deploy all the things
@@ -114,8 +112,8 @@ sudo systemctl enable glances
 
 # TODO Build Grafana Monitoring Solution
 # Install Grafana for Monitoring
-git clone https://github.com/stefanprodan/dockprom
-cd dockprom
+# git clone https://github.com/stefanprodan/dockprom
+# cd dockprom
 
 
 # Create a template in ES that sets the number of replicas for all indexes to 0

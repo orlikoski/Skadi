@@ -1,7 +1,7 @@
 version: '2.4'
 services:
   timesketch:
-    image: aorlikoski/timesketch:1.0
+    image: aorlikoski/skadi_timesketch:1.0
     container_name: timesketch
     ports:
       - 127.0.0.1:5000:5000
@@ -114,7 +114,7 @@ services:
     restart: always
 
   cyberchef:
-    image: aorlikoski/cyberchef:1.0
+    image: aorlikoski/skadi_cyberchef:1.0
     container_name: cyberchef
     ports:
       - 127.0.0.1:8000:8000
