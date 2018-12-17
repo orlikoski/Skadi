@@ -69,25 +69,6 @@ services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.5.1
     container_name: elasticsearch
-    cpus: 2
-    mem_reservation: 1500m
-    environment:
-      - cluster.name=docker-cluster
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    volumes:
-      - esdata1:/usr/share/elasticsearch/data
-    networks:
-      - esnet
-    restart: always
-
-  elasticsearch2:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.5.1
-    container_name: elasticsearch2
     ports:
       - 127.0.0.1:9200:9200
     cpus: 2
@@ -95,14 +76,13 @@ services:
     environment:
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - "discovery.zen.ping.unicast.hosts=elasticsearch"
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
     ulimits:
       memlock:
         soft: -1
         hard: -1
     volumes:
-      - esdata2:/usr/share/elasticsearch/data
+      - esdata1:/usr/share/elasticsearch/data
     networks:
       - esnet
     restart: always
@@ -160,8 +140,6 @@ services:
 
 volumes:
   esdata1:
-    driver: local
-  esdata2:
     driver: local
   neo4jdata:
     driver: local

@@ -93,8 +93,6 @@ sudo sed -i "s/ELASTIC_HOST = u'127.0.0.1'/ELASTIC_HOST = u'elasticsearch'/g" /e
 sudo sed -i "s@'redis://127.0.0.1:6379'@'redis://redis:6379'@g" /etc/timesketch.conf
 sudo sed -i "s/NEO4J_HOST = u'127.0.0.1'/NEO4J_HOST = u'neo4j'/g" /etc/timesketch.conf
 
-
-# tsctl add_user -u "$TIMESKETCH_USER" -p "$TIMESKETCH_PASSWORD"
 sudo useradd -r -s /bin/false timesketch
 
 # Build TimeSketch Docker Image
@@ -113,6 +111,18 @@ sudo chmod g+w /etc/systemd/system/glances.service
 sudo systemctl daemon-reload
 sudo systemctl restart glances
 sudo systemctl enable glances
+
+# Create a template in ES that sets the number of replicas for all indexes to 0
+echo "Waiting for ElasticSearch service to respond to requests"
+until $(curl --output /dev/null --silent --head --fail http://localhost:9200); do
+    printf '.'
+    sleep 5
+done
+echo "Setting the ElasticSearch default number of replicas to 0"
+
+curl -XPUT 'localhost:9200/_template/number_of_replicas' \
+    -d '{"template": "*","settings": {"number_of_replicas": 0}}' \
+    -H'Content-Type: application/json'
 
 # Installs and Configures CDQR and CyLR
 echo "Updating CDQR"
