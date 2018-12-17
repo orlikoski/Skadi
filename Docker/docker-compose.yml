@@ -1,36 +1,33 @@
-version: '3'
+version: '2.4'
 services:
-
   timesketch:
-    image: timesketch:latest
+    image: aorlikoski/timesketch:1.0
     container_name: timesketch
+    ports:
+      - 127.0.0.1:5000:5000
     links:
       - elasticsearch
       - postgres
       - redis
       - neo4j
     environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_ADDRESS=postgres
-      - POSTGRES_PORT=5432
-      - ELASTIC_ADDRESS=elasticsearch
-      - ELASTIC_PORT=9200
-      - REDIS_ADDRESS=redis
-      - REDIS_PORT=6379
-      - NEO4J_ADDRESS=neo4j
-      - NEO4J_PORT=7474
       - TIMESKETCH_USER=${TIMESKETCH_USER}
       - TIMESKETCH_PASSWORD=${TIMESKETCH_PASSWORD}
+    cpus: 1
+    mem_reservation: 1gb
+    volumes:
+      - /etc/timesketch.conf:/etc/timesketch.conf
     networks:
       - esnet
-    ports:
-      - 127.0.0.1:5000:80
     restart: always
 
   postgres:
     image: postgres:10
     container_name: postgres
+    cpus: .1
+    mem_reservation: 100m
+    ports:
+      - 127.0.0.1:5432:5432
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -43,8 +40,12 @@ services:
   redis:
     image: redis:5
     container_name: redis
+    cpus: .1
+    mem_reservation: 100m
+    ports:
+      - 127.0.0.1:6379:6379
     volumes:
-      - /var/lib/redis:/data
+      - redisdata:/var/lib/redis
     networks:
       - esnet
     restart: always
@@ -52,8 +53,13 @@ services:
   neo4j:
     image: neo4j:3.5
     container_name: neo4j
+    cpus: .1
+    mem_reservation: 100m
+    ports:
+      - 127.0.0.1:7474:7474
+      - 127.0.0.1:7687:7687
     environment:
-      - NEO4J_AUTH=none
+      - NEO4J_AUTH=neo4j/${NEO4J_PASSWORD}
     volumes:
       - neo4jdata:/var/lib/neo4j/data
     networks:
@@ -63,37 +69,20 @@ services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.5.1
     container_name: elasticsearch
+    ports:
+      - 127.0.0.1:9200:9200
+    cpus: 2
+    mem_reservation: 1500m
     environment:
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
     ulimits:
       memlock:
         soft: -1
         hard: -1
     volumes:
       - esdata1:/usr/share/elasticsearch/data
-    ports:
-      - 127.0.0.1:9200:9200
-      - 127.0.0.1:9300:9300
-    networks:
-      - esnet
-    restart: always
-
-  elasticsearch2:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.5.1
-    container_name: elasticsearch2
-    environment:
-      - cluster.name=docker-cluster
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - "discovery.zen.ping.unicast.hosts=elasticsearch"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    volumes:
-      - esdata2:/usr/share/elasticsearch/data
     networks:
       - esnet
     restart: always
@@ -103,6 +92,8 @@ services:
     container_name: kibana
     ports:
       - 127.0.0.1:5601:5601
+    cpus: 1
+    mem_reservation: 1gb
     environment:
       SERVER_BASEPATH: /kibana
     networks:
@@ -114,17 +105,23 @@ services:
     container_name: cerebro
     ports:
       - 127.0.0.1:9000:9000
+    cpus: 1
+    mem_reservation: 500m
+    links:
+      - elasticsearch
     networks:
       - esnet
     restart: always
 
   cyberchef:
-    image: cyberchef:latest
+    image: aorlikoski/cyberchef:1.0
     container_name: cyberchef
     ports:
       - 127.0.0.1:8000:8000
+    cpus: .1
+    mem_reservation: 100m
     networks:
-      - esnet
+      - ccnet
     restart: always
 
   nginx:
@@ -137,17 +134,20 @@ services:
     ports:
       - 80:80
       - 443:443
+    cpus: .5
+    mem_reservation: 100m
     restart: always
 
 volumes:
   esdata1:
     driver: local
-  esdata2:
-    driver: local
   neo4jdata:
     driver: local
   pgdata:
     driver: local
+  redisdata:
+    driver: local
 
 networks:
   esnet:
+  ccnet:
