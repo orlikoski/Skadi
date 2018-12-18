@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 set -xe
+# Set Credentials
+SECRET_KEY=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
+POSTGRES_USER="timesketch"
+psql_pw=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
+neo4juser='neo4j'
+neo4jpassword=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
+TIMESKETCH_USER="skadi"
+TIMESKETCH_PASSWORD="skadi"
+GRAFANA_USER="skadi"
+GRAFANA_PASSWORD="skadi"
+
 # Update
 sudo apt-get update && sudo apt-get dist-upgrade -y
 
@@ -47,24 +58,18 @@ echo vm.max_map_count=262144 | sudo tee -a /etc/sysctl.conf
 sudo mkdir -p /opt/skadi/CyLR
 sudo chown -R skadi:skadi /opt/skadi
 sudo mkdir -p /etc/nginx/conf.d
+sudo mkdir -p /usr/share/nginx/html
+
 
 # Copy Nginx configuration files to required locations
 sudo cp ./nginx/.skadi_auth /etc/nginx/
 sudo cp ./nginx/skadi_default.conf /etc/nginx/conf.d
+sudo cp -r ./nginx/www/* /usr/share/nginx/html
 
 # Install Things Required for TimeSketch on Host
 
-# Install Gunicorn and TimeSketch on the Host
+# Install TimeSketch on the Host
 sudo -H pip install timesketch
-
-# Set Credentials
-SECRET_KEY=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
-TIMESKETCH_USER="skadi"
-TIMESKETCH_PASSWORD="skadi"
-POSTGRES_USER="timesketch"
-psql_pw=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
-neo4juser='neo4j'
-neo4jpassword=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
 
 # Write TS and Postgres creds to .env file
 echo TIMESKETCH_USER=$TIMESKETCH_USER > ./.env
@@ -93,7 +98,7 @@ sudo sed -i "s/ELASTIC_HOST = u'127.0.0.1'/ELASTIC_HOST = u'elasticsearch'/g" /e
 sudo sed -i "s@'redis://127.0.0.1:6379'@'redis://redis:6379'@g" /etc/timesketch.conf
 sudo sed -i "s/NEO4J_HOST = u'127.0.0.1'/NEO4J_HOST = u'neo4j'/g" /etc/timesketch.conf
 
-sudo useradd -r -s /bin/false timesketch
+# sudo useradd -r -s /bin/false timesketch
 
 # To build TimeSketch and CyberChef Docker Images Locally, uncomment the following lines
 # sudo docker build -t aorlikoski/skadi_timesketch:1.0 ./timesketch/
@@ -101,20 +106,6 @@ sudo useradd -r -s /bin/false timesketch
 
 # Deploy all the things
 sudo docker-compose up -d
-
-# Install Glances as a Service
-glances_service="W1VuaXRdCkRlc2NyaXB0aW9uPUdsYW5jZXMKQWZ0ZXI9bmV0d29yay50YXJnZXQKCltTZXJ2aWNlXQpFeGVjU3RhcnQ9L3Vzci9iaW4vZ2xhbmNlcyAtdwpSZXN0YXJ0PW9uLWFib3J0CgpbSW5zdGFsbF0KV2FudGVkQnk9bXVsdGktdXNlci50YXJnZXQK"
-echo $glances_service |base64 -d | sudo tee /etc/systemd/system/glances.service
-sudo chmod g+w /etc/systemd/system/glances.service
-sudo systemctl daemon-reload
-sudo systemctl restart glances
-sudo systemctl enable glances
-
-# TODO Build Grafana Monitoring Solution
-# Install Grafana for Monitoring
-# git clone https://github.com/stefanprodan/dockprom
-# cd dockprom
-
 
 # Create a template in ES that sets the number of replicas for all indexes to 0
 echo "Waiting for ElasticSearch service to respond to requests"
@@ -127,6 +118,27 @@ echo "Setting the ElasticSearch default number of replicas to 0"
 curl -XPUT 'localhost:9200/_template/number_of_replicas' \
     -d '{"template": "*","settings": {"number_of_replicas": 0}}' \
     -H'Content-Type: application/json'
+
+
+# Install Glances as a Service
+glances_service="W1VuaXRdCkRlc2NyaXB0aW9uPUdsYW5jZXMKQWZ0ZXI9bmV0d29yay50YXJnZXQKCltTZXJ2aWNlXQpFeGVjU3RhcnQ9L3Vzci9iaW4vZ2xhbmNlcyAtdwpSZXN0YXJ0PW9uLWFib3J0CgpbSW5zdGFsbF0KV2FudGVkQnk9bXVsdGktdXNlci50YXJnZXQK"
+echo $glances_service |base64 -d | sudo tee /etc/systemd/system/glances.service
+sudo chmod g+w /etc/systemd/system/glances.service
+sudo systemctl daemon-reload
+sudo systemctl restart glances
+sudo systemctl enable glances
+
+# Install Grafana for Monitoring
+git clone https://github.com/orlikoski/skadi_dockprom.git
+cd skadi_dockprom
+
+# Write Grafana login creds to .env file
+echo ADMIN_USER=$GRAFANA_USER > ./.env
+echo ADMIN_PASSWORD=$GRAFANA_PASSWORD >> ./.env
+
+sudo docker-compose up -d
+
+
 
 # Installs and Configures CDQR and CyLR
 echo "Updating CDQR"
@@ -170,3 +182,11 @@ cylr_version=$(/tmp/CyLR --version |grep Version)
 rm /tmp/CyLR > /dev/null 2>&1
 echo "All CyLR Files Downloaded"
 echo "Updated to $cylr_version"
+echo ""
+
+# Enable and Configure UFW Firewall
+echo "Enabling UFW firewall to only allow OpenSSH and Ngninx Full"
+sudo ufw allow 80
+sudo ufw allow 443
+sudo ufw allow 'OpenSSH'
+sudo ufw --force enable

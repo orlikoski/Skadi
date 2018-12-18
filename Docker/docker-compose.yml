@@ -130,6 +130,7 @@ services:
     volumes:
       - /etc/nginx/conf.d:/etc/nginx/conf.d
       - /etc/nginx/.skadi_auth:/etc/nginx/.skadi_auth
+      - /usr/share/nginx/html:/usr/share/nginx/html
     network_mode: "host"
     ports:
       - 80:80
