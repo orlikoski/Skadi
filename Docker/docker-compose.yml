@@ -17,6 +17,7 @@ services:
     mem_reservation: 1gb
     volumes:
       - /etc/timesketch.conf:/etc/timesketch.conf
+      - tssockets:/var/timesketch/
     networks:
       - esnet
     restart: always
@@ -131,6 +132,7 @@ services:
       - /etc/nginx/conf.d:/etc/nginx/conf.d
       - /etc/nginx/.skadi_auth:/etc/nginx/.skadi_auth
       - /usr/share/nginx/html:/usr/share/nginx/html
+      - tssockets:/var/timesketch/
     network_mode: "host"
     ports:
       - 80:80
@@ -147,6 +149,8 @@ volumes:
   pgdata:
     driver: local
   redisdata:
+    driver: local
+  tssockets:
     driver: local
 
 networks:
