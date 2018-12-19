@@ -15,4 +15,4 @@ tsctl add_user -u "$TIMESKETCH_USER" -p "$TIMESKETCH_PASSWORD"
 
 # Run the Timesketch server (without SSL)
 exec `bash -c "/usr/local/bin/celery -A timesketch.lib.tasks worker --uid nobody --loglevel info &\
-gunicorn -b 0.0.0.0:5000 --access-logfile - --error-logfile - --log-level info --timeout 600 timesketch.wsgi:application"`
+ uwsgi --ini timesketch_config.ini"`

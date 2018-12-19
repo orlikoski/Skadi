@@ -1,3 +1,0 @@
-[submodule "Docker/timesketch"]
-	path = Docker/timesketch
-	url = https://github.com/google/timesketch.git

@@ -36,6 +36,9 @@ RUN pip install /tmp/timesketch/
 # Copy the Timesketch configuration file into /etc
 RUN cp /usr/local/share/timesketch/timesketch.conf /etc
 
+# Copy the TimeSketch uWSGI configuration file into the container
+COPY timesketch_config.ini /
+
 # Copy the entrypoint script into the container
 COPY docker-entrypoint.sh /
 RUN chmod a+x /docker-entrypoint.sh
