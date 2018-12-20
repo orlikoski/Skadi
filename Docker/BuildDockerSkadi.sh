@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -xe
+set -e
 # Set Credentials
 SECRET_KEY=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
 POSTGRES_USER="timesketch"
