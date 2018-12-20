@@ -123,6 +123,15 @@ curl -XPUT 'localhost:9200/_template/number_of_replicas' \
     -d '{"template": "*","settings": {"number_of_replicas": 0}}' \
     -H'Content-Type: application/json'
 
+echo "Waiting for TimeSketch to become available"
+echo "Press CTRL-C at any time to stop installation"
+until $(curl --output /dev/null --silent --head --fail http://localhost/timesketch); do
+    echo "No response, attempting to restart the TimeSketch container"
+    sudo docker restart timesketch
+    sleep 10
+done
+echo "TimeSketch available. Continuing"
+
 
 # Install Glances as a Service
 glances_service="W1VuaXRdCkRlc2NyaXB0aW9uPUdsYW5jZXMKQWZ0ZXI9bmV0d29yay50YXJnZXQKCltTZXJ2aWNlXQpFeGVjU3RhcnQ9L3Vzci9iaW4vZ2xhbmNlcyAtdwpSZXN0YXJ0PW9uLWFib3J0CgpbSW5zdGFsbF0KV2FudGVkQnk9bXVsdGktdXNlci50YXJnZXQK"
