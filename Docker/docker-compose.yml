@@ -1,7 +1,7 @@
 version: '2.4'
 services:
   timesketch:
-    image: aorlikoski/skadi_timesketch:1.1
+    image: aorlikoski/skadi_timesketch:1.2
     container_name: timesketch
     ports:
       - 127.0.0.1:5000:5000
