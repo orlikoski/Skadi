@@ -1,7 +1,7 @@
 version: '2.4'
 services:
   timesketch:
-    image: aorlikoski/skadi_timesketch:1.0
+    image: aorlikoski/skadi_timesketch:1.1
     container_name: timesketch
     ports:
       - 127.0.0.1:5000:5000
@@ -115,7 +115,7 @@ services:
     restart: always
 
   cyberchef:
-    image: aorlikoski/skadi_cyberchef:1.0
+    image: aorlikoski/skadi_cyberchef:latest
     container_name: cyberchef
     ports:
       - 127.0.0.1:8000:8000
@@ -132,6 +132,7 @@ services:
       - /etc/nginx/conf.d:/etc/nginx/conf.d
       - /etc/nginx/.skadi_auth:/etc/nginx/.skadi_auth
       - /usr/share/nginx/html:/usr/share/nginx/html
+      - /opt/CyLR:/usr/share/nginx/html/downloads
       - tssockets:/var/timesketch/
     network_mode: "host"
     ports:

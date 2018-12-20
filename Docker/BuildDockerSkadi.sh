@@ -23,6 +23,10 @@ sudo -H pip install pip==9.0.3
 # Disable Swap
 sudo swapoff -a
 
+# Create CyLR directory
+sudo mkdir /opt/CyLR/
+sudo chmod 777 /opt/CyLR
+
 # Add Docker gpg key
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
