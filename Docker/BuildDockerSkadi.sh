@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -xe
+set -e
 # Set Credentials
 SECRET_KEY=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
 POSTGRES_USER="timesketch"
@@ -22,6 +22,10 @@ sudo -H pip install pip==9.0.3
 
 # Disable Swap
 sudo swapoff -a
+
+# Create CyLR directory
+sudo mkdir /opt/CyLR/
+sudo chmod 777 /opt/CyLR
 
 # Add Docker gpg key
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -118,6 +122,15 @@ echo "Setting the ElasticSearch default number of replicas to 0"
 curl -XPUT 'localhost:9200/_template/number_of_replicas' \
     -d '{"template": "*","settings": {"number_of_replicas": 0}}' \
     -H'Content-Type: application/json'
+
+echo "Waiting for TimeSketch to become available"
+echo "Press CTRL-C at any time to stop installation"
+until $(curl --output /dev/null --silent --head --fail http://localhost/timesketch); do
+    echo "No response, attempting to restart the TimeSketch container"
+    sudo docker restart timesketch
+    sleep 10
+done
+echo "TimeSketch available. Continuing"
 
 
 # Install Glances as a Service
