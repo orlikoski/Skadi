@@ -11,6 +11,24 @@ TIMESKETCH_PASSWORD="skadi"
 GRAFANA_USER="skadi"
 GRAFANA_PASSWORD="skadi"
 
+# Create Skadi user
+SKADI_USER="skadi"
+SKADI_PASS="skadi"
+SKADI_USER_HOME="/home/$SKADI_USER"
+
+if ! id -u $SKADI_USER >/dev/null 2>&1; then
+    echo "==> Creating $SKADI_USER user"
+    /usr/sbin/groupadd $SKADI_USER
+    /usr/sbin/useradd $SKADI_USER -g $SKADI_USER -G sudo -d $SKADI_USER_HOME --create-home -s "/bin/bash"
+    echo "${SKADI_USER}:${SKADI_PASS}" | chpasswd
+fi
+
+# Set up sudo
+echo "==> Giving ${SKADI_USER} sudo powers"
+echo "${SKADI_USER}        ALL=(ALL)       NOPASSWD: ALL" > /etc/sudoers.d/$SKADI_USER
+chmod 440 /etc/sudoers.d/$SKADI_USER
+
+
 # Update
 sudo apt-get update && sudo apt-get dist-upgrade -y
 
