@@ -63,7 +63,7 @@ sudo apt-get -y clean
 sudo apt-get -y autoclean
 
 # Add skadi to docker usergroup
-sudo usermod -aG docker skadi
+sudo usermod -aG docker $SKADI_USER
 
 # Install Docker-Compose
 # sudo -H pip install docker-compose
