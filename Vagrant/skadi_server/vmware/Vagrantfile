@@ -16,9 +16,13 @@ Vagrant.configure("2") do |config|
   ["vmware_desktop"].each do |provider|
     config.vm.provider provider do |v, override|
       v.name = "skadi_server"
-      v.gui = true
+      # Minimum / Recommended
+      # - CPU: 4 / 8
+      # - MEM: 8192 / 16384
       v.vmx["memsize"] = "8196"
       v.vmx["numvcpus"] = "4"
+      # Uncomment this line to bring up the GUI as the VM starts
+      # v.gui = true
     end
   end
   # Uncomment the following lines to run the update script each time the VM is created
