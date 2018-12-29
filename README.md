@@ -3,44 +3,49 @@
 (pronounced “SKAHD-ee”) is a giantess and goddess of hunting in Norse mythology  
 _**Note: Skadi was formerly known as CCF-VM**_  
 
-# Download Latest Release
-[Click Here For Latest Release](https://github.com/orlikoski/Skadi/releases/latest)
 
 # How to Get Started and Support
+## Download Latest Release
+Available in OVA, Vagrant and Signed Installer formats  
+[Click Here to Download the Latest Release](https://github.com/orlikoski/Skadi/releases/latest)
+
+## Skadi Portal
+This portal allows easy access to Skadi tools. By default it is available at the IP address of the Skadi Server.  
+The default credentials are:  
+- Username: `skadi`  
+- Password: `skadi`  
+
+Access the portal through a web browser at the IP address of the server. In this example the server is `192.168.1.2` and Vagrant will create a link to `localhost`  
+- Example: http://192.168.1.2  
+- Vagrant Example: http://localhost  
+
+![](/objects/images/skadi_portal.jpg?)
+
 ## Skadi Wiki Page
 The answers to common questions and information about how to get started with Skadi is stored in the [Skadi Wiki Pages](https://github.com/orlikoski/skadi/wiki).
 
 ## Skadi Community
 There is a Slack community setup for developers and users of the Skadi ecosystem. It is a safe place to ask questions and share information.  
 
-[Join the Skadi Community Slack](http://skadicommunity.herokuapp.com/) 
-
-# Version 2018.4 is Back and Better Than Ever
-- Now includes CyberChef
- - Now uses ELK 6.x
- - TimeSketch and Nginx configurations updated to now support larger Uploads
- - TimeSketch was built from Master branch instead of pypi release in order to be compatible with ELK 6.x
- - Updated Digitally Signed Installer  
- - Updated Packer and Vagrant build scripts
- - Updated `/opt/skadi/update.sh` to download and install the new version of CyLR 2.0
- - Added `/opt/skadi/healthcheck.sh` to aid in diagnostics
+[Join the Skadi Community Slack](http://skadicommunity.herokuapp.com/)
 
 ## Purpose
 Skadi is a free, open source collection of tools that enables the collection, processing and advanced analysis of forensic artifacts and images. It scales to work effectively on laptops, desktops, servers, the cloud, and can be installed on top of hardened / gold disk images.   
 
 ## Included Tools
-The following tools are combined into one platform that all work together to provide everyone with the ability to collect data, convert the bits and bytes to words and numbers, and analyse the results quickly and easily. All of this enables the ability to rapidly hunt for host based evidence of a malicious activities.  
-
- - Plaso  
+![](/objects/images/skadi_tools.jpg?)
+The tools are combined into one platform that all work together to provide the ability to collect data, convert the bits and bytes to words and numbers, and analyze the results quickly and easily. This enables the ability to rapidly hunt for host based evidence of a malicious activities quickly and accurately.  
  - CDQR  
- - CyLR  
- - CyberChef
- - Docker  
- - ElasticSearch, Logstash, Kibana (ELK)  
- - Redis  
- - Neo4j  
- - Celery  
  - Cerebro  
+ - CyberChef
+ - CyLR  
+ - Docker  
+ - ElasticSearch
+ - Glances
+ - Grafana
+ - Kibana
+ - Plaso  
+ - TimeSketch
 
 ## Skadi Add-on Packs  
 Skadi add-on packs are installed on top of the base Skadi VM to provide extra functionality  
@@ -51,7 +56,7 @@ Skadi add-on packs are installed on top of the base Skadi VM to provide extra fu
 ### Kibana, TimeSketch, Cerebro Included
   ![](/objects/images/desk_tools.jpg?)  
 
-### 11 New Kibana Dashboards  
+### 11 Kibana Dashboards  
   ![](/objects/images/kib_dash01.JPG?)  
   ![](/objects/images/kib_dash02.JPG?)  
 

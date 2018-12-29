@@ -40,8 +40,8 @@
       "ssh_wait_timeout": "10000s",
       "type": "vmware-iso",
       "vmx_data": {
-        "memsize": "8196",
-        "numvcpus": "4"
+        "memsize": "{{ user `memory` }}",
+        "numvcpus": "{{ user `cpus` }}",
       },
       "vm_name": "{{user `vm_name`}}"
     }

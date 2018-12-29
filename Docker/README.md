@@ -1,7 +1,13 @@
 # Docker Build Steps
 
 ## Setup the Host
-Install Ubuntu 16.04 on the host machine. This can be a VM, Cloud instance, or bare iron machine.
+Install Ubuntu 16.04 on the host machine. This can be a VM, Cloud, or bare iron endpoint.
+
+### Machine Specifications
+The following are the minimum / recommended configurations to run Skadi
+ * CPU Cores:  4 / 8
+ * RAM: 8 GB / 16 BB
+ * Disk: 50 GB / 200 GB
 
 ## Install all the Components
 ```

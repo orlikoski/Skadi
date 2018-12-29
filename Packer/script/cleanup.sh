@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SSH_USER="skadi"
+SKADI_USER="skadi"
 DISK_USAGE_BEFORE_CLEANUP=$(df -h)
 
 # Make sure udev does not block our network - http://6.ptmc.org/?p=164
@@ -35,6 +35,7 @@ apt-get -y autoclean
 unset HISTFILE
 rm -f /root/.bash_history
 rm -f /home/${SSH_USER}/.bash_history
+rm -f /home/$SKADI_USER/.bash_history
 
 # Clean up log files
 find /var/log -type f | while read f; do echo -ne '' > "${f}"; done;
