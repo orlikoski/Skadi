@@ -53,7 +53,6 @@ Skadi add-on packs are installed on top of the base Skadi VM to provide extra fu
 *  [Skadi Pack 01: Automation](https://github.com/orlikoski/Skadi/wiki/Skadi-Pack-01:-Automation): Provides two methods of integrating with any Automation tool: gRPC API or using SSH  
 *  [Skadi Pack 02: Secure Networking](https://github.com/orlikoski/Skadi/wiki/Skadi-Pack-02:-Secure-Networking): Updates the firewall and authenticated reverse proxy for use in network deployment. Provides instructions for obtaining TLS/SSL certificates  
 
-
 ### Kibana, TimeSketch, Cerebro Included
   ![](/objects/images/desk_tools.jpg?)  
 
@@ -64,10 +63,6 @@ Skadi add-on packs are installed on top of the base Skadi VM to provide extra fu
 ### TimeSketch
   ![](/objects/images/ts_shot02.JPG?)  
   ![](/objects/images/ts_shot01.JPG?)  
-
-### Skadi Desktop (NEW!)
-  ![](/objects/images/desktop.jpg?)  
-
 
 ## Videos and Media
 *  [Alamo ISSA 2018](https://docs.google.com/presentation/d/1Rl_wF9mUDOkPlbHiWAt-hOiJ-_X8WzTsRfgyYQi9t6M/edit?usp=sharing) Slides: Reviews CCF-VM components, walkthrough of how to install GCP version and discuss automation possibilities and risks
