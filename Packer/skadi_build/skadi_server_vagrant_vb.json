@@ -2,9 +2,9 @@
   "_comment": "Build with `packer build skadi_server.json`",
   "builders": [
     {
-      "type": "vmware-vmx",
-      "source_path": "F:/VMWARE/Skadi Server 2018.4/Skadi Server 2018.4.vmx",
-      "ssh_username": "root",
+      "type": "virtualbox-ovf",
+      "source_path": "F:/VirtualBox/OVA/skadi_server_2019.1.ova",
+      "ssh_username": "vagrant",
       "ssh_password": "vagrant",
       "shutdown_command": "sudo shutdown -P now"
     }
@@ -31,8 +31,8 @@
     }
   ],
   "variables": {
-    "vagrantfile_template": "../../Vagrant/skadi_server/vmware/Vagrantfile",
-    "version": "2018.4",
+    "vagrantfile_template": "../../Vagrant/skadi_server/virtualbox/Vagrantfile",
+    "version": "2019.1",
     "vm_name": "skadi_server"
   }
 }
