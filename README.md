@@ -39,20 +39,6 @@ The tools are combined into one platform that all work together to provide the a
  - Plaso  
  - TimeSketch
 
-## Skadi Wiki Page
-The answers to common questions and information about how to get started with Skadi is stored in the [Skadi Wiki Pages](https://github.com/orlikoski/skadi/wiki).
-
-## Skadi Community
-There is a Slack community setup for developers and users of the Skadi ecosystem. It is a safe place to ask questions and share information.  
-
-[Join the Skadi Community Slack](http://skadicommunity.herokuapp.com/)
-
-
-## Skadi Add-on Packs  
-Skadi add-on packs are installed on top of the base Skadi VM to provide extra functionality  
-*  [Skadi Pack 01: Automation](https://github.com/orlikoski/Skadi/wiki/Skadi-Pack-01:-Automation): Provides two methods of integrating with any Automation tool: gRPC API or using SSH  
-*  [Skadi Pack 02: Secure Networking](https://github.com/orlikoski/Skadi/wiki/Skadi-Pack-02:-Secure-Networking): Updates the firewall and authenticated reverse proxy for use in network deployment. Provides instructions for obtaining TLS/SSL certificates  
-
 ### Kibana, TimeSketch, Cerebro Included
   ![](/objects/images/desk_tools.jpg?)  
 
@@ -70,6 +56,22 @@ Skadi add-on packs are installed on top of the base Skadi VM to provide extra fu
 *  [ISC2 Security Congress 2017](https://drive.google.com/file/d/0B5z7g7P2BWJAckUxbUJWVVZzNDQ/view?usp=sharing) Slides: Another talk about using CCF-VM for Digital Forensics and Incident Response (DFIR)
 *  [DEFCON 25 4-hour Workshop 2017](https://media.defcon.org/DEF%20CON%2025/DEF%20CON%2025%20workshops/DEFCON-25-Workshop-Alan-Orlikoski-and-Dan-M-Free-and-Easy-DFIR-Triage-for-Everyone.pdf) Slides: Free and Easy DFIR Triage for Everyone
 *  [OSDFCON 2017](http://www.osdfcon.org/presentations/2017/Asif-Matadar_Rapid-Incident-Response.pdf) Slides: Walk-through different techniques that are required to provide forensics results for Windows and *nix environments (Including CyLR and CDQR)
+
+
+## Skadi Wiki Page
+The answers to common questions and information about how to get started with Skadi is stored in the [Skadi Wiki Pages](https://github.com/orlikoski/skadi/wiki).
+
+## Skadi Community
+There is a Slack community setup for developers and users of the Skadi ecosystem. It is a safe place to ask questions and share information.  
+
+[Join the Skadi Community Slack](http://skadicommunity.herokuapp.com/)
+
+
+## Skadi Add-on Packs  
+Skadi add-on packs are installed on top of the base Skadi VM to provide extra functionality  
+*  [Skadi Pack 01: Automation](https://github.com/orlikoski/Skadi/wiki/Skadi-Pack-01:-Automation): Provides two methods of integrating with any Automation tool: gRPC API or using SSH  
+*  [Skadi Pack 02: Secure Networking](https://github.com/orlikoski/Skadi/wiki/Skadi-Pack-02:-Secure-Networking): Updates the firewall and authenticated reverse proxy for use in network deployment. Provides instructions for obtaining TLS/SSL certificates  
+
 
 ## Thank you to everyone who has helped, and those that continue to, making this project a reality.
 
