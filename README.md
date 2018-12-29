@@ -3,11 +3,14 @@
 (pronounced “SKAHD-ee”) is a giantess and goddess of hunting in Norse mythology  
 _**Note: Skadi was formerly known as CCF-VM**_  
 
+## Purpose
+Skadi is a free, open source collection of tools that enables the collection, processing and advanced analysis of forensic artifacts and images. It scales to work effectively on laptops, desktops, servers, the cloud, and can be installed on top of hardened / gold disk images.   
 
 # How to Get Started and Support
 ## Download Latest Release
 Available in OVA, Vagrant and Signed Installer formats  
-[Click Here to Download the Latest Release](https://github.com/orlikoski/Skadi/releases/latest)
+[Click Here to Download the Latest Release](https://github.com/orlikoski/Skadi/releases/latest)  
+[Click Here for Installation with Vagrant Instructions](https://github.com/orlikoski/Skadi/wiki/Installation-with-Vagrant-Instructions)
 
 ## Skadi Portal
 This portal allows easy access to Skadi tools. By default it is available at the IP address of the Skadi Server.  
@@ -20,17 +23,6 @@ Access the portal through a web browser at the IP address of the server. In this
 - Vagrant Example: http://localhost  
 
 ![](/objects/images/skadi_portal.jpg?)
-
-## Skadi Wiki Page
-The answers to common questions and information about how to get started with Skadi is stored in the [Skadi Wiki Pages](https://github.com/orlikoski/skadi/wiki).
-
-## Skadi Community
-There is a Slack community setup for developers and users of the Skadi ecosystem. It is a safe place to ask questions and share information.  
-
-[Join the Skadi Community Slack](http://skadicommunity.herokuapp.com/)
-
-## Purpose
-Skadi is a free, open source collection of tools that enables the collection, processing and advanced analysis of forensic artifacts and images. It scales to work effectively on laptops, desktops, servers, the cloud, and can be installed on top of hardened / gold disk images.   
 
 ## Included Tools
 ![](/objects/images/skadi_tools.jpg?)
@@ -46,6 +38,15 @@ The tools are combined into one platform that all work together to provide the a
  - Kibana
  - Plaso  
  - TimeSketch
+
+## Skadi Wiki Page
+The answers to common questions and information about how to get started with Skadi is stored in the [Skadi Wiki Pages](https://github.com/orlikoski/skadi/wiki).
+
+## Skadi Community
+There is a Slack community setup for developers and users of the Skadi ecosystem. It is a safe place to ask questions and share information.  
+
+[Join the Skadi Community Slack](http://skadicommunity.herokuapp.com/)
+
 
 ## Skadi Add-on Packs  
 Skadi add-on packs are installed on top of the base Skadi VM to provide extra functionality  
