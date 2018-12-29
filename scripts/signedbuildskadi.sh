@@ -1,13 +1,44 @@
 #!/bin/bash
 set -e
 
+# Update
+sudo apt-get update && sudo apt-get dist-upgrade -y
+
+# Install deps
+sudo apt-get install apt-transport-https ca-certificates curl software-properties-common python-pip glances unzip vim htop apache2-utils -y
+
 default_skadi_passwords=${DEFAULT_PASSWORDS:-"false"}
+
+# Set Credentials
+SECRET_KEY=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
+POSTGRES_USER="timesketch"
+psql_pw=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
+neo4juser='neo4j'
+neo4jpassword=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
 
 if [ $default_skadi_passwords = "false" ]
   then
-    echo "Using random username and passwords for TimeSketch and Nginx proxy"
+    echo "Using random username and passwords for OS Account, TimeSketch, Nginx proxy, and Grafana"
+    TIMESKETCH_USER="skadi_$(openssl rand -base64 3)"
+    TIMESKETCH_PASSWORD=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
+    GRAFANA_USER="skadi_$(openssl rand -base64 3)"
+    GRAFANA_PASSWORD=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
+    NGINX_USER="skadi_$(openssl rand -base64 3)"
+    NGINX_PASSWORD=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
+    SKADI_USER="skadi_$(openssl rand -base64 3)"
+    SKADI_PASS=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
+    SKADI_USER_HOME="/home/$SKADI_USER"
 else
-    echo "Using Skadi default username and password of skadi:skadi for TimeSketch and Nginx proxy"
+    echo "Using Skadi default username and password of skadi:skadi for OS Account, TimeSketch, Nginx proxy, and Grafana"
+    TIMESKETCH_USER="skadi"
+    TIMESKETCH_PASSWORD="skadi"
+    GRAFANA_USER="skadi"
+    GRAFANA_PASSWORD="skadi"
+    NGINX_USER="skadi"
+    NGINX_PASSWORD="skadi"
+    SKADI_USER="skadi"
+    SKADI_PASS="skadi"
+    SKADI_USER_HOME="/home/$SKADI_USER"
 fi
 
 # Set Hostname to skadi
@@ -19,10 +50,6 @@ echo skadi |sudo tee /etc/hostname >/dev/null 2>&1
 sudo systemctl restart systemd-logind.service >/dev/null 2>&1
 
 # Create Skadi user
-SKADI_USER="skadi"
-SKADI_PASS="skadi"
-SKADI_USER_HOME="/home/skadi"
-
 if ! id -u $SKADI_USER >/dev/null 2>&1; then
     echo "==> Creating $SKADI_USER user"
     /usr/sbin/groupadd $SKADI_USER
@@ -35,174 +62,142 @@ echo "==> Giving ${SKADI_USER} sudo powers"
 echo "${SKADI_USER}        ALL=(ALL)       NOPASSWD: ALL" > /etc/sudoers.d/$SKADI_USER
 chmod 440 /etc/sudoers.d/$SKADI_USER
 
-sudo apt-get install curl wget software-properties-common -y
+# Create needed folders
+sudo mkdir -p /opt/skadi/CyLR
+sudo chown -R $SKADI_USER:$SKADI_USER /opt/skadi
+sudo mkdir -p /etc/nginx/conf.d
+sudo mkdir -p /usr/share/nginx/html
+
+# Copy Nginx configuration files to required locations
+sudo git clone https://github.com/orlikoski/Skadi.git /opt/Skadi
+sudo cp /opt/Skadi/Docker/nginx/skadi_default.conf /etc/nginx/conf.d
+sudo cp -r /opt/Skadi/Docker/nginx/www/* /usr/share/nginx/html
+
+# Setup Nginx Auth
+echo $NGINX_PASSWORD | sudo htpasswd -i -c /etc/nginx/.skadi_auth $NGINX_USER
 
 # Set Timezone to UTC
 sudo timedatectl set-timezone UTC
 
-# Add Repositories required:
-sudo sed -i 's/deb cdrom/#deb cdrom/g' /etc/apt/sources.list
-sudo add-apt-repository ppa:gift/stable -y
+# Ensure pip is on 9.0.3 for installation
+sudo -H pip install pip==9.0.3 --no-cache-dir
+
+# Disable Swap
+sudo swapoff -a
+
+# Create CyLR directory
+sudo mkdir /opt/CyLR/
+sudo chmod 777 /opt/CyLR
+
+# Add Docker gpg key
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" -y
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 
-# Add Repositories for Mono
-# sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
-# echo "deb http://download.mono-project.com/repo/ubuntu stable-xenial main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
+# Add Plaso repository
+sudo add-apt-repository ppa:gift/stable -y
 
-# Add Repositories for Elasticsearch
-wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
-echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-6.x.list
-sudo add-apt-repository ppa:webupd8team/java -y
+# Install Docker and Plaso
+sudo apt-get update
+sudo apt-get install docker-ce python-plaso plaso-tools python-psycopg2  -y
+sudo systemctl enable docker
 
-# Install Redis
-sudo add-apt-repository ppa:chris-lea/redis-server -y
+# Clean APT
+sudo apt-get -y autoremove --purge
+sudo apt-get -y clean
+sudo apt-get -y autoclean
 
-# Add Repositories for Neo4j
-wget -O - https://debian.neo4j.org/neotechnology.gpg.key | sudo apt-key add -
-echo 'deb http://debian.neo4j.org/repo stable/' | sudo tee -a /etc/apt/sources.list.d/neo4j.list
+# Add skadi to docker usergroup
+sudo usermod -aG docker $SKADI_USER
 
-# Add Repositories for Letsencrypt
-sudo add-apt-repository ppa:certbot/certbot -y
+# Install Docker-Compose
+sudo curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+sudo curl -L https://raw.githubusercontent.com/docker/compose/1.23.1/contrib/completion/bash/docker-compose -o /etc/bash_completion.d/docker-compose
 
-# Update apt and apply all updates
-sudo apt-get update -y
-sudo apt-get dist-upgrade -y
-sudo apt-get autoremove -y
+# Set the vm.max_map_count kernel setting needs to be set to at least 262144 for production use
+sudo sysctl -w vm.max_map_count=262144
+echo vm.max_map_count=262144 | sudo tee -a /etc/sysctl.conf
 
-# Install Most Of The Things
-# sudo apt-get install -y vim screen openssh-server unzip htop ca-certificates apt-transport-https docker-ce python-software-properties python-plaso plaso-tools mono-devel redis-server neo4j postgresql python-psycopg2 python-pip python-dev libffi-dev nginx apache2-utils python-certbot-nginx
-sudo apt-get install -y vim screen openssh-server unzip htop ca-certificates apt-transport-https docker-ce python-software-properties redis-server neo4j postgresql python-psycopg2 python-pip python-dev libffi-dev nginx apache2-utils python-certbot-nginx npm
+# Install TimeSketch on the Host (required for psort.py to output in timesketch format)
+sudo -H pip install timesketch
 
-# Install Java and ELK
-echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
-echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections
-sudo apt-get install -y oracle-java8-installer
-sudo apt-get install -y elasticsearch kibana logstash
-# Update pip
-sudo -H pip install --upgrade pip
+# Write TS and Postgres creds to .env file
+cd /opt/Skadi/Docker/
+echo TIMESKETCH_USER=$TIMESKETCH_USER > ./.env
+echo TIMESKETCH_PASSWORD=$TIMESKETCH_PASSWORD >> ./.env
+echo POSTGRES_USER=$POSTGRES_USER >> ./.env
+echo POSTGRES_PASSWORD=$psql_pw >> ./.env
+echo NEO4J_PASSWORD=$neo4jpassword >> ./.env
 
-# Install Gunicorn, TimeSketch, and Plaso
-# sudo -H pip install timesketch
-sudo -H pip install gunicorn
-git clone https://github.com/google/timesketch.git
-cd timesketch/
-sudo -H pip install . --upgrade
-sudo apt-get install -y python-plaso plaso-tools
+# Configure /etc/hosts file so the host can use same names for each service as the TimeSketch Dockers
+echo 127.0.0.1       elasticsearch |sudo tee -a /etc/hosts
+echo 127.0.0.1       postgres |sudo tee -a /etc/hosts
+echo 127.0.0.1       neo4j |sudo tee -a /etc/hosts
+echo 127.0.0.1       redis |sudo tee -a /etc/hosts
 
-
-
-
-sudo sed -i 's/#network.host\: 192.168.0.1/network.host\: localhost/g' /etc/elasticsearch/elasticsearch.yml
-# Assign jvm.options to 1/2 the allocated memory at run time
-# Default Values
-# -Xms1g
-# -Xmx1g
-#total_mem=$(free -h |awk '/Mem/{print substr($2, 1, length($2)-1)}'|cut -d'.' -f1)
-mem_size="2"
-echo "Setting jvm.options memory size to $mem_size GB"
-sudo sed -i "s/-Xms1/-Xms$mem_size/g" /etc/elasticsearch/jvm.options
-sudo sed -i "s/-Xmx1/-Xmx$mem_size/g" /etc/elasticsearch/jvm.options
-
-sudo systemctl restart elasticsearch
-sudo systemctl enable elasticsearch
-
-# Create a template in ES that sets the number of replicas for all indexes to 0
-echo "Waiting 60 seconds for Elasticsearch to initialize"
-sleep 60 # Give ES time to start
-echo "Setting the default number of replicas to 0"
-curl -XPUT 'localhost:9200/_template/number_of_replicas' -d '{"template": "*","settings": {"number_of_replicas": 0}}' -H'Content-Type: application/json'
-
-# Configure/Enable Redis
-sudo systemctl restart redis-server
-sudo systemctl enable redis-server
-
-# Configure Neo4j
-neo4juser='neo4j'
-neo4jpassword=$(openssl rand -base64 32)
-sudo /usr/bin/neo4j-admin set-initial-password $neo4jpassword
-sudo chown -R neo4j:neo4j /var/lib/neo4j/
-sudo systemctl restart neo4j
-sudo systemctl enable neo4j
-
-
-# Configure Kibana
-sudo sed -i 's@#server.host\: \"localhost\"@server.host\: \"localhost\"@g' /etc/kibana/kibana.yml
-sudo systemctl restart kibana
-sudo systemctl enable kibana
-
-# Configure TimeSketch
-SECRET_KEY="$(openssl rand -base64 32 | sha256sum)"
-psql_pw=$(openssl rand -base64 32 | sha256sum)
-
-echo "local all timesketch md5"|sudo tee -a /etc/postgresql/9.5/main/pg_hba.conf
-sudo systemctl restart postgresql.service
-echo "create user timesketch with password '$psql_pw';" | sudo -u postgres psql || true
-echo "create database timesketch owner timesketch;" | sudo -u postgres psql || true
-
+# Write TimeSketch config file on host
 sudo cp /usr/local/share/timesketch/timesketch.conf /etc/
 sudo sed -i "s@SECRET_KEY = u'<KEY_GOES_HERE>'@SECRET_KEY = u'$SECRET_KEY'@g" /etc/timesketch.conf
-sudo sed -i "s@<USERNAME>\:<PASSWORD>@timesketch\:$psql_pw@g" /etc/timesketch.conf
+sudo sed -i "s@<USERNAME>\:<PASSWORD>@$POSTGRES_USER\:$psql_pw@g" /etc/timesketch.conf
 sudo sed -i "s@NEO4J_USERNAME = u'neo4j'@NEO4J_USERNAME = u'$neo4juser'@g" /etc/timesketch.conf
 sudo sed -i "s@NEO4J_PASSWORD = u'<N4J_PASSWORD>'@NEO4J_PASSWORD = u'$neo4jpassword'@g" /etc/timesketch.conf
 sudo sed -i "s/UPLOAD_ENABLED = False/UPLOAD_ENABLED = True/g" /etc/timesketch.conf
 sudo sed -i "s/GRAPH_BACKEND_ENABLED = False/GRAPH_BACKEND_ENABLED = True/g" /etc/timesketch.conf
+sudo sed -i "s#@localhost/timesketch#@postgres/timesketch#g" /etc/timesketch.conf
+sudo sed -i "s/ELASTIC_HOST = u'127.0.0.1'/ELASTIC_HOST = u'elasticsearch'/g" /etc/timesketch.conf
+sudo sed -i "s@'redis://127.0.0.1:6379'@'redis://redis:6379'@g" /etc/timesketch.conf
+sudo sed -i "s/NEO4J_HOST = u'127.0.0.1'/NEO4J_HOST = u'neo4j'/g" /etc/timesketch.conf
 
-if [ $default_skadi_passwords = "false" ]; then
-  timesketchpassword=$(openssl rand -base64 32)
-  timesketchuser="skadi_$(openssl rand -base64 3)"
-else
-  timesketchpassword="skadi"
-  timesketchuser="skadi"
-fi
-tsctl add_user -u "$timesketchuser" -p "$timesketchpassword"
-sudo useradd -r -s /bin/false timesketch
+# To build TimeSketch and CyberChef Docker Images Locally, uncomment the following lines
+# sudo docker build -t aorlikoski/skadi_timesketch:1.0 ./timesketch/
+# sudo docker build -t aorlikoski/skadi_cyberchef:1.0 ./cyberchef/
 
-timesketch_service="W1VuaXRdCkRlc2NyaXB0aW9uPVRpbWVTa2V0Y2ggU2VydmljZQpBZnRlcj1uZXR3b3JrLnRhcmdldAoKW1NlcnZpY2VdClVzZXI9dGltZXNrZXRjaApHcm91cD10aW1lc2tldGNoCkV4ZWNTdGFydD0vdXNyL2xvY2FsL2Jpbi9ndW5pY29ybiAtLXdvcmtlcnMgNCAtLWJpbmQgMTI3LjAuMC4xOjUwMDAgdGltZXNrZXRjaC53c2dpCgpbSW5zdGFsbF0KV2FudGVkQnk9bXVsdGktdXNlci50YXJnZXQK"
-echo $timesketch_service |base64 -d | sudo tee /etc/systemd/system/timesketch.service
-sudo chmod g+w /etc/systemd/system/timesketch.service
+# Deploy the Skadi solution defined in ./docker-compose.yml
+sudo docker-compose up -d
+
+# Create a template in ES that sets the number of replicas for all indexes to 0
+echo "Waiting for ElasticSearch service to respond to requests"
+until $(curl --output /dev/null --silent --head --fail http://localhost:9200); do
+    printf '.'
+    sleep 5
+done
+echo "Setting the ElasticSearch default number of replicas to 0"
+
+curl -XPUT 'localhost:9200/_template/number_of_replicas' \
+    -d '{"template": "*","settings": {"number_of_replicas": 0}}' \
+    -H'Content-Type: application/json'
+
+# The TimeSketch container needs to be running before continuing and this
+# requires the other containers to be up and running too. This can take time
+# so this loop ensures all the parts are running and timesketch is responding
+# to web requets before continuing
+echo "Waiting for TimeSketch to become available"
+echo "Press CTRL-C at any time to stop installation"
+until $(curl --output /dev/null --silent --head --fail http://localhost/timesketch); do
+    echo "No response, restarting the TimeSketch container and waiting 10 seconds to try again"
+    sudo docker restart timesketch
+    sleep 10
+done
+echo "TimeSketch available. Continuing"
+
+# Install Glances as a Service
+glances_service="W1VuaXRdCkRlc2NyaXB0aW9uPUdsYW5jZXMKQWZ0ZXI9bmV0d29yay50YXJnZXQKCltTZXJ2aWNlXQpFeGVjU3RhcnQ9L3Vzci9iaW4vZ2xhbmNlcyAtdwpSZXN0YXJ0PW9uLWFib3J0CgpbSW5zdGFsbF0KV2FudGVkQnk9bXVsdGktdXNlci50YXJnZXQK"
+echo $glances_service |base64 -d | sudo tee /etc/systemd/system/glances.service
+sudo chmod g+w /etc/systemd/system/glances.service
 sudo systemctl daemon-reload
-sudo systemctl restart timesketch.service
-sudo systemctl enable timesketch.service
+sudo systemctl restart glances
+sudo systemctl enable glances
 
-# Configure Celery
-celery_service="W1VuaXRdCkRlc2NyaXB0aW9uPUNlbGVyeSBTZXJ2aWNlCkFmdGVyPW5ldHdvcmsudGFyZ2V0CgpbU2VydmljZV0KVHlwZT1mb3JraW5nClVzZXI9Y2VsZXJ5Ckdyb3VwPWNlbGVyeQpQSURGaWxlPS9vcHQvY2VsZXJ5L2NlbGVyeS5waWRsb2NrCgpFeGVjU3RhcnQ9L3Vzci9sb2NhbC9iaW4vY2VsZXJ5IG11bHRpIHN0YXJ0IHNpbmdsZS13b3JrZXIgLUEgdGltZXNrZXRjaC5saWIudGFza3Mgd29ya2VyIC0tbG9nbGV2ZWw9aW5mbyAtLWxvZ2ZpbGU9L3Zhci9sb2cvY2VsZXJ5X3dvcmtlciAtLXBpZGZpbGU9L29wdC9jZWxlcnkvY2VsZXJ5LnBpZGxvY2sKRXhlY1N0b3A9L3Vzci9sb2NhbC9iaW4vY2VsZXJ5IG11bHRpIHN0b3B3YWl0IHNpbmdsZS13b3JrZXIgLS1waWRmaWxlPS9vcHQvY2VsZXJ5L2NlbGVyeS5waWRsb2NrIC0tbG9nZmlsZT0vdmFyL2xvZy9jZWxlcnlfd29ya2VyCkV4ZWNSZWxvYWQ9L3Vzci9sb2NhbC9iaW4vY2VsZXJ5IG11bHRpIHJlc3RhcnQgc2luZ2xlLXdvcmtlciAtLXBpZGZpbGU9L29wdC9jZWxlcnkvY2VsZXJ5LnBpZGxvY2sgLS1sb2dmaWxlPS92YXIvbG9nL2NlbGVyeV93b3JrZXIKCgpbSW5zdGFsbF0KV2FudGVkQnk9bXVsdGktdXNlci50YXJnZXQK"
-sudo useradd -r -s /bin/false celery
-sudo mkdir -p /opt/celery
-sudo touch /var/log/celery_worker
-sudo touch /opt/celery/celery.pidlock
-sudo chown -R celery:celery /opt/celery
-sudo chown -R celery:celery /opt/celery/celery.pidlock
+# Install Grafana for Monitoring
+git clone https://github.com/orlikoski/skadi_dockprom.git
+cd skadi_dockprom
 
-sudo chown -R celery:celery /var/log/celery_worker
-echo $celery_service |base64 -d | sudo tee /etc/systemd/system/celery.service
-sudo chmod g+w /etc/systemd/system/celery.service
-sudo systemctl daemon-reload
-sudo systemctl restart celery
-sudo systemctl enable celery
+# Write Grafana login creds to .env file
+echo ADMIN_USER=$GRAFANA_USER > ./.env
+echo ADMIN_PASSWORD=$GRAFANA_PASSWORD >> ./.env
 
-# Configure Cerebro
-cerebro_secret=$(openssl rand -base64 32 | sha256sum)
-sudo useradd -r -s /bin/false cerebro
-sudo mkdir /opt/cerebro
-
-cerebro_version="0.8.1"
-sudo wget -O "/opt/cerebro/cerebro-$cerebro_version.tgz" "https://github.com/lmenezes/cerebro/releases/download/v$cerebro_version/cerebro-$cerebro_version.tgz"
-sudo tar xzf "/opt/cerebro/cerebro-$cerebro_version.tgz" -C "/opt/cerebro/"
-sudo rm -rf "/opt/cerebro/cerebro-$cerebro_version.tgz"
-sudo chown -R cerebro:cerebro /opt/cerebro
-sudo chmod +w /opt/cerebro
-sudo sed -i "s@./cerebro.db@/opt/cerebro/cerebro-$cerebro_version/cerebro.db@g" "/opt/cerebro/cerebro-$cerebro_version/conf/application.conf"
-sudo sed -i "s/secret = .*/secret = \"$cerebro_secret\"/g"  "/opt/cerebro/cerebro-$cerebro_version/conf/application.conf"
-sudo sed -i "s@hosts = \[@hosts = \[\\n\  {\\n    host = \"http\://localhost\:9200\"\\n    name = \"SKADI\"\\n  \}@g" "/opt/cerebro/cerebro-$cerebro_version/conf/application.conf"
-
-cerebro_service="W1VuaXRdCkRlc2NyaXB0aW9uPUNlcmVicm8gU2VydmljZQpBZnRlcj1uZXR3b3JrLnRhcmdldAoKW1NlcnZpY2VdClVzZXI9Y2VyZWJybwpHcm91cD1jZXJlYnJvCkV4ZWNTdGFydD0vb3B0L2NlcmVicm8vY2VyZWJyby12ZXJzaW9uL2Jpbi9jZXJlYnJvIC1EaHR0cC5hZGRyZXNzPTEyNy4wLjAuMQoKW0luc3RhbGxdCldhbnRlZEJ5PW11bHRpLXVzZXIudGFyZ2V0Cg=="
-echo $cerebro_service |base64 -d | sudo tee /etc/systemd/system/cerebro.service
-sudo sed -i "s/cerebro-version/cerebro-$cerebro_version/g" /etc/systemd/system/cerebro.service
-sudo chmod g+w /etc/systemd/system/cerebro.service
-sudo systemctl daemon-reload
-sudo systemctl restart cerebro.service
-sudo systemctl enable cerebro.service
+# This uses the docker-compose.yml found in the skadi_dockprom repo
+sudo docker-compose up -d
 
 # Installs and Configures CDQR and CyLR
 echo "Updating CDQR"
@@ -212,19 +207,10 @@ sudo mv /tmp/cdqr.py /usr/local/bin/cdqr.py
 echo "CDQR is in /usr/local/bin/cdqr.py"
 
 echo "Updating CyLR"
-# Building the CyLR link
 cylr_files=( "CyLR_linux-x64.zip" "CyLR_osx-x64.zip" "CyLR_win-x64.zip" "CyLR_win-x86.zip")
 LATEST_RELEASE=$(curl -L -s -H 'Accept: application/json' https://github.com/orlikoski/CyLR/releases/latest)
 LATEST_VERSION=$(echo $LATEST_RELEASE | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/')
 ARTIFACT_URL="https://github.com/orlikoski/CyLR/releases/download/$LATEST_VERSION/"
-
-# Remove old versions
-if [ -f /opt/CyLR/CyLR.exe ]; then
-    sudo rm /opt/CyLR/CyLR.exe
-fi
-if [ -f /home/skadi/Desktop/CyLR.exe ]; then
-    sudo rm /home/skadi/Desktop/CyLR.exe
-fi
 
 for cylrzip in "${cylr_files[@]}"
 do
@@ -255,129 +241,40 @@ cylr_version=$(/tmp/CyLR --version |grep Version)
 rm /tmp/CyLR > /dev/null 2>&1
 echo "All CyLR Files Downloaded"
 echo "Updated to $cylr_version"
+echo ""
 
-echo ""
-echo ""
-sudo mkdir -p /opt/skadi
-sudo wget -O /opt/skadi/update.sh https://raw.githubusercontent.com/orlikoski/Skadi/master/scripts/update.sh
-sudo chown -R skadi:skadi /opt/skadi
-sudo chmod +x /opt/skadi/update.sh
-echo ""
-echo ""
-# Disable IPv6
-echo "net.ipv6.conf.all.disable_ipv6 = 1" | sudo tee -a /etc/sysctl.d/99-sysctl.conf
-echo "net.ipv6.conf.default.disable_ipv6 = 1" | sudo tee -a /etc/sysctl.d/99-sysctl.conf
-echo "net.ipv6.conf.lo.disable_ipv6 = 1" | sudo tee -a /etc/sysctl.d/99-sysctl.conf
-sudo sysctl -p
-
-# Update Kibana to work with forwarding
-sudo systemctl stop kibana
-sudo sed -i "s@\#server.basePath: \"\"@server.basePath: \"/kibana\"@g" /etc/kibana/kibana.yml
-sudo systemctl start kibana
-
-# Configure Nginx and web utils
-sudo ufw allow 'Nginx Full'
+# Enable and Configure UFW Firewall
+echo "Enabling UFW firewall to only allow OpenSSH and Ngninx Full"
+sudo ufw allow 80
+sudo ufw allow 443
 sudo ufw allow 'OpenSSH'
 sudo ufw --force enable
 
-# Configure Nginx for Kibana, Cerebro, and TimeSketch
-nginx_conf="c2VydmVyIHsKICBsaXN0ZW4gODA7CiAgc2VydmVyX25hbWUgXzsKICBjbGllbnRfbWF4X2JvZHlfc2l6ZSAxMjI4OE07CiAgcHJveHlfY29ubmVjdF90aW1lb3V0IDkwMDBzOwogIHByb3h5X3JlYWRfdGltZW91dCA5MDAwczsKICByb290ICAgICAgICAgL3Vzci9zaGFyZS9uZ2lueC9odG1sOwogIGVycm9yX3BhZ2UgNDA0IC80MDQuaHRtbDsKICAgIGxvY2F0aW9uID0gLzQwNC5odG1sIHt9CiAgZXJyb3JfcGFnZSA1MDAgNTAyIDUwMyA1MDQgLzUweC5odG1sOwogICAgbG9jYXRpb24gPSAvNTB4Lmh0bWwge30KCiAgZXJyb3JfbG9nICAgL3Zhci9sb2cvbmdpbngvZXJyb3IubG9nOwogIGFjY2Vzc19sb2cgIC92YXIvbG9nL25naW54L2FjY2Vzcy5sb2c7CgogIGxvY2F0aW9uIC8gewogICAgcHJveHlfcGFzcyBodHRwOi8vbG9jYWxob3N0OjUwMDA7CiAgICBwcm94eV9odHRwX3ZlcnNpb24gMS4xOwogICAgcHJveHlfc2V0X2hlYWRlciBVcGdyYWRlICRodHRwX3VwZ3JhZGU7CiAgICBwcm94eV9zZXRfaGVhZGVyIENvbm5lY3Rpb24gJ3VwZ3JhZGUnOwogICAgcHJveHlfc2V0X2hlYWRlciBIb3N0ICRob3N0OwogICAgcHJveHlfY2FjaGVfYnlwYXNzICRodHRwX3VwZ3JhZGU7CiAgICBzdWJfZmlsdGVyICdMb2dvdXQ8L2E+JyAnTG9nb3V0PC9hPjxicj4mbmJzcDsmbmJzcDsmbmJzcDs8YSB0YXJnZXQ9Il9ibGFuayIgc3R5bGU9ImNvbG9yOiNmZmY7IiBocmVmPSIva2liYW5hLyI+S2liYW5hPC9hPiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOzxhIHRhcmdldD0iX2JsYW5rIiBzdHlsZT0iY29sb3I6I2ZmZjsiIGhyZWY9Ii9jZXJlYnJvLyMvb3ZlcnZpZXc/aG9zdD1odHRwOiUyRiUyRmxvY2FsaG9zdDo5MjAwIj5DZXJlYnJvPC9hPiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOzxhIHRhcmdldD0iX2JsYW5rIiBzdHlsZT0iY29sb3I6I2ZmZjsiIGhyZWY9Ii9jeWJlcmNoZWYvIj5DeWJlckNoZWY8L2E+JzsKICAgIHN1Yl9maWx0ZXIgJ1NpZ24gaW48L2J1dHRvbj4nICdTaWduIGluPC9idXR0b24+PGJyPjxicj48YSB0YXJnZXQ9Il9ibGFuayIgc3R5bGU9ImNvbG9yOiNmZmY7IiBocmVmPSIva2liYW5hLyI+S2liYW5hPC9hPjxicj48YSB0YXJnZXQ9Il9ibGFuayIgc3R5bGU9ImNvbG9yOiNmZmY7IiBocmVmPSIvY2VyZWJyby8jL292ZXJ2aWV3P2hvc3Q9aHR0cDolMkYlMkZsb2NhbGhvc3Q6OTIwMCI+Q2VyZWJybzwvYT48YnI+PGEgdGFyZ2V0PSJfYmxhbmsiIHN0eWxlPSJjb2xvcjojZmZmOyIgaHJlZj0iL2N5YmVyY2hlZi8iPkN5YmVyQ2hlZjwvYT4nOwogICAgc3ViX2ZpbHRlcl9vbmNlIG9mZjsKICB9CgogIGxvY2F0aW9uIH4gXi9raWJhbmEoLiopJCB7CiAgICBwcm94eV9odHRwX3ZlcnNpb24gMS4xOwogICAgcHJveHlfc2V0X2hlYWRlciBVcGdyYWRlICRodHRwX3VwZ3JhZGU7CiAgICBwcm94eV9zZXRfaGVhZGVyIENvbm5lY3Rpb24gJ3VwZ3JhZGUnOwogICAgcHJveHlfc2V0X2hlYWRlciBIb3N0ICRob3N0OwogICAgcHJveHlfY2FjaGVfYnlwYXNzICRodHRwX3VwZ3JhZGU7CiAgICBwcm94eV9wYXNzICBodHRwOi8vbG9jYWxob3N0OjU2MDE7CiAgICByZXdyaXRlIF4va2liYW5hLyguKikkIC8kMSBicmVhazsKICAgIHJld3JpdGUgXi9raWJhbmEkIC9raWJhbmEvOwogICAgYXV0aF9iYXNpYyAiUmVzdHJpY3RlZCBDb250ZW50IjsKICAgIGF1dGhfYmFzaWNfdXNlcl9maWxlIC9ldGMvbmdpbngvLnNrYWRpX2F1dGg7CiAgfQoKICBsb2NhdGlvbiAvY2VyZWJyby8gewogICAgcHJveHlfcGFzcyBodHRwOi8vbG9jYWxob3N0OjkwMDAvOwogICAgcHJveHlfc2V0X2hlYWRlciBIb3N0ICRob3N0OwogICAgYXV0aF9iYXNpYyAiUmVzdHJpY3RlZCBDb250ZW50IjsKICAgIGF1dGhfYmFzaWNfdXNlcl9maWxlIC9ldGMvbmdpbngvLnNrYWRpX2F1dGg7CiAgfQogIGxvY2F0aW9uIC9jeWJlcmNoZWYvIHsKICAgIHByb3h5X3Bhc3MgaHR0cDovL2xvY2FsaG9zdDo4MDAwLzsKICAgIHByb3h5X3NldF9oZWFkZXIgSG9zdCAkaG9zdDsKICAgIGF1dGhfYmFzaWMgIlJlc3RyaWN0ZWQgQ29udGVudCI7CiAgICBhdXRoX2Jhc2ljX3VzZXJfZmlsZSAvZXRjL25naW54Ly5za2FkaV9hdXRoOwogIH0KfQo="
-
-# Configure default site
-echo $nginx_conf |base64 -d |sudo tee /etc/nginx/sites-available/default
-
-# Configure Nginx proxy Credentials
-if [ $default_skadi_passwords = "false" ]; then
-  n_user="skadi_$(openssl rand -base64 3)"
-  n_pass=$(openssl rand -base64 32)
-else
-  n_user="skadi"
-  n_pass="skadi"
-fi
-  echo $n_pass | sudo htpasswd -i -c /etc/nginx/.skadi_auth $n_user
-
-# Configure Kibana Credentials
-# k_user="kibuser_$(openssl rand -base64 3)"
-# k_pass=$(openssl rand -base64 32)
-# echo $k_pass | sudo htpasswd -i -c /etc/nginx/.kibana_auth $k_user
-
-# Configure Cerebro Credentials
-# c_user="ceruser_$(openssl rand -base64 3)"
-# c_pass=$(openssl rand -base64 32)
-# echo $c_pass | sudo htpasswd -i -c /etc/nginx/.cerebro_auth $c_user
-
-echo "Installing Cyberchef Docker"
-sudo docker run --name cyberchef --restart unless-stopped -d -p 127.0.0.1:8000:8000 mpepping/cyberchef:v8.8.5
-
-sudo systemctl restart nginx
-sudo systemctl enable nginx
-
-new_domain="localhost"
-
 echo ""
 echo ""
 echo ""
+echo "Skadi Setup is Complete"
 echo ""
-
+echo "The Nginx reverse proxy setup and can be accessed at http://<IP Address> or http://localhost if installed locally:"
+echo "The following are the credentials needed to access this build: "
 echo ""
-echo "Logstash is installed but not enabled by default"
-echo "To enable run the following commands"
-echo "    sudo systemctl restart logstash"
-echo "    sudo systemctl enable logstash"
+echo "  OS Account:"
+echo "     - Username: $SKADI_USER"
+echo "     - Password: $SKADI_PASS"
 echo ""
+echo "  Proxy Account:"
+echo "     - Username: $NGINX_USER"
+echo "     - Password: $NGINX_PASSWORD"
 echo ""
-echo "Installed Software Version Checks (Where it is supported)"
-/usr/bin/log2timeline.py --version 2>&1 >/dev/null |awk '{ printf "Plaso Version %s\n", $5 }'
-/usr/local/bin/cdqr.py --version |awk '{split($0,a,":");printf "%s%s\n", a[1], a[2]}'
-echo $cylr_version
-docker --version |awk '{split($3,a,",");printf "%s Version %s\n", $1, a[1]}'
-echo "ELK Version $(curl --silent -XGET 'localhost:9200' |awk '/number/{print substr($3, 2, length($3)-3)}')"
-pip show timesketch |grep Version:|awk '{split($0,a,":");printf "TimeSketch %s%s\n", a[1], a[2]}'
-redis-server --version|awk '{ split($3,a, "=");printf "%s Version %s\n", $1, a[2] }'
-neo4j --version |awk '{printf "Neo4j Version %s\n", $2}'
-echo "Celery Version $(celery --version |awk '{print$1}')"
-echo "Cerebro Version $cerebro_version"
+echo "  TimeSketch Account:"
+echo "     - Username: $TIMESKETCH_USER"
+echo "     - Password: $TIMESKETCH_PASSWORD"
 echo ""
-echo ""
-
-echo "System Health Checks"
-# system health checks
-declare -a services=('elasticsearch' 'postgresql' 'celery' 'neo4j' 'redis' 'kibana' 'timesketch')
-# Ensure all Services are started
-for item in "${services[@]}"
-do
-    echo "  Bringing up $item"
-    sudo systemctl restart $item
-    sleep 1
-done
-
-echo ""
-
-for item in "${services[@]}"
-do
-    echo "  $item service is: $(systemctl is-active $item)"
-done
-
+echo "  Grafana Account"
+echo "     - Username: $GRAFANA_USER"
+echo "     - Password: $GRAFANA_PASSWORD"
 echo ""
 echo ""
-echo ""
-echo ""
-echo ""
-echo "Nginx reverse proxy setup is complete with the following:"
-echo "Hostname: '$new_domain'"
-echo "The following are now being reverse proxied with authentication at: "
-echo ""
-echo "  TimeSketch:"
-echo "   - 'http://$new_domain'"
-echo "     - Username: $timesketchuser"
-echo "     - Password: $timesketchpassword"
-echo ""
-echo "  Kibana:"
-echo "   - 'http://$new_domain/kibana'"
-echo "     - Username: $n_user"
-echo "     - Password: $n_pass"
-echo ""
-echo "  Cerebro"
-echo "   - 'http://$new_domain/cerebro'"
-echo "     - Username: $n_user"
-echo "     - Password: $n_pass"
+echo "The following files have credentials used in the build process stored in them:"
+echo "  - /opt/Skadi/Docker/.env"
+echo "  - /opt/Skadi/Docker/skadi_dockprom/.env"
