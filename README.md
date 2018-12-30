@@ -11,6 +11,8 @@ Skadi is a free, open source collection of tools that enables the collection, pr
 Available in OVA, Vagrant and Signed Installer formats  
 [Click Here to Download the Latest Release](https://github.com/orlikoski/Skadi/releases/latest)  
 [Click Here for Installation with Vagrant Instructions](https://github.com/orlikoski/Skadi/wiki/Installation-with-Vagrant-Instructions)
+[Click Here for OVA Installation Instructions](https://github.com/orlikoski/Skadi/wiki/Installation:-Importing-OVA)
+[Click Here for Signed Installer Instructions](https://github.com/orlikoski/Skadi/wiki/Installation:-OpenSSL-Signed-Installation-Guide)
 
 ## Skadi Portal
 This portal allows easy access to Skadi tools. By default it is available at the IP address of the Skadi Server.  
