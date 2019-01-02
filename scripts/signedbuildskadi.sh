@@ -29,7 +29,7 @@ if [ $default_skadi_passwords = "false" ]
     SKADI_USER="skadi"
     SKADI_PASS=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
     SKADI_USER_HOME="/home/$SKADI_USER"
-    echo "  Proxy & Grafana Account:" >> /opt/skadi_credentials
+    echo "  Proxy & Grafana Account:" > /opt/skadi_credentials
     echo "     - Username: $NGINX_USER" >> /opt/skadi_credentials
     echo "     - Password: $NGINX_PASSWORD" >> /opt/skadi_credentials
     echo "" >> /opt/skadi_credentials
@@ -60,7 +60,7 @@ sudo systemctl restart systemd-logind.service >/dev/null 2>&1
 # Create Skadi user
 if ! id -u $SKADI_USER >/dev/null 2>&1; then
     echo "==> Creating $SKADI_USER user"
-    echo "  Created OS Account:" > /opt/skadi_credentials
+    echo "  Created OS Account:" >> /opt/skadi_credentials
     echo "     - Username: $SKADI_USER" >> /opt/skadi_credentials
     echo "     - Password: $SKADI_PASS" >> /opt/skadi_credentials
     echo "" >> /opt/skadi_credentials
