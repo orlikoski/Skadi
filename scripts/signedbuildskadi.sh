@@ -60,10 +60,10 @@ sudo systemctl restart systemd-logind.service >/dev/null 2>&1
 # Create Skadi user
 if ! id -u $SKADI_USER >/dev/null 2>&1; then
     echo "==> Creating $SKADI_USER user"
+    echo "" >> /opt/skadi_credentials
     echo "  Created OS Account:" >> /opt/skadi_credentials
     echo "     - Username: $SKADI_USER" >> /opt/skadi_credentials
     echo "     - Password: $SKADI_PASS" >> /opt/skadi_credentials
-    echo "" >> /opt/skadi_credentials
     /usr/sbin/groupadd $SKADI_USER
     /usr/sbin/useradd $SKADI_USER -g $SKADI_USER -G sudo -d $SKADI_USER_HOME --create-home -s "/bin/bash"
     echo "${SKADI_USER}:${SKADI_PASS}" | chpasswd
