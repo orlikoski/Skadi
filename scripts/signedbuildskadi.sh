@@ -26,24 +26,16 @@ if [ $default_skadi_passwords = "false" ]
     NGINX_PASSWORD=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
     GRAFANA_USER=$NGINX_USER
     GRAFANA_PASSWORD=$NGINX_PASSWORD
-    SKADI_USER="skadi_$(openssl rand -base64 3)"
+    SKADI_USER="skadi"
     SKADI_PASS=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
     SKADI_USER_HOME="/home/$SKADI_USER"
-    echo "  OS Account:" > /opt/skadi_credentials
-    echo "     - Username: $SKADI_USER" >> /opt/skadi_credentials
-    echo "     - Password: $SKADI_PASS" >> /opt/skadi_credentials
-    echo "" >> /opt/skadi_credentials
-    echo "  Proxy Account:" >> /opt/skadi_credentials
+    echo "  Proxy & Grafana Account:" >> /opt/skadi_credentials
     echo "     - Username: $NGINX_USER" >> /opt/skadi_credentials
     echo "     - Password: $NGINX_PASSWORD" >> /opt/skadi_credentials
     echo "" >> /opt/skadi_credentials
     echo "  TimeSketch Account:" >> /opt/skadi_credentials
     echo "     - Username: $TIMESKETCH_USER" >> /opt/skadi_credentials
     echo "     - Password: $TIMESKETCH_PASSWORD" >> /opt/skadi_credentials
-    echo "" >> /opt/skadi_credentials
-    echo "  Grafana Account" >> /opt/skadi_credentials
-    echo "     - Username: $GRAFANA_USER" >> /opt/skadi_credentials
-    echo "     - Password: $GRAFANA_PASSWORD" >> /opt/skadi_credentials
 else
     echo "Using Skadi default username and password of skadi:skadi for OS Account, TimeSketch, Nginx proxy, and Grafana"
     TIMESKETCH_USER="skadi"
@@ -57,8 +49,6 @@ else
     SKADI_USER_HOME="/home/$SKADI_USER"
 fi
 
-
-
 # Set Hostname to skadi
 newhostname='skadi'
 oldhostname=$(</etc/hostname)
@@ -70,6 +60,10 @@ sudo systemctl restart systemd-logind.service >/dev/null 2>&1
 # Create Skadi user
 if ! id -u $SKADI_USER >/dev/null 2>&1; then
     echo "==> Creating $SKADI_USER user"
+    echo "  Created OS Account:" > /opt/skadi_credentials
+    echo "     - Username: $SKADI_USER" >> /opt/skadi_credentials
+    echo "     - Password: $SKADI_PASS" >> /opt/skadi_credentials
+    echo "" >> /opt/skadi_credentials
     /usr/sbin/groupadd $SKADI_USER
     /usr/sbin/useradd $SKADI_USER -g $SKADI_USER -G sudo -d $SKADI_USER_HOME --create-home -s "/bin/bash"
     echo "${SKADI_USER}:${SKADI_PASS}" | chpasswd
