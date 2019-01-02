@@ -5,7 +5,7 @@ set -e
 sudo apt-get update && sudo apt-get dist-upgrade -y
 
 # Install deps
-sudo apt-get install apt-transport-https ca-certificates curl software-properties-common python-pip glances unzip vim htop apache2-utils -y
+sudo apt-get install openssh-server git apt-transport-https ca-certificates curl software-properties-common python-pip glances unzip vim htop apache2-utils -y
 
 default_skadi_passwords=${DEFAULT_PASSWORDS:-"false"}
 
@@ -18,28 +18,46 @@ neo4jpassword=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
 
 if [ $default_skadi_passwords = "false" ]
   then
-    echo "Using random username and passwords for OS Account, TimeSketch, Nginx proxy, and Grafana"
+    echo "Using random username and passwords for OS Account, TimeSketch, Nginx proxy / Grafana"
+    echo "Writing all credentials to /opt/skadi_credentials"
     TIMESKETCH_USER="skadi_$(openssl rand -base64 3)"
     TIMESKETCH_PASSWORD=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
-    GRAFANA_USER="skadi_$(openssl rand -base64 3)"
-    GRAFANA_PASSWORD=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
     NGINX_USER="skadi_$(openssl rand -base64 3)"
     NGINX_PASSWORD=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
+    GRAFANA_USER=$NGINX_USER
+    GRAFANA_PASSWORD=$NGINX_PASSWORD
     SKADI_USER="skadi_$(openssl rand -base64 3)"
     SKADI_PASS=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
     SKADI_USER_HOME="/home/$SKADI_USER"
+    echo "  OS Account:" > /opt/skadi_credentials
+    echo "     - Username: $SKADI_USER" >> /opt/skadi_credentials
+    echo "     - Password: $SKADI_PASS" >> /opt/skadi_credentials
+    echo "" >> /opt/skadi_credentials
+    echo "  Proxy Account:" >> /opt/skadi_credentials
+    echo "     - Username: $NGINX_USER" >> /opt/skadi_credentials
+    echo "     - Password: $NGINX_PASSWORD" >> /opt/skadi_credentials
+    echo "" >> /opt/skadi_credentials
+    echo "  TimeSketch Account:" >> /opt/skadi_credentials
+    echo "     - Username: $TIMESKETCH_USER" >> /opt/skadi_credentials
+    echo "     - Password: $TIMESKETCH_PASSWORD" >> /opt/skadi_credentials
+    echo "" >> /opt/skadi_credentials
+    echo "  Grafana Account" >> /opt/skadi_credentials
+    echo "     - Username: $GRAFANA_USER" >> /opt/skadi_credentials
+    echo "     - Password: $GRAFANA_PASSWORD" >> /opt/skadi_credentials
 else
     echo "Using Skadi default username and password of skadi:skadi for OS Account, TimeSketch, Nginx proxy, and Grafana"
     TIMESKETCH_USER="skadi"
     TIMESKETCH_PASSWORD="skadi"
-    GRAFANA_USER="skadi"
-    GRAFANA_PASSWORD="skadi"
     NGINX_USER="skadi"
     NGINX_PASSWORD="skadi"
+    GRAFANA_USER=$NGINX_USER
+    GRAFANA_PASSWORD=$NGINX_PASSWORD
     SKADI_USER="skadi"
     SKADI_PASS="skadi"
     SKADI_USER_HOME="/home/$SKADI_USER"
 fi
+
+
 
 # Set Hostname to skadi
 newhostname='skadi'
@@ -171,7 +189,9 @@ curl -XPUT 'localhost:9200/_template/number_of_replicas' \
 # requires the other containers to be up and running too. This can take time
 # so this loop ensures all the parts are running and timesketch is responding
 # to web requets before continuing
-echo "Waiting for TimeSketch to become available"
+sudo docker restart timesketch
+echo "Waiting 10 seconds for TimeSketch to become available"
+sleep 10
 echo "Press CTRL-C at any time to stop installation"
 until $(curl --output /dev/null --silent --head --fail http://localhost/timesketch); do
     echo "No response, restarting the TimeSketch container and waiting 10 seconds to try again"
@@ -200,48 +220,7 @@ echo ADMIN_PASSWORD=$GRAFANA_PASSWORD >> ./.env
 sudo docker-compose up -d
 
 # Installs and Configures CDQR and CyLR
-echo "Updating CDQR"
-wget -O /tmp/cdqr.py https://raw.githubusercontent.com/orlikoski/CDQR/master/src/cdqr.py
-chmod a+x /tmp/cdqr.py
-sudo mv /tmp/cdqr.py /usr/local/bin/cdqr.py
-echo "CDQR is in /usr/local/bin/cdqr.py"
-
-echo "Updating CyLR"
-cylr_files=( "CyLR_linux-x64.zip" "CyLR_osx-x64.zip" "CyLR_win-x64.zip" "CyLR_win-x86.zip")
-LATEST_RELEASE=$(curl -L -s -H 'Accept: application/json' https://github.com/orlikoski/CyLR/releases/latest)
-LATEST_VERSION=$(echo $LATEST_RELEASE | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/')
-ARTIFACT_URL="https://github.com/orlikoski/CyLR/releases/download/$LATEST_VERSION/"
-
-for cylrzip in "${cylr_files[@]}"
-do
-  if [ ! -d "/opt/CyLR" ]; then
-    sudo mkdir /opt/CyLR/
-    sudo chmod 777 /opt/CyLR
-  else
-    sudo rm -rf /opt/CyLR/$cylrzip
-  fi
-  wget -O "/opt/CyLR/$cylrzip" "$ARTIFACT_URL/$cylrzip" > /dev/null 2>&1
-  if [ $? -ne 0 ]; then
-    echo "CyLR Download of $cylrzip failed"
-  else
-      if [ -d "CyLR/" ]; then
-        sudo rm -rf CyLR/
-      fi
-      echo "$cylrzip downloaded into /opt/CyLR/"
-  fi
-done
-# If Skadi Desktop exists place link to CyLR folder on it
-if [ -d /home/skadi/Desktop ]; then
-    sudo ln -s /opt/CyLR /home/skadi/Desktop/CyLR
-    sudo chown -h skadi:skadi /home/skadi/Desktop/CyLR
-fi
-
-unzip -o /opt/CyLR/CyLR_linux-x64.zip -d /tmp/ > /dev/null 2>&1
-cylr_version=$(/tmp/CyLR --version |grep Version)
-rm /tmp/CyLR > /dev/null 2>&1
-echo "All CyLR Files Downloaded"
-echo "Updated to $cylr_version"
-echo ""
+sudo bash /opt/Skadi/scripts/update.sh
 
 # Enable and Configure UFW Firewall
 echo "Enabling UFW firewall to only allow OpenSSH and Ngninx Full"
@@ -256,25 +235,12 @@ echo ""
 echo "Skadi Setup is Complete"
 echo ""
 echo "The Nginx reverse proxy setup and can be accessed at http://<IP Address> or http://localhost if installed locally:"
-echo "The following are the credentials needed to access this build: "
+echo "The following are the credentials needed to access this build and are stored in /opt/skadi_credentials if run-time generated credentials was chosen: "
 echo ""
-echo "  OS Account:"
-echo "     - Username: $SKADI_USER"
-echo "     - Password: $SKADI_PASS"
-echo ""
-echo "  Proxy Account:"
-echo "     - Username: $NGINX_USER"
-echo "     - Password: $NGINX_PASSWORD"
-echo ""
-echo "  TimeSketch Account:"
-echo "     - Username: $TIMESKETCH_USER"
-echo "     - Password: $TIMESKETCH_PASSWORD"
-echo ""
-echo "  Grafana Account"
-echo "     - Username: $GRAFANA_USER"
-echo "     - Password: $GRAFANA_PASSWORD"
+cat /opt/skadi_credentials
 echo ""
 echo ""
 echo "The following files have credentials used in the build process stored in them:"
+echo "  - /opt/skadi_credentials (only if run-time generated credentials chosen)"
 echo "  - /opt/Skadi/Docker/.env"
 echo "  - /opt/Skadi/Docker/skadi_dockprom/.env"
