@@ -38,9 +38,9 @@ echo ""
 # Ask for and validate domain name to use
 echo ""
 echo ""
-read -p "Please enter the FQDN, IP address, or routable hostname to use (cannot be blank): " new_domain
+read -p "Please enter the FQDN, IP address, or routable hostname to use (cannot be blank): " hostinfo
 
-if [ -z "$new_domain" ]; then
+if [ -z "$hostinfo" ]; then
   echo "Warning: Hostname entered was Null or empty"
   echo "This is required. Exiting"
   exit
@@ -48,9 +48,9 @@ fi
 
 
 # Add domain name (if changed) and enable basic auth
-if [[ ! -z "$new_domain" ]]; then
-  echo "Replacing existing server name with '$new_domain'"
-  sudo sed -i "s/server_name .*\;/server_name $new_domain\;/g" /etc/nginx/sites-available/default
+if [[ ! -z "$hostinfo" ]]; then
+  echo "Replacing existing server name with '$hostinfo'"
+  sudo sed -i "s/server_name .*\;/server_name $hostinfo\;/g" /etc/nginx/sites-available/default
 fi
 
 # Install and Configure Mkcert
@@ -59,6 +59,8 @@ sudo apt-get install libnss3-tools -y
 export mkcert VER="V.1.2.0"
 sudo wget -O /usr/local/bin mkcert https://github.com/FiloSottile/mkcert/releases/download/${VER}/mkcert-${VER}-linux-amd64
 sudo chmod +x /usr/local/bin/mkcert
+sudo mkcert -install
+sudo mkcert $hostinfo 127.0.0.1 localhost ::1
 
 # Install and Configure Letsencrypt
 sudo apt update -y
@@ -73,19 +75,19 @@ echo ""
 echo ""
 echo ""
 echo "Nginx reverse proxy update is complete with the following:"
-echo "Hostname: '$new_domain'"
+echo "Hostname: '$hostinfo'"
 echo "The following are reverse proxied with authentication: "
 echo ""
 echo "  TimeSketch:"
-echo "   - 'http://$new_domain'"
+echo "   - 'http://$hostinfo'"
 echo ""
 echo "  Kibana:"
-echo "   - 'http://$new_domain/kibana'"
+echo "   - 'http://$hostinfo/kibana'"
 echo "     - Username: $k_user"
 echo "     - Password: $k_pass"
 echo ""
 echo "  Cerebro"
-echo "   - 'http://$new_domain/cerebro'"
+echo "   - 'http://$hostinfo/cerebro'"
 echo "     - Username: $c_user"
 echo "     - Password: $c_pass"
 echo ""
