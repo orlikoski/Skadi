@@ -1,4 +1,5 @@
-#!/bin/bash
+#!b/in/bash
+
 echo "Installing Skadi Pack: Secure Networking"
 echo "This installation will do the following:"
 echo "  - Update the Nginx reverse proxy for TimeSketch, Kibana, and Cerebro websites"
@@ -52,18 +53,13 @@ if [[ ! -z "$new_domain" ]]; then
   sudo sed -i "s/server_name .*\;/server_name $new_domain\;/g" /etc/nginx/sites-available/default
 fi
 
-# Configure Kibana Credentials
-k_user="kibuser_$(openssl rand -base64 3)"
-k_pass=$(openssl rand -base64 32)
-echo $k_pass | sudo htpasswd -i -c /etc/nginx/.kibana_auth $k_user
+# Install and Configure Mkcert
 
-# Configure Cerebro Credentials
-c_user="ceruser_$(openssl rand -base64 3)"
-c_pass=$(openssl rand -base64 32)
-echo $c_pass | sudo htpasswd -i -c /etc/nginx/.cerebro_auth $c_user
-
-sudo systemctl restart nginx
-sudo systemctl enable nginx
+sudo apt update -y
+sudo apt-get install libnss3-tools -y
+export mkcert VER="V.1.2.0"
+sudo wget -O /usr/local/bin mkcert https://github.com/FiloSottile/mkcert/releases/download/${VER}/mkcert-${VER}-linux-amd64
+sudo chmod +x /usr/local/bin/mkcert
 
 # Install and Configure Letsencrypt
 sudo apt update -y
@@ -72,7 +68,6 @@ sudo add-apt-repository ppa:certbot/certbot -y
 sudo apt update -y
 sudo apt install python-certbot-nginx -y
 sudo apt autoremove -y
-
 echo ""
 echo ""
 echo ""
