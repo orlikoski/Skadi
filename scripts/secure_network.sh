@@ -54,7 +54,6 @@ if [[ ! -z "$new_domain" ]]; then
 fi
 
 # Install and Configure Mkcert
-
 sudo apt update -y
 sudo apt-get install libnss3-tools -y
 export mkcert VER="V.1.2.0"
