@@ -53,6 +53,8 @@ if [[ ! -z "$hostinfo" ]]; then
 sudo mkdir -p /etc/nginx/certs/
 sudo rm -rf /etc/nginx/conf.d/*
 cat /opt/Skadi/Docker/nginx/skadi_TLS.conf | sed "s/server_name  localhost/server_name $hostinfo localhost 127.0.0.1 ::1/g" > /tmp/skadi_TLS.conf
+sudo sed -i "s/localhost.pem/$hostinfo.pem/g" /tmp/skadi_TLS.conf
+sudo sed -i "s/localhost.key.pem/$hostinfo.key.pem/g" /tmp/skadi_TLS.conf
 sudo mv /tmp/skadi_TLS.conf /etc/nginx/conf.d/
 sudo chown root:root /etc/nginx/conf.d/skadi_TLS.conf
 sudo chmod 644 /etc/nginx/conf.d/skadi_TLS.conf
