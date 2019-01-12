@@ -129,6 +129,7 @@ services:
     image: nginx:1.15
     container_name: nginx
     volumes:
+      - /etc/nginx/certs:/etc/nginx/certs
       - /etc/nginx/conf.d:/etc/nginx/conf.d
       - /etc/nginx/.skadi_auth:/etc/nginx/.skadi_auth
       - /usr/share/nginx/html:/usr/share/nginx/html
