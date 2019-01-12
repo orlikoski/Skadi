@@ -111,6 +111,8 @@ echo "*********** WARNING ***********"
 echo ""
 echo ""
 read -n 1 -r -s -p "If it is configured correctly; Press any key to continue... or CTRL+C to exit"
+cd /opt/Skadi/Docker
+sudo docker-compose up -d
 echo ""
 echo ""
 #sudo certbot --nginx
