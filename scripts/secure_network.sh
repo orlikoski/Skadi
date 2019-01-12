@@ -50,25 +50,29 @@ fi
 # Add domain name (if changed) and enable basic auth
 if [[ ! -z "$hostinfo" ]]; then
   echo "Replacing existing server name with '$hostinfo'"
-  sudo sed -i "s/server_name .*\;/server_name $hostinfo\;/g" /etc/nginx/sites-available/default
+sudo mkdir -p /etc/nginx/certs/
+sudo rm -rf /etc/nginx/conf.d/*
+cat /opt/Skadi/Docker/nginx/skadi_TLS.conf | sed "s/server_name  localhost/server_name $hostinfo localhost 127.0.0.1 ::1/g" > /tmp/skadi_TLS.conf
+sudo mv /tmp/skadi_TLS.conf /etc/nginx/conf.d/
+sudo chown root:root /etc/nginx/conf.d/skadi_TLS.conf
+sudo chmod 644 /etc/nginx/conf.d/skadi_TLS.conf
 fi
 
 # Install and Configure Mkcert
 sudo apt update -y
 sudo apt-get install libnss3-tools -y
 export mkcert VER="V.1.2.0"
-sudo wget -O /usr/local/bin mkcert https://github.com/FiloSottile/mkcert/releases/download/${VER}/mkcert-${VER}-linux-amd64
+sudo wget -O /usr/local/bin/mkcert https://github.com/FiloSottile/mkcert/releases/download/${VER}/mkcert-${VER}-linux-amd64
 sudo chmod +x /usr/local/bin/mkcert
-sudo mkcert -install
-sudo mkcert $hostinfo 127.0.0.1 localhost ::1
+sudo mkcert -install -cert-file /etc/nginx/certs/$hostinfo.pem -key-file /etc/nginx/certs/$hostinfo.key.pem 127.0.0.1 localhost $hostinfo ::1
 
 # Install and Configure Letsencrypt
-sudo apt update -y
-sudo apt install software-properties-common -y
-sudo add-apt-repository ppa:certbot/certbot -y
-sudo apt update -y
-sudo apt install python-certbot-nginx -y
-sudo apt autoremove -y
+#sudo apt update -y
+#sudo apt install software-properties-common -y
+#sudo add-apt-repository ppa:certbot/certbot -y
+#sudo apt update -y
+#sudo apt install python-certbot-nginx -y
+#sudo apt autoremove -y
 echo ""
 echo ""
 echo ""
@@ -107,4 +111,4 @@ echo ""
 read -n 1 -r -s -p "If it is configured correctly; Press any key to continue... or CTRL+C to exit"
 echo ""
 echo ""
-sudo certbot --nginx
+#sudo certbot --nginx
