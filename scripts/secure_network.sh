@@ -61,8 +61,8 @@ fi
 # Install and Configure Mkcert
 sudo apt update -y
 sudo apt-get install libnss3-tools -y
-export mkcert VER="V.1.2.0"
-sudo wget -O /usr/local/bin/mkcert https://github.com/FiloSottile/mkcert/releases/download/${VER}/mkcert-${VER}-linux-amd64
+VER="v.1.2.0"
+sudo wget -O /usr/local/bin/mkcert "https://github.com/FiloSottile/mkcert/releases/download/$VER/mkcert-$VER-linux-amd64"
 sudo chmod +x /usr/local/bin/mkcert
 sudo mkcert -install -cert-file /etc/nginx/certs/$hostinfo.pem -key-file /etc/nginx/certs/$hostinfo.key.pem 127.0.0.1 localhost $hostinfo ::1
 
