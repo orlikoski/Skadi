@@ -131,11 +131,11 @@ services:
     volumes:
       - /etc/nginx/certs:/etc/nginx/certs
       - /etc/nginx/conf.d:/etc/nginx/conf.d
+      - /var/log/nginx:/var/log/nginx
       - /etc/nginx/.skadi_auth:/etc/nginx/.skadi_auth
       - /usr/share/nginx/html:/usr/share/nginx/html
       - /opt/CyLR:/usr/share/nginx/html/downloads
       - tssockets:/var/timesketch/
-      - /var/log/nginx:/var/log/nginx
     network_mode: "host"
     ports:
       - 80:80
