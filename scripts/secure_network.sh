@@ -47,7 +47,7 @@ nginx_setup () {
   echo "This will take a while, the dots are the progress meter. If they are still being added, it's working"
   # Use the DHPARAM key and ECDH curve >= 256bit
   # Use this command to generate the key ''
-  sudo openssl dhparam -out /etc/nginx/certs/dhparam.pem 4096
+  sudo openssl dhparam -out /etc/nginx/certs/dhparam.pem 2048
   echo "Nginx configuration for enabling TLS is complete"
   echo ""
 }
