@@ -1,0 +1,13 @@
+################################
+# NGINX BASIC AUTH
+[nginx-auth]
+
+enabled = true
+filter  = nginx-auth
+action  = iptables-multiport[name=nginx-auth,port="80,443"]
+logpath = /var/log/nginx/error.log
+################################
+# modify the following
+ignoreip = 127.0.0.1/8
+bantime  = 604800
+maxretry = 4
