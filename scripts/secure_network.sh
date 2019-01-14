@@ -42,12 +42,23 @@ nginx_setup () {
   sudo cp /opt/Skadi/Docker/nginx/ssl.conf /etc/nginx/conf.d/ssl.conf
   sudo chown root:root /etc/nginx/conf.d/ssl.conf
   sudo chmod 644 /etc/nginx/conf.d/ssl.conf
+}
 
+dhparam_setup () {
   echo "Creating DHPARAM key"
   echo "This will take a while, the dots are the progress meter. If they are still being added, it's working"
   # Use the DHPARAM key and ECDH curve >= 256bit
   # Use this command to generate the key ''
-  sudo openssl dhparam -out /etc/nginx/certs/dhparam.pem 2048
+  sudo openssl dhparam -out /etc/nginx/certs/dhparam.pem 4096
+  echo "Nginx configuration for enabling TLS is complete"
+  echo ""
+}
+
+dhparam_setup_testonly () {
+  # THIS IS FOR TESTING ONLY, DO NOT USE IN PRODUCTION
+  echo "Creating DHPARAM key"
+  echo "This will take a while, the dots are the progress meter. If they are still being added, it's working"
+  cp /opt/Skadi/Docker/nginx/test_dhparam.pem /etc/nginx/certs/dhparam.pem
   echo "Nginx configuration for enabling TLS is complete"
   echo ""
 }
@@ -70,7 +81,6 @@ mkcert_setup () {
   echo ""
   echo "Certificates were written to /etc/nginx/certs"
   echo ""
-  echo "Restarting Nginx Docker"
   sudo docker restart nginx
   echo ""
 }
@@ -93,6 +103,17 @@ fail2ban_setup () {
   sudo service fail2ban restart
 }
 
+nginx_disable () {
+  echo "Stopping Nginx Docker"
+  sudo docker stop nginx
+  echo ""
+}
+
+nginx_enable () {
+  echo "Starting Nginx Docker"
+  sudo docker start nginx
+  echo ""
+}
 goodbye_message () {
   echo "Docker containers have been restarted and changes applied"
   echo ""
@@ -101,16 +122,18 @@ goodbye_message () {
   echo "  - Generate and apply certs for $hostinfo, localhost, 127.0.0.1, and ::1"
   echo ""
   echo "PLEASE NOTE: BROWSERS WILL STILL SHOW AS NOT SECURE EVEN THOUGH THEY ARE SERVING TLS ENCRYPTION"
-  echo ""
+  echo ""``
   echo "For further info on self-signed certs please see: https://github.com/FiloSottile/mkcert"
 }
 
-
 ############ MAIN PROGRAM #############
-
 hello_message
+nginx_disable
 get_hostname
 nginx_setup
+# dhparam_setup
+dhparam_setup_testonly
 mkcert_setup
 fail2ban_setup
+nginx_enable
 goodbye_message
