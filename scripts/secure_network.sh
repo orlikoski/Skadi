@@ -143,5 +143,4 @@ dhparam_setup
 mkcert_setup
 nginx_enable
 fail2ban_setup
-
 goodbye_message
