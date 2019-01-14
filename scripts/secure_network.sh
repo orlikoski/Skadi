@@ -22,6 +22,11 @@ get_hostname () {
   fi
 }
 
+update_repo () {
+  cd /opt/Skadi/Docker
+  git pull
+}
+
 nginx_setup () {
   echo "Setting Up Nginx using '$hostinfo'"
   echo "Make the required directories and clean out existing nginx config files"
@@ -109,8 +114,9 @@ nginx_disable () {
 }
 
 nginx_enable () {
-  echo "Starting Nginx Docker"
-  sudo docker start nginx
+  echo "Re-building Nginx Docker"
+  cd /opt/Skadi/Docker
+  sudo docker-compose up -d
   echo ""
 }
 goodbye_message () {
@@ -128,11 +134,13 @@ goodbye_message () {
 ############ MAIN PROGRAM #############
 hello_message
 get_hostname
+# update_repo
 nginx_disable
 nginx_setup
 # dhparam_setup
 dhparam_setup_testonly
 mkcert_setup
-fail2ban_setup
 nginx_enable
+fail2ban_setup
+
 goodbye_message
