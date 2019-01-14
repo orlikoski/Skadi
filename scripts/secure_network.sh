@@ -1,114 +1,146 @@
 #!/bin/bash
-echo "Installing Skadi Pack: Secure Networking"
-echo "This installation will do the following:"
-echo "  - Update the Nginx reverse proxy for TimeSketch, Kibana, and Cerebro websites"
-echo "  - Install and configure all prerequisits to install valid TLS/SSL certificates from Letsencrypt"
-echo "  - Change the default passwords for TimeSketch, Kibana and Cerebro (created dynamically at run time)"
-echo "  - Enable TLS/SSL encryption using Letsencrypt"
-echo ""
-echo "In order to continue a publicly accessable FQDN (such as 'mydomain.com') is required"
-echo "The Kibana, Cerebro, and TimeSketch websites will be configured to use that FQDN"
-echo "This cannot be left blank for the TLS certificates to work"
-echo ""
-echo ""
-echo "Example Domain: 'mydomain.com'"
-echo "Results in the following: "
-echo "   - 'mydomain.com'"
-echo "   - 'mydomain.com/kibana'"
-echo "   - 'mydomain.com/cerebro'"
-echo ""
-echo "All of this can be changed in the following file:"
-echo "   - /etc/nginx/sites-available/default"
-echo ""
-echo ""
-echo "All usernames and passwords are made dynamically at run time"
-echo "These are displayed at the end of the script (record them for use)"
-echo ""
-echo "*********** WARNING ***********"
-echo "This script was built and tested to work on Skadi 2018.2"
-echo "It is not possible to predict the results of using it on any other platform"
-echo "root or sudo privileges are required for this installation"
-echo "*********** WARNING ***********"
-echo ""
-read -n 1 -r -s -p "Press any key to continue... or CTRL+C to exit (nothing has been installed)"
-echo ""
-echo ""
+set -e
 
-# Ask for and validate domain name to use
-echo ""
-echo ""
-read -p "Please enter the FQDN, IP address, or routable hostname to use (cannot be blank): " new_domain
+hello_message () {
+  echo "Installing Skadi Pack: Secure Networking"
+  echo "This installation will do the following:"
+  echo "  - Install and configure all prerequisites for mkcert to issue valid self-signed TLS certs"
+  echo ""
+  read -n 1 -r -s -p "Press any key to continue... or CTRL+C to exit (nothing has been installed)"
+  echo ""
+}
 
-if [ -z "$new_domain" ]; then
-  echo "Warning: Hostname entered was Null or empty"
-  echo "This is required. Exiting"
-  exit
-fi
+get_hostname () {
+  # Ask for and validate domain name to use
+  echo ""
+  read -p "Please enter the FQDN, IP address, or routable hostname to use (cannot be blank): " hostinfo
 
+  if [ -z "$hostinfo" ]; then
+    echo "Warning: Hostname entered was Null or empty"
+    echo "This is required. Exiting"
+    exit
+  fi
+}
 
-# Add domain name (if changed) and enable basic auth
-if [[ ! -z "$new_domain" ]]; then
-  echo "Replacing existing server name with '$new_domain'"
-  sudo sed -i "s/server_name .*\;/server_name $new_domain\;/g" /etc/nginx/sites-available/default
-fi
+update_repo () {
+  sudo chown -R skadi:skadi /opt/Skadi
+  cd /opt/Skadi/Docker
+  git pull
+}
 
-# Configure Kibana Credentials
-k_user="kibuser_$(openssl rand -base64 3)"
-k_pass=$(openssl rand -base64 32)
-echo $k_pass | sudo htpasswd -i -c /etc/nginx/.kibana_auth $k_user
+nginx_setup () {
+  echo "Setting Up Nginx using '$hostinfo'"
+  echo "Make the required directories and clean out existing nginx config files"
+  sudo mkdir -p /etc/nginx/certs/letsencrypt
+  sudo rm -rf /etc/nginx/conf.d/*
 
-# Configure Cerebro Credentials
-c_user="ceruser_$(openssl rand -base64 3)"
-c_pass=$(openssl rand -base64 32)
-echo $c_pass | sudo htpasswd -i -c /etc/nginx/.cerebro_auth $c_user
+  echo "Customizing /etc/nginx/conf.d/skadi_TLS.conf"
+  cat /opt/Skadi/Docker/nginx/skadi_TLS.conf | \
+    sed "s/server_name  localhost/server_name $hostinfo localhost 127.0.0.1 \
+    ::1/g" > /tmp/skadi_TLS.conf
+  sudo sed -i "s/localhost.pem/$hostinfo.pem/g" /tmp/skadi_TLS.conf
+  sudo sed -i "s/localhost.key.pem/$hostinfo.key.pem/g" /tmp/skadi_TLS.conf
+  sudo mv /tmp/skadi_TLS.conf /etc/nginx/conf.d/
+  sudo chown root:root /etc/nginx/conf.d/skadi_TLS.conf
+  sudo chmod 644 /etc/nginx/conf.d/skadi_TLS.conf
 
-sudo systemctl restart nginx
-sudo systemctl enable nginx
+  echo "Adding /etc/nginx/conf.d/ssl.conf"
+  sudo cp /opt/Skadi/Docker/nginx/ssl.conf /etc/nginx/conf.d/ssl.conf
+  sudo chown root:root /etc/nginx/conf.d/ssl.conf
+  sudo chmod 644 /etc/nginx/conf.d/ssl.conf
+}
 
-# Install and Configure Letsencrypt
-sudo apt update -y
-sudo apt install software-properties-common -y
-sudo add-apt-repository ppa:certbot/certbot -y
-sudo apt update -y
-sudo apt install python-certbot-nginx -y
-sudo apt autoremove -y
+dhparam_setup () {
+  echo "Creating DHPARAM key"
+  echo "This will take a while, the dots are the progress meter. If they are still being added, it's working"
+  # Use the DHPARAM key and ECDH curve >= 256bit
+  # Use this command to generate the key ''
+  sudo openssl dhparam -out /etc/nginx/certs/dhparam.pem 4096
+  echo "Nginx configuration for enabling TLS is complete"
+  echo ""
+}
 
-echo ""
-echo ""
-echo ""
-echo ""
-echo ""
-echo "Nginx reverse proxy update is complete with the following:"
-echo "Hostname: '$new_domain'"
-echo "The following are reverse proxied with authentication: "
-echo ""
-echo "  TimeSketch:"
-echo "   - 'http://$new_domain'"
-echo ""
-echo "  Kibana:"
-echo "   - 'http://$new_domain/kibana'"
-echo "     - Username: $k_user"
-echo "     - Password: $k_pass"
-echo ""
-echo "  Cerebro"
-echo "   - 'http://$new_domain/cerebro'"
-echo "     - Username: $c_user"
-echo "     - Password: $c_pass"
-echo ""
-echo ""
-echo ""
-echo ""
-echo "*********** WARNING ***********"
-echo "The next step requires a publicly accessable FQDN with working DNS"
-echo "If there is an issue with the FQDN, IP address, or routable hostname please stop now"
-echo " - This can be changed in '/etc/nginx/sites-available/default'"
-echo " - Change the line that start with 'server_name' to the correct name before continuing"
-echo ""
-echo "If there are any issues it is best to stop now and, when it is configured corrctly, run 'sudo certbot --nginx' manually"
-echo "*********** WARNING ***********"
-echo ""
-echo ""
-read -n 1 -r -s -p "If it is configured correctly; Press any key to continue... or CTRL+C to exit"
-echo ""
-echo ""
-sudo certbot --nginx
+dhparam_setup_testonly () {
+  # THIS IS FOR TESTING ONLY, DO NOT USE IN PRODUCTION
+  echo "Creating DHPARAM key"
+  echo "This will take a while, the dots are the progress meter. If they are still being added, it's working"
+  cp /opt/Skadi/Docker/nginx/test_dhparam.pem /etc/nginx/certs/dhparam.pem
+  echo "Nginx configuration for enabling TLS is complete"
+  echo ""
+}
+
+mkcert_setup () {
+  VER="v1.2.0"
+  echo "Installing Mkcert"
+  echo ""
+  # Install and Configure Mkcert
+  sudo apt update -y
+  sudo apt-get install libnss3-tools -y
+  sudo wget -O /usr/local/bin/mkcert "https://github.com/FiloSottile/mkcert/releases/download/$VER/mkcert-$VER-linux-amd64"
+  sudo chmod +x /usr/local/bin/mkcert
+  echo "Mkcert has been installed"
+  echo ""
+
+  echo "Creating Self Signed Certificates for 127.0.0.1 localhost $hostinfo ::1"
+  echo ""
+  sudo mkcert -install -cert-file /etc/nginx/certs/$hostinfo.pem -key-file /etc/nginx/certs/$hostinfo.key.pem 127.0.0.1 localhost $hostinfo ::1
+  echo ""
+  echo "Certificates were written to /etc/nginx/certs"
+  echo ""
+  sudo docker restart nginx
+  echo ""
+}
+
+fail2ban_setup () {
+  echo "Installing Fail2Ban"
+  sudo apt-get update && sudo apt-get install fail2ban -y
+  echo ""
+  echo "Configuring Fail2Ban to monitor 'sshd' and 'nginx-auth'"
+  sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+  cat /opt/Skadi/Docker/nginx/nginx-auth.jail | sudo tee -a /etc/fail2ban/jail.local
+  sudo chmod 644 /etc/fail2ban/jail.local
+  echo ""
+  echo "Adding nginx-auth.jail to the local config file /etc/fail2ban/jail.local"
+  sudo cp /opt/Skadi/Docker/nginx/nginx-auth.conf /etc/fail2ban/filter.d/nginx-auth.conf
+  sudo chmod 644 /etc/fail2ban/filter.d/nginx-auth.conf
+  echo ""
+  echo "Configuration Complet. Restarting Fail2Ban service"
+  sudo service fail2ban restart
+}
+
+nginx_disable () {
+  echo "Stopping Nginx Docker"
+  sudo docker stop nginx
+  echo ""
+}
+
+nginx_enable () {
+  echo "Re-building Nginx Docker"
+  cd /opt/Skadi/Docker
+  sudo docker-compose up -d
+  echo ""
+}
+goodbye_message () {
+  echo "Docker containers have been restarted and changes applied"
+  echo ""
+  echo "Mkcert is installed and configured to do the following:"
+  echo "  - Install a ROOT CA to the local keystore"
+  echo "  - Generate and apply certs for $hostinfo, localhost, 127.0.0.1, and ::1"
+  echo ""
+  echo "PLEASE NOTE: BROWSERS WILL STILL SHOW AS NOT SECURE EVEN THOUGH THEY ARE SERVING TLS ENCRYPTION"
+  echo ""``
+  echo "For further info on self-signed certs please see: https://github.com/FiloSottile/mkcert"
+}
+
+############ MAIN PROGRAM #############
+hello_message
+get_hostname
+update_repo
+nginx_disable
+nginx_setup
+dhparam_setup
+# dhparam_setup_testonly # use only for testing
+mkcert_setup
+nginx_enable
+fail2ban_setup
+goodbye_message

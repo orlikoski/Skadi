@@ -1,0 +1,9 @@
+################################
+# NGINX AUTH for Elasticsearch
+[nginx-auth]
+
+enabled = true
+filter  = nginx-auth
+action  = iptables-multiport[name=nginx-auth,port="80,443"]
+logpath = /var/log/nginx/error.log
+################################
