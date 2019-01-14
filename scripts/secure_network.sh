@@ -90,11 +90,11 @@ fail2ban_setup () {
   sudo apt-get update && sudo apt-get install fail2ban -y
   echo ""
   echo "Configuring Fail2Ban to monitor 'sshd' and 'nginx-auth'"
-  cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+  sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+  cat /opt/Skadi/Docker/nginx/nginx-auth.jail | sudo tee -a /etc/fail2ban/jail.local
   sudo chmod 644 /etc/fail2ban/jail.local
   echo ""
   echo "Adding nginx-auth.jail to the local config file /etc/fail2ban/jail.local"
-  cat /opt/Skadi/Docker/nginx/nginx-auth.jail | sudo tee -a /etc/fail2ban/jail.local
   sudo cp /opt/Skadi/Docker/nginx/nginx-auth.conf /etc/fail2ban/filter.d/nginx-auth.conf
   sudo chmod 644 /etc/fail2ban/filter.d/nginx-auth.conf
   echo ""
