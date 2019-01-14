@@ -60,15 +60,6 @@ dhparam_setup () {
   echo ""
 }
 
-dhparam_setup_testonly () {
-  # THIS IS FOR TESTING ONLY, DO NOT USE IN PRODUCTION
-  echo "Creating DHPARAM key"
-  echo "This will take a while, the dots are the progress meter. If they are still being added, it's working"
-  cp /opt/Skadi/Docker/nginx/test_dhparam.pem /etc/nginx/certs/dhparam.pem
-  echo "Nginx configuration for enabling TLS is complete"
-  echo ""
-}
-
 mkcert_setup () {
   VER="v1.2.0"
   echo "Installing Mkcert"
@@ -121,12 +112,42 @@ nginx_enable () {
   echo ""
 }
 
-goodbye_message () {
+bandersnatch () {
   echo "Docker containers have been restarted and changes applied"
   echo ""
   echo "Mkcert is installed and configured to do the following:"
   echo "  - Install a ROOT CA to the local keystore"
-  echo "  - Generate and apply certs for $hostinfo, localhost, 127.0.0.1, and ::1"
+  echo "  - Generate and apply Self Signed TLS certs for $hostinfo, localhost, "
+  echo "    127.0.0.1, and ::1"
+  echo ""
+  echo "Would you like to install valid TLS certs using Certbot via"
+  echo "ACME and Letsencrypt?"
+  echo ""
+  echo "CAUTION: A FQDN (example: myhost.mydomain.com) with working DNS"
+  echo "is required in order for Letsencrypt to access it via the Internet and"
+  echo "complete the installation process."
+  echo ""
+  while true;
+  do
+      read -r -p "Type Yes to continue or No to stop the script: " response
+      if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]
+      then
+          return 0
+      elif [[ $response =~ ^([nN][oO]|[nN])$ ]]
+      then
+          return 1
+      fi
+  done
+}
+
+call_tls () {
+  echo "Starting /opt/Skadi/scripts/install_tls_certs.sh"
+  sudo bash /opt/Skadi/scripts/install_tls_certs.sh
+}
+
+goodbye_message () {
+  echo ""
+  echo "Installation of Self Signed Certificates is complete"
   echo ""
   echo "PLEASE NOTE: BROWSERS WILL STILL SHOW AS NOT SECURE EVEN THOUGH THEY ARE SERVING TLS ENCRYPTION"
   echo ""
@@ -140,8 +161,12 @@ update_repo
 nginx_disable
 nginx_setup
 dhparam_setup
-# dhparam_setup_testonly # use only for testing
 mkcert_setup
 nginx_enable
 fail2ban_setup
-goodbye_message
+bandersnatch
+if [ "$?" -eq 0 ]; then
+  call_tls
+else
+  goodbye_message
+fi
