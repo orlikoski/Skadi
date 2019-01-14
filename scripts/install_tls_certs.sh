@@ -66,12 +66,15 @@ sudo cp /tmp/ssl.conf /etc/nginx/conf.d/ssl.conf
 sudo chmod 644 /etc/nginx/conf.d/ssl.conf
 }
 
-setup_certbot () {
+execute_certbot () {
+  echo "Starting certbot/certbot docker container to obtain certs for $hostinfo"
   cp /opt/Skadi/scripts/certs.sh /tmp/certs
   sudo sed -i "s@localhost@$hostinfo@g" /tmp/certs
   sudo mv /tmp/certs /etc/cron.monthly/
   sudo chmod 755 /etc/cron.monthly/certs
   sudo bash /etc/cron.monthly/certs
+  echo "Added /etc/cron.monthly/certs which uses cron to attempt to renew the"
+  echo "certifications for $hostinfo with Letsencrypt monthly"
 }
 
 goodbye_message () {
@@ -91,7 +94,7 @@ get_hostname
 nginx_disable
 nginx_update_hostname
 nginx_enable
-setup_certbot
+execute_certbot
 nginx_disable
 nginx_update_certs
 enable_ocsp
