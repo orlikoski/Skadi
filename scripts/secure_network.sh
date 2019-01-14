@@ -23,6 +23,7 @@ get_hostname () {
 }
 
 update_repo () {
+  sudo chown -R skadi:skadi /opt/Skadi
   cd /opt/Skadi/Docker
   git pull
 }
@@ -134,11 +135,11 @@ goodbye_message () {
 ############ MAIN PROGRAM #############
 hello_message
 get_hostname
-# update_repo
+update_repo
 nginx_disable
 nginx_setup
-# dhparam_setup
-dhparam_setup_testonly
+dhparam_setup
+# dhparam_setup_testonly # use only for testing
 mkcert_setup
 nginx_enable
 fail2ban_setup
