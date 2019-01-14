@@ -120,6 +120,7 @@ nginx_enable () {
   sudo docker-compose up -d
   echo ""
 }
+
 goodbye_message () {
   echo "Docker containers have been restarted and changes applied"
   echo ""
@@ -128,7 +129,7 @@ goodbye_message () {
   echo "  - Generate and apply certs for $hostinfo, localhost, 127.0.0.1, and ::1"
   echo ""
   echo "PLEASE NOTE: BROWSERS WILL STILL SHOW AS NOT SECURE EVEN THOUGH THEY ARE SERVING TLS ENCRYPTION"
-  echo ""``
+  echo ""
   echo "For further info on self-signed certs please see: https://github.com/FiloSottile/mkcert"
 }
 
