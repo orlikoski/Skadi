@@ -2,7 +2,7 @@
 set -e
 
 hello_message () {
-  echo "Installing Skadi Pack: Letsencrypt"
+  echo "Installing Skadi Pack: Install TLS Certs"
   echo "This installation will do the following:"
   echo "  - Use the certbot/certbot docker container to install valid TLS certs"
   echo ""
