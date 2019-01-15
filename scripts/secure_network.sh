@@ -95,7 +95,7 @@ fail2ban_setup () {
   sudo cp /opt/Skadi/Docker/nginx/nginx-auth.conf /etc/fail2ban/filter.d/nginx-auth.conf
   sudo chmod 644 /etc/fail2ban/filter.d/nginx-auth.conf
   echo ""
-  echo "Configuration Complet. Restarting Fail2Ban service"
+  echo "Configuration Complete. Restarting Fail2Ban service"
   sudo service fail2ban restart
 }
 
