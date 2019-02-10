@@ -15,7 +15,7 @@ Vagrant.configure("2") do |config|
   # Change the following to align with resources available
   ["vmware_desktop"].each do |provider|
     config.vm.provider provider do |v, override|
-      v.name = "skadi_server"
+      v.vmx["displayname"] = "skadi_server"
       # Minimum / Recommended
       # - CPU: 4 / 8
       # - MEM: 8192 / 16384
