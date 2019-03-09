@@ -77,7 +77,7 @@ services:
     environment:
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+      - "ES_JAVA_OPTS=-Xms${HEAP_SIZE} -Xmx${HEAP_SIZE}"
     ulimits:
       memlock:
         soft: -1
