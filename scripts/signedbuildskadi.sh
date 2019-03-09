@@ -24,7 +24,7 @@ if [ $default_skadi_passwords = "false" ]
     TIMESKETCH_PASSWORD=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
     NGINX_USER="skadi_$(openssl rand -base64 3)"
     NGINX_PASSWORD=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
-    HEAP_SIZE=$HEAP_SIZE
+    HEAP_SIZE=$(HEAP_SIZE:-1g)
     GRAFANA_USER=$NGINX_USER
     GRAFANA_PASSWORD=$NGINX_PASSWORD
     SKADI_USER="skadi"
@@ -45,7 +45,7 @@ else
     NGINX_PASSWORD="skadi"
     GRAFANA_USER=$NGINX_USER
     GRAFANA_PASSWORD=$NGINX_PASSWORD
-    HEAP_SIZE=$HEAP_SIZE
+    HEAP_SIZE=$(HEAP_SIZE:-1g)
     SKADI_USER="skadi"
     SKADI_PASS="skadi"
     SKADI_USER_HOME="/home/$SKADI_USER"
@@ -142,7 +142,7 @@ echo TIMESKETCH_PASSWORD=$TIMESKETCH_PASSWORD >> ./.env
 echo POSTGRES_USER=$POSTGRES_USER >> ./.env
 echo POSTGRES_PASSWORD=$psql_pw >> ./.env
 echo NEO4J_PASSWORD=$neo4jpassword >> ./.env
-echo 
+ 
 # Configure /etc/hosts file so the host can use same names for each service as the TimeSketch Dockers
 echo 127.0.0.1       elasticsearch |sudo tee -a /etc/hosts
 echo 127.0.0.1       postgres |sudo tee -a /etc/hosts
