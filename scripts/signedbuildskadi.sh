@@ -140,6 +140,7 @@ echo TIMESKETCH_PASSWORD=$TIMESKETCH_PASSWORD >> ./.env
 echo POSTGRES_USER=$POSTGRES_USER >> ./.env
 echo POSTGRES_PASSWORD=$psql_pw >> ./.env
 echo NEO4J_PASSWORD=$neo4jpassword >> ./.env
+echo HEAP_SIZE=1g >> ./.env
  
 # Configure /etc/hosts file so the host can use same names for each service as the TimeSketch Dockers
 echo 127.0.0.1       elasticsearch |sudo tee -a /etc/hosts
