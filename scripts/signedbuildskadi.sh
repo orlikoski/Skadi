@@ -24,7 +24,6 @@ if [ $default_skadi_passwords = "false" ]
     TIMESKETCH_PASSWORD=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
     NGINX_USER="skadi_$(openssl rand -base64 3)"
     NGINX_PASSWORD=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
-    HEAP_SIZE=$(HEAP_SIZE:-1g)
     GRAFANA_USER=$NGINX_USER
     GRAFANA_PASSWORD=$NGINX_PASSWORD
     SKADI_USER="skadi"
@@ -45,7 +44,6 @@ else
     NGINX_PASSWORD="skadi"
     GRAFANA_USER=$NGINX_USER
     GRAFANA_PASSWORD=$NGINX_PASSWORD
-    HEAP_SIZE=$(HEAP_SIZE:-1g)
     SKADI_USER="skadi"
     SKADI_PASS="skadi"
     SKADI_USER_HOME="/home/$SKADI_USER"
