@@ -141,7 +141,7 @@ echo POSTGRES_USER=$POSTGRES_USER >> ./.env
 echo POSTGRES_PASSWORD=$psql_pw >> ./.env
 echo NEO4J_PASSWORD=$neo4jpassword >> ./.env
 echo HEAP_SIZE=1g >> ./.env
- 
+
 # Configure /etc/hosts file so the host can use same names for each service as the TimeSketch Dockers
 echo 127.0.0.1       elasticsearch |sudo tee -a /etc/hosts
 echo 127.0.0.1       postgres |sudo tee -a /etc/hosts
@@ -150,16 +150,16 @@ echo 127.0.0.1       redis |sudo tee -a /etc/hosts
 
 # Write TimeSketch config file on host
 sudo cp /usr/local/share/timesketch/timesketch.conf /etc/
-sudo sed -i "s@SECRET_KEY = u'<KEY_GOES_HERE>'@SECRET_KEY = u'$SECRET_KEY'@g" /etc/timesketch.conf
+sudo sed -i "s@SECRET_KEY = '<KEY_GOES_HERE>'@SECRET_KEY = '$SECRET_KEY'@g" /etc/timesketch.conf
 sudo sed -i "s@<USERNAME>\:<PASSWORD>@$POSTGRES_USER\:$psql_pw@g" /etc/timesketch.conf
-sudo sed -i "s@NEO4J_USERNAME = u'neo4j'@NEO4J_USERNAME = u'$neo4juser'@g" /etc/timesketch.conf
-sudo sed -i "s@NEO4J_PASSWORD = u'<N4J_PASSWORD>'@NEO4J_PASSWORD = u'$neo4jpassword'@g" /etc/timesketch.conf
+sudo sed -i "s@NEO4J_USERNAME = 'neo4j'@NEO4J_USERNAME = '$neo4juser'@g" /etc/timesketch.conf
+sudo sed -i "s@NEO4J_PASSWORD = '<NEO4J_PASSWORD>'@NEO4J_PASSWORD = '$neo4jpassword'@g" /etc/timesketch.conf
 sudo sed -i "s/UPLOAD_ENABLED = False/UPLOAD_ENABLED = True/g" /etc/timesketch.conf
 sudo sed -i "s/GRAPH_BACKEND_ENABLED = False/GRAPH_BACKEND_ENABLED = True/g" /etc/timesketch.conf
 sudo sed -i "s#@localhost/timesketch#@postgres/timesketch#g" /etc/timesketch.conf
-sudo sed -i "s/ELASTIC_HOST = u'127.0.0.1'/ELASTIC_HOST = u'elasticsearch'/g" /etc/timesketch.conf
+sudo sed -i "s/ELASTIC_HOST = '127.0.0.1'/ELASTIC_HOST = 'elasticsearch'/g" /etc/timesketch.conf
 sudo sed -i "s@'redis://127.0.0.1:6379'@'redis://redis:6379'@g" /etc/timesketch.conf
-sudo sed -i "s/NEO4J_HOST = u'127.0.0.1'/NEO4J_HOST = u'neo4j'/g" /etc/timesketch.conf
+sudo sed -i "s/NEO4J_HOST = '127.0.0.1'/NEO4J_HOST = 'neo4j'/g" /etc/timesketch.conf
 
 # To build TimeSketch and CyberChef Docker Images Locally, uncomment the following lines
 # sudo docker build -t aorlikoski/skadi_timesketch:1.0 ./timesketch/
@@ -230,10 +230,13 @@ echo ""
 echo "Skadi Setup is Complete"
 echo ""
 echo "The Nginx reverse proxy setup and can be accessed at http://<IP Address> or http://localhost if installed locally:"
-echo "The following are the credentials needed to access this build and are stored in /opt/skadi_credentials if run-time generated credentials was chosen: "
-echo ""
-cat /opt/skadi_credentials
-echo ""
+if [ $default_skadi_passwords = "false" ]
+  then
+    echo "The following are the credentials needed to access this build and are stored in /opt/skadi_credentials if run-time generated credentials was chosen: "
+    echo ""
+    cat /opt/skadi_credentials
+    echo ""
+fi
 echo ""
 echo "The following files have credentials used in the build process stored in them:"
 echo "  - /opt/skadi_credentials (only if run-time generated credentials chosen)"
