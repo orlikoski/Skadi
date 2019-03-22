@@ -1,0 +1,8 @@
+#!/bin/bash
+docker run \
+  -v /home/skadi/:/data/ \
+  -v /etc/hosts:etc/hosts:ro \
+  -v "/opt/timesketch.conf":/etc/timesketch.conf \
+  --network host \
+  aorlikoski/cdq "$@"
+
