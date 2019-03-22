@@ -1,7 +1,7 @@
 version: '2.4'
 services:
   timesketch:
-    image: aorlikoski/skadi_timesketch:1.2
+    image: aorlikoski/skadi_timesketch:1.3
     container_name: timesketch
     ports:
       - 127.0.0.1:5000:5000
@@ -60,7 +60,7 @@ services:
       - 127.0.0.1:7474:7474
       - 127.0.0.1:7687:7687
     environment:
-      - NEO4J_AUTH=neo4j/${NEO4J_PASSWORD}
+      - NEO4J_AUTH=none
     volumes:
       - neo4jdata:/var/lib/neo4j/data
     networks:
