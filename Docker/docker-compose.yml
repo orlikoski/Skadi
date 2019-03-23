@@ -1,7 +1,7 @@
 version: '2.4'
 services:
   timesketch:
-    image: aorlikoski/skadi_timesketch:1.3
+    image: aorlikoski/skadi_timesketch:1.4
     container_name: timesketch
     ports:
       - 127.0.0.1:5000:5000
@@ -23,7 +23,7 @@ services:
     restart: always
 
   postgres:
-    image: postgres:10
+    image: postgres:11
     container_name: postgres
     cpus: .1
     mem_reservation: 100m
@@ -68,7 +68,7 @@ services:
     restart: always
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.5.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.6.2
     container_name: elasticsearch
     ports:
       - 127.0.0.1:9200:9200
@@ -89,7 +89,7 @@ services:
     restart: always
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:6.5.1
+    image: docker.elastic.co/kibana/kibana:6.6.2
     container_name: kibana
     ports:
       - 127.0.0.1:5601:5601
