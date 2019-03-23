@@ -144,6 +144,22 @@ services:
     mem_reservation: 100m
     restart: always
 
+  portainer:
+    image: portainer/portainer:1.20.2
+    container_name: portainer
+    volumes:
+      - portainerdata:/data portainer/portainer
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    command: --no-auth
+    pid: host
+    networks:
+      - ccnet
+    ports:
+      - 127.0.0.1:7000:9000
+    cpus: .2
+    mem_reservation: 200m
+    restart: always
+
 volumes:
   esdata1:
     driver: local
@@ -154,6 +170,8 @@ volumes:
   redisdata:
     driver: local
   tssockets:
+    driver: local
+  portainerdata:
     driver: local
 
 networks:
