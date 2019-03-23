@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+set -e
 
 # Choosing to use default passwords or not
 default_skadi_passwords=${DEFAULT_PASSWORDS:-"false"}
@@ -109,13 +109,12 @@ echo "${SKADI_USER}        ALL=(ALL)       NOPASSWD: ALL" > /etc/sudoers.d/$SKAD
 chmod 440 /etc/sudoers.d/$SKADI_USER
 
 # Create needed folders
-sudo mkdir -p /opt/skadi/CyLR
-sudo chown -R $SKADI_USER:$SKADI_USER /opt/skadi
 sudo mkdir -p /etc/nginx/conf.d
 sudo mkdir -p /usr/share/nginx/html
 
 # Copy Nginx configuration files to required locations
 sudo git clone --single-branch --branch $install_branch https://github.com/orlikoski/Skadi.git /opt/Skadi
+sudo chown -R $SKADI_USER:$SKADI_USER /opt/Skadi
 sudo cp /opt/Skadi/Docker/nginx/skadi_default.conf /etc/nginx/conf.d
 sudo cp -r /opt/Skadi/Docker/nginx/www/* /usr/share/nginx/html
 
@@ -213,7 +212,7 @@ echo ADMIN_PASSWORD=$GRAFANA_PASSWORD >> ./.env
 sudo docker-compose up -d
 
 # Installs and Configures CDQR and CyLR
-sudo bash /opt/Skadi/scripts/update.sh
+sudo -E bash /opt/Skadi/scripts/update.sh
 
 # Enable and Configure UFW Firewall
 echo "Enabling UFW firewall to only allow OpenSSH and Ngninx Full"
