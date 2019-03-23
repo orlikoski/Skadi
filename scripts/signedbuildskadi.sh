@@ -105,12 +105,9 @@ sudo chmod 777 /opt/CyLR
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 
-# Add Plaso repository
-sudo add-apt-repository ppa:gift/stable -y
-
-# Install Docker and Plaso
+# Install Docker
 sudo apt-get update
-sudo apt-get install docker-ce python-plaso plaso-tools python-psycopg2  -y
+sudo apt-get install docker-ce -y
 sudo systemctl enable docker
 
 # Clean APT
@@ -129,9 +126,6 @@ sudo curl -L https://raw.githubusercontent.com/docker/compose/1.23.1/contrib/com
 # Set the vm.max_map_count kernel setting needs to be set to at least 262144 for production use
 sudo sysctl -w vm.max_map_count=262144
 echo vm.max_map_count=262144 | sudo tee -a /etc/sysctl.conf
-
-# Install TimeSketch on the Host (required for psort.py to output in timesketch format)
-sudo -H pip install timesketch
 
 # Write TS and Postgres creds to .env file
 cd /opt/Skadi/Docker/
