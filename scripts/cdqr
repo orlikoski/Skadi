@@ -1,8 +1,49 @@
 #!/bin/bash
-docker run \
-  -v /home/skadi/:/data/ \
-  -v /etc/hosts:etc/hosts:ro \
-  -v "/opt/timesketch.conf":/etc/timesketch.conf \
-  --network host \
-  aorlikoski/cdq "$@"
-
+cdqr_version="4.4.0"
+cur_dir="$(pwd)"
+timesketch_conf="/etc/timesketch.conf"
+docker_args="docker run \
+  -v /etc/hosts:/etc/hosts:ro \
+  --network host"
+args=()
+for i in "$@"; do
+  # If it's timesketch add the timesketch mapping
+  if [ $i == "--es_ts" ]; then
+    docker_args="$docker_args -v $timesketch_conf:/etc/timesketch.conf"
+  fi
+  # If it's an input file/dir (denoted by "in:" then resolve absolute path)
+  if [ "${i:0:3}" == "in:" ]; then
+    input_map="${i:3:${#i}}"
+    if [ "${input_map:0:1}" == "/" ]; then
+      #this is a root level path, do not modify
+      final_input_path=$input_map
+    elif [ "${input_map:0:2}" == "./" ]; then
+      #this is a current dir path, modify to add absolute path
+      final_input_path=("$cur_dir/${input_map:2:${#input_map}}")
+    else
+      final_input_path=("$cur_dir/$input_map")
+    fi
+    args+=($final_input_path)
+    docker_args="$docker_args -v $final_input_path:$final_input_path"
+  # If it's an output file/dir (denoted by "out:" then resolve absolute path)
+  elif [ "${i:0:4}" == "out:" ]; then
+    output_map="${i:4:${#i}}"
+    if [ "${output_map:0:1}" == "/" ]; then
+      #this is a root level path, do not modify
+      final_output_path=$output_map
+    elif [ "${output_map:0:2}" == "./" ]; then
+      #this is a current dir path, modify to add absolute path
+      final_output_path=("$cur_dir/${output_map:2:${#output_map}}")
+    else
+      final_output_path=("$cur_dir/$output_map")
+    fi
+    args+=($final_output_path)
+    docker_args="$docker_args -v $final_output_path:$final_output_path"
+  # Everything is is copied over as is
+  else
+    args+=("$i")
+  fi
+done
+final_command="$docker_args aorlikoski/cdqr:$cdqr_version ${args[@]}"
+echo "$final_command"
+$final_command
