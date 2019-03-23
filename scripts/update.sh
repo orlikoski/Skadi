@@ -14,7 +14,7 @@ sudo apt-get -y autoremove
 # Installs and Configures CDQR and CyLR
 echo "Updating CDQR"
 echo "Downloading cdqr docker script into /usr/local/bin/cdqr"
-sudo curl -O /usr/local/bin/cdqr "https://raw.githubusercontent.com/orlikoski/Skadi/$install_branch/scripts/cdqr"
+sudo curl -o /usr/local/bin/cdqr "https://raw.githubusercontent.com/orlikoski/Skadi/$install_branch/scripts/cdqr"
 sudo chmod +x /usr/local/bin/cdqr
 echo "Downloading aorlikoski/CDQR:$cdqr_version "
 sudo docker pull "aorlikoski/cdqr:$cdqr_version"
