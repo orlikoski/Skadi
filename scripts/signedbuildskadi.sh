@@ -48,7 +48,7 @@ SECRET_KEY=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
 POSTGRES_USER="timesketch"
 psql_pw=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
 neo4juser='neo4j'
-neo4jpassword=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
+
 
 if [ $default_skadi_passwords = "false" ]
   then
@@ -148,7 +148,6 @@ echo TIMESKETCH_USER=$TIMESKETCH_USER > ./.env
 echo TIMESKETCH_PASSWORD=$TIMESKETCH_PASSWORD >> ./.env
 echo POSTGRES_USER=$POSTGRES_USER >> ./.env
 echo POSTGRES_PASSWORD=$psql_pw >> ./.env
-echo NEO4J_PASSWORD=$neo4jpassword >> ./.env
 echo HEAP_SIZE=1g >> ./.env
 
 # Configure /etc/hosts file so the host can use same names for each service as the TimeSketch Dockers
@@ -162,7 +161,7 @@ sudo cp /opt/Skadi/Docker/timesketch/timesketch.conf /etc/
 sudo sed -i "s@SECRET_KEY = '<KEY_GOES_HERE>'@SECRET_KEY = '$SECRET_KEY'@g" /etc/timesketch.conf
 sudo sed -i "s@<USERNAME>\:<PASSWORD>@$POSTGRES_USER\:$psql_pw@g" /etc/timesketch.conf
 sudo sed -i "s@NEO4J_USERNAME = 'neo4j'@NEO4J_USERNAME = '$neo4juser'@g" /etc/timesketch.conf
-sudo sed -i "s@NEO4J_PASSWORD = '<NEO4J_PASSWORD>'@NEO4J_PASSWORD = '$neo4jpassword'@g" /etc/timesketch.conf
+sudo sed -i "s@NEO4J_PASSWORD = '<NEO4J_PASSWORD>'@NEO4J_PASSWORD = ''@g" /etc/timesketch.conf
 sudo sed -i "s/UPLOAD_ENABLED = False/UPLOAD_ENABLED = True/g" /etc/timesketch.conf
 sudo sed -i "s/GRAPH_BACKEND_ENABLED = False/GRAPH_BACKEND_ENABLED = True/g" /etc/timesketch.conf
 sudo sed -i "s#@localhost/timesketch#@postgres/timesketch#g" /etc/timesketch.conf
