@@ -1,13 +1,47 @@
 #!/bin/bash
-set -e
+set -ex
+
+# Choosing to use default passwords or not
+default_skadi_passwords=${DEFAULT_PASSWORDS:-"false"}
+
+# Set the installation branch
+install_branch=${INSTALL_BRANCH:-"master"}
 
 # Update
 sudo apt-get update && sudo apt-get dist-upgrade -y
 
 # Install deps
-sudo apt-get install openssh-server git apt-transport-https ca-certificates curl software-properties-common python-pip glances unzip vim htop apache2-utils -y
+sudo apt-get install -y \
+  openssh-server \
+  git \
+  curl \
+  glances \
+  unzip \
+  vim \
+  htop \
+  screen \
+  apache2-utils
 
-default_skadi_passwords=${DEFAULT_PASSWORDS:-"false"}
+# Add Docker gpg key
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+
+# Install Docker
+sudo apt-get update
+sudo apt-get install docker-ce -y
+sudo systemctl enable docker
+
+# Install Docker-Compose
+sudo curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+sudo curl -L https://raw.githubusercontent.com/docker/compose/1.23.1/contrib/completion/bash/docker-compose -o /etc/bash_completion.d/docker-compose
+
+# Clean APT
+sudo apt-get -y autoremove --purge
+sudo apt-get -y clean
+sudo apt-get -y autoclean
+
+
 
 # Set Credentials
 SECRET_KEY=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
@@ -81,9 +115,13 @@ sudo mkdir -p /etc/nginx/conf.d
 sudo mkdir -p /usr/share/nginx/html
 
 # Copy Nginx configuration files to required locations
-sudo git clone https://github.com/orlikoski/Skadi.git /opt/Skadi
+sudo git clone --single-branch --branch $install_branch https://github.com/orlikoski/Skadi.git /opt/Skadi
 sudo cp /opt/Skadi/Docker/nginx/skadi_default.conf /etc/nginx/conf.d
 sudo cp -r /opt/Skadi/Docker/nginx/www/* /usr/share/nginx/html
+
+# Copy cdqr script to /usr/local/bin
+sudo cp /opt/Skadi/scripts/cdqr /usr/local/bin/cdqr
+sudo chmod +x /usr/local/bin/cdqr
 
 # Setup Nginx Auth
 echo $NGINX_PASSWORD | sudo htpasswd -i -c /etc/nginx/.skadi_auth $NGINX_USER
@@ -98,27 +136,8 @@ sudo swapoff -a
 sudo mkdir /opt/CyLR/
 sudo chmod 777 /opt/CyLR
 
-# Add Docker gpg key
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-
-# Install Docker
-sudo apt-get update
-sudo apt-get install docker-ce -y
-sudo systemctl enable docker
-
-# Clean APT
-sudo apt-get -y autoremove --purge
-sudo apt-get -y clean
-sudo apt-get -y autoclean
-
 # Add skadi to docker usergroup
 sudo usermod -aG docker $SKADI_USER
-
-# Install Docker-Compose
-sudo curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
-sudo curl -L https://raw.githubusercontent.com/docker/compose/1.23.1/contrib/completion/bash/docker-compose -o /etc/bash_completion.d/docker-compose
 
 # Set the vm.max_map_count kernel setting needs to be set to at least 262144 for production use
 sudo sysctl -w vm.max_map_count=262144
@@ -140,7 +159,7 @@ echo 127.0.0.1       neo4j |sudo tee -a /etc/hosts
 echo 127.0.0.1       redis |sudo tee -a /etc/hosts
 
 # Write TimeSketch config file on host
-sudo cp cp /opt/Skadi/Docker/timesketch/timesketch.conf /etc/
+sudo cp /opt/Skadi/Docker/timesketch/timesketch.conf /etc/
 sudo sed -i "s@SECRET_KEY = '<KEY_GOES_HERE>'@SECRET_KEY = '$SECRET_KEY'@g" /etc/timesketch.conf
 sudo sed -i "s@<USERNAME>\:<PASSWORD>@$POSTGRES_USER\:$psql_pw@g" /etc/timesketch.conf
 sudo sed -i "s@NEO4J_USERNAME = 'neo4j'@NEO4J_USERNAME = '$neo4juser'@g" /etc/timesketch.conf
@@ -181,14 +200,6 @@ until $(curl --output /dev/null --silent --head --fail http://localhost/timesket
     sleep 10
 done
 echo "TimeSketch available. Continuing"
-
-# Install Glances as a Service
-glances_service="W1VuaXRdCkRlc2NyaXB0aW9uPUdsYW5jZXMKQWZ0ZXI9bmV0d29yay50YXJnZXQKCltTZXJ2aWNlXQpFeGVjU3RhcnQ9L3Vzci9iaW4vZ2xhbmNlcyAtdwpSZXN0YXJ0PW9uLWFib3J0CgpbSW5zdGFsbF0KV2FudGVkQnk9bXVsdGktdXNlci50YXJnZXQK"
-echo $glances_service |base64 -d | sudo tee /etc/systemd/system/glances.service
-sudo chmod g+w /etc/systemd/system/glances.service
-sudo systemctl daemon-reload
-sudo systemctl restart glances
-sudo systemctl enable glances
 
 # Install Grafana for Monitoring
 git clone https://github.com/orlikoski/skadi_dockprom.git

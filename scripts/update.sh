@@ -1,4 +1,9 @@
 #!/bin/bash
+# Set the version of CDQR docker
+cdqr_version=${CDQR_VERSION:-"4.4.0"}
+
+# Set the installation branch
+install_branch=${INSTALL_BRANCH:-"master"}
 
 echo "Updating OS"
 sudo apt-get -y update
@@ -8,10 +13,11 @@ sudo apt-get -y autoremove
 
 # Installs and Configures CDQR and CyLR
 echo "Updating CDQR"
-wget -O /tmp/cdqr.py https://raw.githubusercontent.com/orlikoski/CDQR/master/src/cdqr.py
-chmod a+x /tmp/cdqr.py
-sudo mv /tmp/cdqr.py /usr/local/bin/cdqr.py
-echo "CDQR is in /usr/local/bin/cdqr.py"
+echo "Downloading cdqr docker script into /usr/local/bin/cdqr"
+sudo curl -O /usr/local/bin/cdqr "https://raw.githubusercontent.com/orlikoski/Skadi/$install_branch/scripts/cdqr"
+sudo chmod +x /usr/local/bin/cdqr
+echo "Downloading aorlikoski/CDQR:$cdqr_version "
+sudo docker pull "aorlikoski/cdqr:$cdqr_version"
 
 echo "Updating CyLR"
 # Building the CyLR link
