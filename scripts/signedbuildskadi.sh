@@ -91,9 +91,6 @@ echo $NGINX_PASSWORD | sudo htpasswd -i -c /etc/nginx/.skadi_auth $NGINX_USER
 # Set Timezone to UTC
 sudo timedatectl set-timezone UTC
 
-# Ensure pip is on 9.0.3 for installation
-sudo -H pip install pip==9.0.3 --no-cache-dir
-
 # Disable Swap
 sudo swapoff -a
 
@@ -143,7 +140,7 @@ echo 127.0.0.1       neo4j |sudo tee -a /etc/hosts
 echo 127.0.0.1       redis |sudo tee -a /etc/hosts
 
 # Write TimeSketch config file on host
-sudo cp /usr/local/share/timesketch/timesketch.conf /etc/
+sudo cp cp /opt/Skadi/Docker/timesketch/timesketch.conf /etc/
 sudo sed -i "s@SECRET_KEY = '<KEY_GOES_HERE>'@SECRET_KEY = '$SECRET_KEY'@g" /etc/timesketch.conf
 sudo sed -i "s@<USERNAME>\:<PASSWORD>@$POSTGRES_USER\:$psql_pw@g" /etc/timesketch.conf
 sudo sed -i "s@NEO4J_USERNAME = 'neo4j'@NEO4J_USERNAME = '$neo4juser'@g" /etc/timesketch.conf
@@ -154,10 +151,6 @@ sudo sed -i "s#@localhost/timesketch#@postgres/timesketch#g" /etc/timesketch.con
 sudo sed -i "s/ELASTIC_HOST = '127.0.0.1'/ELASTIC_HOST = 'elasticsearch'/g" /etc/timesketch.conf
 sudo sed -i "s@'redis://127.0.0.1:6379'@'redis://redis:6379'@g" /etc/timesketch.conf
 sudo sed -i "s/NEO4J_HOST = '127.0.0.1'/NEO4J_HOST = 'neo4j'/g" /etc/timesketch.conf
-
-# To build TimeSketch and CyberChef Docker Images Locally, uncomment the following lines
-# sudo docker build -t aorlikoski/skadi_timesketch:1.0 ./timesketch/
-# sudo docker build -t aorlikoski/skadi_cyberchef:1.0 ./cyberchef/
 
 # Deploy the Skadi solution defined in ./docker-compose.yml
 sudo docker-compose up -d
