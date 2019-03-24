@@ -2,13 +2,27 @@
 set -e
 
 # Choosing to use default passwords or not
-default_skadi_passwords=${DEFAULT_PASSWORDS:-"false"}
+default_skadi_passwords=${DEFAULT_PASSWORDS:-false}
 
 # Set the installation branch
 install_branch=${INSTALL_BRANCH:-"master"}
 
-# Change hostname
+# Set the value for if the hostname should be changed
 hostname_change=${SKADI_HOSTNAME:-true}
+
+# Set the value for if the skadi user should be created
+create_skadi_user=${MAKE_SKADI_USER:-true}
+
+# Default Values
+SKADI_USER="skadi"
+SKADI_PASS="skadi"
+SKADI_USER_HOME="/home/$SKADI_USER"
+TIMESKETCH_USER="skadi"
+TIMESKETCH_PASSWORD="skadi"
+NGINX_USER="skadi"
+NGINX_PASSWORD="skadi"
+GRAFANA_USER=$NGINX_USER
+GRAFANA_PASSWORD=$NGINX_PASSWORD
 
 # Update
 sudo apt-get update && sudo apt-get dist-upgrade -y
@@ -46,15 +60,27 @@ sudo apt-get -y autoremove --purge
 sudo apt-get -y clean
 sudo apt-get -y autoclean
 
-
-
 # Set Credentials
 SECRET_KEY=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
 POSTGRES_USER="timesketch"
 psql_pw=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
 neo4juser='neo4j'
 
+# Set Hostname to skadi by default with option to not to
+if [ $hostname_change = "true" ]
+  then
+  echo "Renaming Host to skadi"
+  newhostname='skadi'
+  oldhostname=$(</etc/hostname)
+  sudo hostname $newhostname >/dev/null 2>&1
+  sudo sed -i "s/$oldhostname/$newhostname/g" /etc/hosts >/dev/null 2>&1
+  echo skadi |sudo tee /etc/hostname >/dev/null 2>&1
+  sudo systemctl restart systemd-logind.service >/dev/null 2>&1
+else
+  echo "Not renaming host"
+fi
 
+# Use dynamically created passwords with an option to use defaults
 if [ $default_skadi_passwords = "false" ]
   then
     echo "Using random username and passwords for OS Account, TimeSketch, Nginx proxy / Grafana"
@@ -65,7 +91,6 @@ if [ $default_skadi_passwords = "false" ]
     NGINX_PASSWORD=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
     GRAFANA_USER=$NGINX_USER
     GRAFANA_PASSWORD=$NGINX_PASSWORD
-    SKADI_USER="skadi"
     SKADI_PASS=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
     SKADI_USER_HOME="/home/$SKADI_USER"
     echo "  Proxy & Grafana Account:" > /opt/skadi_credentials
@@ -77,45 +102,30 @@ if [ $default_skadi_passwords = "false" ]
     echo "     - Password: $TIMESKETCH_PASSWORD" >> /opt/skadi_credentials
 else
     echo "Using Skadi default username and password of skadi:skadi for OS Account, TimeSketch, Nginx proxy, and Grafana"
-    TIMESKETCH_USER="skadi"
-    TIMESKETCH_PASSWORD="skadi"
-    NGINX_USER="skadi"
-    NGINX_PASSWORD="skadi"
-    GRAFANA_USER=$NGINX_USER
-    GRAFANA_PASSWORD=$NGINX_PASSWORD
-    SKADI_USER="skadi"
-    SKADI_PASS="skadi"
-    SKADI_USER_HOME="/home/$SKADI_USER"
 fi
 
-# Set Hostname to skadi by default with option to opt out
-if [ $hostname_change = "true" ]
+# Create Skadi user by default with option to not to
+if [ $create_skadi_user = "true" ]
   then
-  echo "Renaming Host to skadi"
-  newhostname='skadi'
-  oldhostname=$(</etc/hostname)
-  sudo hostname $newhostname >/dev/null 2>&1
-  sudo sed -i "s/$oldhostname/$newhostname/g" /etc/hosts >/dev/null 2>&1
-  echo skadi |sudo tee /etc/hostname >/dev/null 2>&1
-  sudo systemctl restart systemd-logind.service >/dev/null 2>&1
-fi
+  if ! id -u $SKADI_USER >/dev/null 2>&1; then
+      echo "==> Creating $SKADI_USER user"
+      echo "" >> /opt/skadi_credentials
+      echo "  Created OS Account:" >> /opt/skadi_credentials
+      echo "     - Username: $SKADI_USER" >> /opt/skadi_credentials
+      echo "     - Password: $SKADI_PASS" >> /opt/skadi_credentials
+      /usr/sbin/groupadd $SKADI_USER
+      /usr/sbin/useradd $SKADI_USER -g $SKADI_USER -G sudo -d $SKADI_USER_HOME --create-home -s "/bin/bash"
+      echo "$SKADI_USER:$SKADI_PASS" | chpasswd
 
-# Create Skadi user
-if ! id -u $SKADI_USER >/dev/null 2>&1; then
-    echo "==> Creating $SKADI_USER user"
-    echo "" >> /opt/skadi_credentials
-    echo "  Created OS Account:" >> /opt/skadi_credentials
-    echo "     - Username: $SKADI_USER" >> /opt/skadi_credentials
-    echo "     - Password: $SKADI_PASS" >> /opt/skadi_credentials
-    /usr/sbin/groupadd $SKADI_USER
-    /usr/sbin/useradd $SKADI_USER -g $SKADI_USER -G sudo -d $SKADI_USER_HOME --create-home -s "/bin/bash"
-    echo "${SKADI_USER}:${SKADI_PASS}" | chpasswd
+      # Set up sudo
+      echo "==> Giving $SKADI_USER sudo powers"
+      echo "$SKADI_USER        ALL=(ALL)       NOPASSWD: ALL" > /etc/sudoers.d/$SKADI_USER
+      chmod 440 /etc/sudoers.d/$SKADI_USER
+  fi
+else
+  echo "Not creating skadi user"
+  SKADI_USER=$(whoami)
 fi
-
-# Set up sudo
-echo "==> Giving ${SKADI_USER} sudo powers"
-echo "${SKADI_USER}        ALL=(ALL)       NOPASSWD: ALL" > /etc/sudoers.d/$SKADI_USER
-chmod 440 /etc/sudoers.d/$SKADI_USER
 
 # Create needed folders
 sudo mkdir -p /etc/nginx/conf.d
