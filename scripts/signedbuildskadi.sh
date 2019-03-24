@@ -13,6 +13,9 @@ hostname_change=${SKADI_HOSTNAME:-true}
 # Set the value for if the skadi user should be created
 create_skadi_user=${MAKE_SKADI_USER:-true}
 
+# Set the value for if the server time should be set to UTC
+set_time_utc=${UTC_TIME:-true}
+
 # Default Values
 SKADI_USER="skadi"
 SKADI_PASS="skadi"
@@ -144,8 +147,12 @@ sudo chmod +x /usr/local/bin/cdqr
 # Setup Nginx Auth
 echo $NGINX_PASSWORD | sudo htpasswd -i -c /etc/nginx/.skadi_auth $NGINX_USER
 
-# Set Timezone to UTC
-sudo timedatectl set-timezone UTC
+# Set Server to UTC or not
+if [ $set_time_utc = "true" ]
+  then
+  # Set Timezone to UTC
+  sudo timedatectl set-timezone UTC
+fi
 
 # Create CyLR directory
 sudo mkdir /opt/CyLR/
