@@ -147,9 +147,6 @@ echo $NGINX_PASSWORD | sudo htpasswd -i -c /etc/nginx/.skadi_auth $NGINX_USER
 # Set Timezone to UTC
 sudo timedatectl set-timezone UTC
 
-# Disable Swap
-sudo swapoff -a
-
 # Create CyLR directory
 sudo mkdir /opt/CyLR/
 sudo chmod 777 /opt/CyLR
