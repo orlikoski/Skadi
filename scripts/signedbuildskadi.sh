@@ -7,6 +7,9 @@ default_skadi_passwords=${DEFAULT_PASSWORDS:-"false"}
 # Set the installation branch
 install_branch=${INSTALL_BRANCH:-"master"}
 
+# Change hostname
+hostname_change=${SKADI_HOSTNAME:-true}
+
 # Update
 sudo apt-get update && sudo apt-get dist-upgrade -y
 
@@ -84,7 +87,7 @@ else
 fi
 
 # Set Hostname to skadi by default with option to opt out
-if [ ${SKADI_HOSTNAME:-true} = "true" ]
+if [ $hostname_change = "true" ]
   then
   echo "Renaming Host to skadi"
   newhostname='skadi'
