@@ -23,6 +23,8 @@ sudo apt-get install -y \
   vim \
   htop \
   screen \
+  gnupg \
+  software-properties-common \
   apache2-utils
 
 # Add Docker gpg key
