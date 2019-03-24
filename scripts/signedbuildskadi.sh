@@ -83,13 +83,15 @@ else
     SKADI_USER_HOME="/home/$SKADI_USER"
 fi
 
-# Set Hostname to skadi
-newhostname='skadi'
-oldhostname=$(</etc/hostname)
-sudo hostname $newhostname >/dev/null 2>&1
-sudo sed -i "s/$oldhostname/$newhostname/g" /etc/hosts >/dev/null 2>&1
-echo skadi |sudo tee /etc/hostname >/dev/null 2>&1
-sudo systemctl restart systemd-logind.service >/dev/null 2>&1
+if [ ${SKADI_HOSTNAME:-true} = "true" ]
+  # Set Hostname to skadi
+  newhostname='skadi'
+  oldhostname=$(</etc/hostname)
+  sudo hostname $newhostname >/dev/null 2>&1
+  sudo sed -i "s/$oldhostname/$newhostname/g" /etc/hosts >/dev/null 2>&1
+  echo skadi |sudo tee /etc/hostname >/dev/null 2>&1
+  sudo systemctl restart systemd-logind.service >/dev/null 2>&1
+fi
 
 # Create Skadi user
 if ! id -u $SKADI_USER >/dev/null 2>&1; then
