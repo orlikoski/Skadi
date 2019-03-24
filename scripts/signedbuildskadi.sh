@@ -86,6 +86,7 @@ fi
 # Set Hostname to skadi by default with option to opt out
 if [ ${SKADI_HOSTNAME:-true} = "true" ]
   then
+  echo "Renaming Host to skadi"
   newhostname='skadi'
   oldhostname=$(</etc/hostname)
   sudo hostname $newhostname >/dev/null 2>&1
