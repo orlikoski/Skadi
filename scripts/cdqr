@@ -44,6 +44,6 @@ for i in "$@"; do
     args+=("$i")
   fi
 done
-final_command="$docker_args aorlikoski/cdqr:$cdqr_version ${args[@]}"
+final_command="$docker_args aorlikoski/cdqr:$cdqr_version -y ${args[@]}"
 echo "$final_command"
 $final_command
