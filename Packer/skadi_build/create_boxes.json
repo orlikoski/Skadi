@@ -1,0 +1,82 @@
+{
+  "_comment": "Build with `packer build create_boxes.json`",
+  "builders": [
+    {
+      "type": "vmware-vmx",
+      "source_path": "output-skadi_basebox-vmware-iso/skadi_basebox.vmx",
+      "ssh_username": "skadi",
+      "ssh_password": "skadi",
+      "shutdown_command": "sudo shutdown -P now",
+      "headless": "{{ user `headless` }}"
+    },
+    {
+      "type": "virtualbox-ovf",
+      "source_path": "output-skadi_basebox-virtualbox-iso/skadi_basebox.ovf",
+      "ssh_username": "skadi",
+      "ssh_password": "skadi",
+      "shutdown_command": "sudo shutdown -P now",
+      "headless": "{{ user `headless` }}"
+    }
+  ],
+  "provisioners": [
+    {
+      "environment_vars": [
+        "DEBIAN_FRONTEND=noninteractive",
+      ],
+      "execute_command": "echo '{{ user `ssh_password` }}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
+      "scripts": [
+        "../script/vmware.sh"
+      ],
+      "type": "shell",
+      "expect_disconnect": "true",
+      "only": ["vmware-vmx"]
+    },
+    {
+      "environment_vars": [
+        "DEBIAN_FRONTEND=noninteractive",
+      ],
+      "execute_command": "echo '{{ user `ssh_password` }}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
+      "scripts": [
+        "../script/virtualbox.sh"
+      ],
+      "type": "shell",
+      "expect_disconnect": "true",
+      "only": ["virtualbox-ovf"]
+    },
+    {
+      "environment_vars": [
+        "DEBIAN_FRONTEND=noninteractive",
+      ],
+      "execute_command": "echo '{{ user `ssh_password` }}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
+      "scripts": [
+        "../script/vagrant.sh",
+        "../script/sshd.sh",
+        "../script/motd.sh",
+        "../script/cleanup.sh"
+      ],
+      "type": "shell",
+      "expect_disconnect": "true"
+    }
+  ],
+  "post-processors": [
+    {
+      "keep_input_artifact": false,
+      "output": "box/{{.Provider}}/{{user `vm_name`}}-{{user `version`}}.box",
+      "type": "vagrant",
+      "vagrantfile_template": "../../Vagrant/skadi_server/vmware/Vagrantfile",
+      "only": ["vmware-vmx"]
+    },
+    {
+      "keep_input_artifact": false,
+      "output": "box/{{.Provider}}/{{user `vm_name`}}-{{user `version`}}.box",
+      "type": "vagrant",
+      "vagrantfile_template": "../../Vagrant/skadi_server/virtualbox/Vagrantfile",
+      "only": ["virtualbox-ovf"]
+    }
+  ],
+  "variables": {
+    "version": "2019.2",
+    "vm_name": "skadi_server",
+    "headless": "true"
+  }
+}

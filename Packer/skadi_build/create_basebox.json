@@ -3,7 +3,7 @@
   "builders": [
     {
       "boot_command": [
-        "{{ user `boot_command_prefix` }}",
+        "{{ user `bionic_boot_command_prefix` }}",
         "/install/vmlinuz noapic ",
         "initrd=/install/initrd.gz ",
         "file=/floppy/{{ user `preseed` }} ",
@@ -26,11 +26,11 @@
       ],
       "guest_os_type": "{{ user `vmware_guest_os_type` }}",
       "headless": "{{ user `headless` }}",
-      "iso_checksum": "{{ user `iso_checksum` }}",
+      "iso_checksum": "{{ user `iso_bionic_checksum` }}",
       "iso_checksum_type": "{{ user `iso_checksum_type` }}",
       "iso_urls": [
-        "{{ user `iso_path` }}/{{ user `iso_name` }}",
-        "{{ user `iso_url` }}"
+        "{{ user `iso_path` }}/{{ user `iso_bionic_name` }}",
+        "{{ user `iso_bionic_url` }}"
       ],
       "output_directory": "output-{{ user `vm_name` }}-vmware-iso",
       "shutdown_timeout": "1m",
@@ -47,7 +47,7 @@
     },
     {
       "boot_command": [
-        "{{ user `boot_command_prefix` }}",
+        "{{ user `bionic_boot_command_prefix` }}",
         "/install/vmlinuz noapic ",
         "initrd=/install/initrd.gz ",
         "file=/floppy/{{ user `preseed` }} ",
@@ -71,11 +71,11 @@
       "guest_os_type": "{{ user `virtualbox_guest_os_type` }}",
       "hard_drive_interface": "sata",
       "headless": "{{ user `headless` }}",
-      "iso_checksum": "{{ user `iso_checksum` }}",
+      "iso_checksum": "{{ user `iso_bionic_checksum` }}",
       "iso_checksum_type": "{{ user `iso_checksum_type` }}",
       "iso_urls": [
-        "{{ user `iso_path` }}/{{ user `iso_name` }}",
-        "{{ user `iso_url` }}"
+        "{{ user `iso_path` }}/{{ user `iso_bionic_name` }}",
+        "{{ user `iso_bionic_url` }}"
       ],
       "output_directory": "output-{{ user `vm_name` }}-virtualbox-iso",
       "post_shutdown_delay": "1m",
@@ -102,65 +102,61 @@
   "provisioners": [
     {
       "environment_vars": [
-        "CLEANUP_PAUSE={{user `cleanup_pause`}}",
         "DEBIAN_FRONTEND=noninteractive",
-        "DESKTOP={{user `desktop`}}",
-        "UPDATE={{user `update`}}",
-        "INSTALL_VAGRANT_KEY={{user `install_vagrant_key`}}",
-        "SSH_USERNAME={{user `ssh_username`}}",
-        "SSH_PASSWORD={{user `ssh_password`}}",
-        "http_proxy={{user `http_proxy`}}",
-        "https_proxy={{user `https_proxy`}}",
-        "ftp_proxy={{user `ftp_proxy`}}",
-        "rsync_proxy={{user `rsync_proxy`}}",
-        "no_proxy={{user `no_proxy`}}",
-        "DEFAULT_PASSWORDS={{user `skadi_default_passwords`}}"
+        "SSH_USERNAME=skadi",
+        "CDQR_VERSION=4.4.0",
+        "DEFAULT_PASSWORDS=true",
+        "INSTALL_BRANCH=esxi_packer",
+        "SKADI_HOSTNAME=true",
+        "MAKE_SKADI_USER=true",
+        "UTC_TIME=true"
       ],
       "execute_command": "echo '{{ user `ssh_password` }}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
       "scripts": [
-        "../script/vagrant.sh",
-        "../script/sshd.sh",
-        "../script/vmware.sh",
-        "../script/motd.sh",
         "../script/update.sh",
-        "{{user `custom_script`}}",
-        "../script/cleanup.sh"
+        "../script/skadi.sh",
+        "../script/motd.sh",
+        "{{user `custom_script` }}"
       ],
       "type": "shell",
       "expect_disconnect": "true"
     }
   ],
   "variables": {
+    "custom_script": "../../scripts/signedbuildskadi.sh",
     "skadi_default_passwords": "true",
-    "boot_command_prefix": "<enter><wait><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+    "xenial_boot_command_prefix": "<enter><wait><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+    "bionic_boot_command_prefix": "<enter><wait><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
     "cleanup_pause": "",
     "cpus": "4",
     "memory": "8196",
-    "custom_script": "../../Docker/BuildDockerSkadi.sh",
     "desktop": "false",
     "disk_size": "102400",
     "ftp_proxy": "{{env `ftp_proxy`}}",
-    "headless": "false",
+    "headless": "true",
     "http_proxy": "{{env `http_proxy`}}",
     "https_proxy": "{{env `https_proxy`}}",
-    "install_vagrant_key": "true",
-    "iso_checksum": "c94de1cc2e10160f325eb54638a5b5aa38f181d60ee33dae9578d96d932ee5f8",
-    "iso_checksum_type": "sha256",
-    "iso_name": "ubuntu-16.04.5-server-amd64.iso",
+    "install_vagrant_key": "false",
     "iso_path": "/Volumes/Storage/software/ubuntu",
-    "iso_url": "http://releases.ubuntu.com/16.04/ubuntu-16.04.5-server-amd64.iso",
+    "iso_checksum_type": "sha256",
+    "iso_xenial_checksum": "c94de1cc2e10160f325eb54638a5b5aa38f181d60ee33dae9578d96d932ee5f8",
+    "iso_xenial_name": "ubuntu-16.04.5-server-amd64.iso",
+    "iso_xenial_url": "http://releases.ubuntu.com/16.04/ubuntu-16.04.5-server-amd64.iso",
+    "iso_bionic_checksum": "a2cb36dc010d98ad9253ea5ad5a07fd6b409e3412c48f1860536970b073c98f5",
+    "iso_bionic_name": "ubuntu-18.04.2-server-amd64.iso",
+    "iso_bionic_url": "http://cdimage.ubuntu.com/releases/18.04.2/release/ubuntu-18.04.2-server-amd64.iso",
     "locale": "en_US",
     "no_proxy": "{{env `no_proxy`}}",
     "parallels_guest_os_type": "ubuntu",
     "preseed" : "preseed.cfg",
     "rsync_proxy": "{{env `rsync_proxy`}}",
     "hostname": "skadi",
-    "ssh_fullname": "vagrant",
-    "ssh_password": "vagrant",
-    "ssh_username": "vagrant",
-    "update": "false",
+    "ssh_fullname": "skadi",
+    "ssh_password": "skadi",
+    "ssh_username": "skadi",
+    "update": "true",
     "vagrantfile_template": "../../Vagrant/skadi_server/vmware/Vagrantfile",
-    "version": "2019.1",
+    "version": "2019.2",
     "virtualbox_guest_os_type": "Ubuntu_64",
     "vm_name": "skadi_basebox",
     "vmware_guest_os_type": "ubuntu-64"

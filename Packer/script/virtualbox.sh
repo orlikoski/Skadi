@@ -1,6 +1,6 @@
 #!/bin/bash -eux
 
-SSH_USER=${SSH_USERNAME:-vagrant}
+SSH_USER=${SSH_USERNAME:-skadi}
 #SSH_USER="root"
 
 
