@@ -16,6 +16,16 @@
       "ssh_password": "skadi",
       "shutdown_command": "sudo shutdown -P now",
       "headless": "{{ user `headless` }}"
+    },
+    {
+      "type": "virtualbox-ovf",
+      "source_path": "output-skadi_basebox-virtualbox-iso/skadi_basebox.ovf",
+      "ssh_username": "skadi",
+      "ssh_password": "skadi",
+      "shutdown_command": "sudo shutdown -P now",
+      "headless": "{{ user `headless` }}",
+      "output_directory": "ova",
+      "format": "ova"
     }
   ],
   "provisioners": [
@@ -55,6 +65,7 @@
       ],
       "execute_command": "echo '{{ user `ssh_password` }}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
       "scripts": [
+        "../script/update.sh",
         "../script/sshd.sh",
         "../script/motd.sh",
         "{{user `custom_script` }}",
