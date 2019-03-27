@@ -41,6 +41,7 @@ sudo apt-get install -y \
   htop \
   screen \
   gnupg \
+  net-tools \
   software-properties-common \
   apache2-utils
 
