@@ -209,8 +209,7 @@ curl -XPUT 'localhost:9200/_template/number_of_replicas' \
 
 echo "Importing Saved Objects to Kibana"
 sleep 10
-curl -o /tmp/kibana_6.x.json https://raw.githubusercontent.com/orlikoski/Skadi/master/objects/kibana_6.x_cli_import.json
-curl -X POST "http://localhost:5601/api/saved_objects/_bulk_create" -H 'kbn-xsrf: true' -H 'Content-Type: application/json' --data-binary @/tmp/kibana_6.x_cli_import.json
+curl -X POST "http://localhost:5601/api/saved_objects/_bulk_create" -H 'kbn-xsrf: true' -H 'Content-Type: application/json' --data-binary @/opt/Skadi/objects/kibana_6.x_cli_import.json
 
 # The TimeSketch container needs to be running before continuing and this
 # requires the other containers to be up and running too. This can take time
