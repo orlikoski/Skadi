@@ -55,10 +55,10 @@
       ],
       "execute_command": "echo '{{ user `ssh_password` }}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
       "scripts": [
-        "../script/vagrant.sh",
         "../script/sshd.sh",
         "../script/motd.sh",
         "{{user `custom_script` }}",
+        "../script/vagrant.sh",
         "../script/cleanup.sh"
       ],
       "type": "shell",
