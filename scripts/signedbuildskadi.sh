@@ -41,6 +41,7 @@ sudo apt-get install -y \
   htop \
   screen \
   gnupg \
+  net-tools \
   software-properties-common \
   apache2-utils
 
@@ -206,6 +207,10 @@ echo "Setting the ElasticSearch default number of replicas to 0"
 curl -XPUT 'localhost:9200/_template/number_of_replicas' \
     -d '{"template": "*","settings": {"number_of_replicas": 0}}' \
     -H'Content-Type: application/json'
+echo "Waiting 30 seconds for Kibana to start"
+sleep 30
+echo "Importing Saved Objects to Kibana"
+curl -X POST "http://localhost:5601/api/saved_objects/_bulk_create" -H 'kbn-xsrf: true' -H 'Content-Type: application/json' --data-binary @/opt/Skadi/objects/kibana_6.x_cli_import.json
 
 # The TimeSketch container needs to be running before continuing and this
 # requires the other containers to be up and running too. This can take time

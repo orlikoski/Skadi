@@ -4,13 +4,17 @@
 echo "==> Disabling the release upgrader"
 sed -i.bak 's/^Prompt=.*$/Prompt=never/' /etc/update-manager/release-upgrades
 
+# Sync Date
+sudo timedatectl set-ntp off
+sudo timedatectl set-ntp on
+
 echo "==> Checking version of Ubuntu"
 . /etc/lsb-release
 
-if [[ $DISTRIB_RELEASE == 16.04 || $DISTRIB_RELEASE == 16.10 ]]; then
-    echo "==> Disabling periodic apt upgrades"
-    echo 'APT::Periodic::Enable "0";' >> /etc/apt/apt.conf.d/10periodic
-fi
+
+echo "==> Disabling periodic apt upgrades"
+echo 'APT::Periodic::Enable "0";' >> /etc/apt/apt.conf.d/10periodic
+
 
 
 echo "==> Updating list of repositories"
