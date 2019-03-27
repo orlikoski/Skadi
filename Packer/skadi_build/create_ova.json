@@ -4,29 +4,29 @@
     {
       "type": "virtualbox-ovf",
       "source_path": "output-skadi_basebox-virtualbox-iso/skadi_basebox.ovf",
-      "ssh_username": "vagrant",
-      "ssh_password": "vagrant",
+      "ssh_username": "skadi",
+      "ssh_password": "skadi",
       "shutdown_command": "sudo shutdown -P now",
-      "headless": "{{ user `headless` }}"
+      "headless": "{{ user `headless` }}",
+      "output_directory": "output-{{ user `vm_name` }}-vmware-iso",
+      "format": "ova"
     }
   ],
   "provisioners": [
     {
       "environment_vars": ["CDQR_VERSION=4.4.0",
                            "DEFAULT_PASSWORDS=true",
-                           "INSTALL_BRANCH=master",
+                           "INSTALL_BRANCH=esxi_packer",
                            "SKADI_HOSTNAME=true",
                            "MAKE_SKADI_USER=true",
                            "UTC_TIME=true"],
       "execute_command": "echo '{{ user `ssh_password` }}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
       "scripts": [
+        "../script/skadi.sh",
         "../script/update.sh",
-        "../script/vagrant.sh",
-        "../script/vmware.sh",
-        "../script/virtualbox.sh",
-        "{{user `custom_script`}}",
         "../script/sshd.sh",
         "../script/motd.sh",
+        "{{user `custom_script` }}",
         "../script/cleanup.sh"
       ],
       "type": "shell",
