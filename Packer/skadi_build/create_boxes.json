@@ -18,13 +18,15 @@
       "headless": "{{ user `headless` }}"
     },
     {
+      "name": "ova",
+      "vm_name": "{{user `vm_name`}}-{{user `version`}}.",
+      "output_directory": "ova",
       "type": "virtualbox-ovf",
       "source_path": "output-skadi_basebox-virtualbox-iso/skadi_basebox.ovf",
       "ssh_username": "skadi",
       "ssh_password": "skadi",
       "shutdown_command": "sudo shutdown -P now",
       "headless": "{{ user `headless` }}",
-      "output_directory": "ova",
       "format": "ova"
     }
   ],
@@ -55,10 +57,11 @@
     },
     {
       "environment_vars": [
+        "DEBIAN_FRONTEND=noninteractive",
         "SSH_USERNAME=skadi",
         "CDQR_VERSION=4.4.0",
         "DEFAULT_PASSWORDS=true",
-        "INSTALL_BRANCH=esxi_packer",
+        "INSTALL_BRANCH=master",
         "SKADI_HOSTNAME=true",
         "MAKE_SKADI_USER=true",
         "UTC_TIME=true"
@@ -69,11 +72,22 @@
         "../script/sshd.sh",
         "../script/motd.sh",
         "{{user `custom_script` }}",
-        "../script/vagrant.sh",
         "../script/cleanup.sh"
       ],
       "type": "shell",
       "expect_disconnect": "true"
+    },
+    {
+      "environment_vars": [
+        "DEBIAN_FRONTEND=noninteractive"
+      ],
+      "execute_command": "echo '{{ user `ssh_password` }}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
+      "scripts": [
+        "../script/vagrant.sh"
+      ],
+      "type": "shell",
+      "expect_disconnect": "true",
+      "only": ["virtualbox-ovf", "vmware-vmx"]
     }
   ],
   "post-processors": [

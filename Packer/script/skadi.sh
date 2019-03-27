@@ -2,13 +2,13 @@
 
 date > /etc/box_build_time
 
-SSH_USER=${SSH_USERNAME:-skadi}
-SSH_PASS=${SSH_PASSWORD:-skadi}
-SSH_USER_HOME=${SSH_USER_HOME:-/home/${SSH_USER}}
+SSH_USER=$skadi
+SSH_PASS=$skadi
+SSH_USER_HOME=$/home/$SSH_USER
 
 # Set up sudo
-echo "==> Giving ${SSH_USER} sudo powers"
-echo "${SSH_USER}        ALL=(ALL)       NOPASSWD: ALL" >> /etc/sudoers.d/$SSH_USER
+echo "==> Giving $SSH_USER sudo powers"
+echo "$SSH_USER        ALL=(ALL)       NOPASSWD: ALL" >> /etc/sudoers.d/$SSH_USER
 chmod 440 /etc/sudoers.d/$SSH_USER
 
 # Fix stdin not being a tty
