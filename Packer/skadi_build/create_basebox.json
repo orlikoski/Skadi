@@ -101,29 +101,17 @@
   ],
   "provisioners": [
     {
-      "environment_vars": [
-        "DEBIAN_FRONTEND=noninteractive",
-        "SSH_USERNAME=skadi",
-        "CDQR_VERSION=4.4.0",
-        "DEFAULT_PASSWORDS=true",
-        "INSTALL_BRANCH=esxi_packer",
-        "SKADI_HOSTNAME=true",
-        "MAKE_SKADI_USER=true",
-        "UTC_TIME=true"
-      ],
       "execute_command": "echo '{{ user `ssh_password` }}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
       "scripts": [
         "../script/update.sh",
         "../script/skadi.sh",
-        "../script/motd.sh",
-        "{{user `custom_script` }}"
+        "../script/motd.sh"
       ],
       "type": "shell",
       "expect_disconnect": "true"
     }
   ],
   "variables": {
-    "custom_script": "../../scripts/signedbuildskadi.sh",
     "skadi_default_passwords": "true",
     "xenial_boot_command_prefix": "<enter><wait><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
     "bionic_boot_command_prefix": "<enter><wait><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",

@@ -2,14 +2,6 @@
   "_comment": "Build with `packer build create_VMWare_box.json`",
   "builders": [
     {
-      "type": "vmware-vmx",
-      "source_path": "output-skadi_basebox-vmware-iso/skadi_basebox.vmx",
-      "ssh_username": "vagrant",
-      "ssh_password": "vagrant",
-      "shutdown_command": "sudo shutdown -P now",
-      "headless": "{{ user `headless` }}"
-    },
-    {
       "type": "virtualbox-ovf",
       "source_path": "output-skadi_basebox-virtualbox-iso/skadi_basebox.ovf",
       "ssh_username": "vagrant",
@@ -30,6 +22,8 @@
       "scripts": [
         "../script/update.sh",
         "../script/vagrant.sh",
+        "../script/vmware.sh",
+        "../script/virtualbox.sh",
         "{{user `custom_script`}}",
         "../script/sshd.sh",
         "../script/motd.sh",
@@ -37,37 +31,12 @@
       ],
       "type": "shell",
       "expect_disconnect": "true"
-    },
-    {
-      "execute_command": "echo '{{ user `ssh_password` }}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
-      "scripts": [
-        "../script/vmware.sh"
-      ],
-      "type": "shell",
-      "expect_disconnect": "true",
-      "only": ["vmware-vmx"]
-    },
-    {
-      "execute_command": "echo '{{ user `ssh_password` }}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
-      "scripts": [
-        "../script/virtualbox.sh"
-      ],
-      "type": "shell",
-      "expect_disconnect": "true",
-      "only": ["virtualbox-ovf"]
     }
   ],
   "post-processors": [
     {
       "keep_input_artifact": false,
-      "output": "box/{{.Provider}}/{{user `vm_name`}}-{{user `version`}}.box",
-      "type": "vagrant",
-      "vagrantfile_template": "../../Vagrant/skadi_server/vmware/Vagrantfile",
-      "only": ["vmware-vmx"]
-    },
-    {
-      "keep_input_artifact": false,
-      "output": "box/{{.Provider}}/{{user `vm_name`}}-{{user `version`}}.box",
+      "output": "OVA/{{user `vm_name`}}-{{user `version`}}.box",
       "type": "vagrant",
       "vagrantfile_template": "../../Vagrant/skadi_server/virtualbox/Vagrantfile",
       "only": ["virtualbox-ovf"]
