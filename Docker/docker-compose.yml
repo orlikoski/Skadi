@@ -51,6 +51,18 @@ services:
       - esnet
     restart: always
 
+  mongodb:
+    image: mongo:4.1-bionic
+    container_name: mongodb
+    cpus: .1
+    mem_reservation: 100m
+    ports:
+      - 127.0.0.1:8081:8081
+    networks:
+      - esnet
+    restart: always
+
+
   neo4j:
     image: neo4j:3.5
     container_name: neo4j
@@ -159,6 +171,90 @@ services:
     cpus: .2
     mem_reservation: 200m
     restart: always
+
+  yeti:
+    image: aorlikoski/skadi_yeti
+    ports:
+      - "8080:8080"
+    links:
+      - redis
+      - mongodb
+    command: ['docker-entrypoint.sh', 'uwsgi-http']
+    networks:
+      - esnet
+    restart: always
+    depends_on:
+      - redis
+      - mongodb
+  yeti-feeds:
+    image: aorlikoski/skadi_yeti
+    links:
+      - redis
+      - mongodb
+    command: ['docker-entrypoint.sh', 'feeds']
+    networks:
+      - esnet
+    restart: always
+    depends_on:
+      - redis
+      - mongodb
+      - yeti
+    environment:
+      - TLDEXTRACT_CACHE=/tmp/tldextract.cache
+  yeti-analytics:
+    image: aorlikoski/skadi_yeti
+    links:
+      - redis
+      - mongodb
+    command: ['docker-entrypoint.sh', 'analytics']
+    networks:
+      - esnet
+    restart: always
+    depends_on:
+      - redis
+      - mongodb
+      - yeti
+    environment:
+      - TLDEXTRACT_CACHE=/tmp/tldextract.cache
+  yeti-beat:
+    image: aorlikoski/skadi_yeti
+    links:
+      - redis
+      - mongodb
+    command: ['docker-entrypoint.sh', 'beat']
+    networks:
+      - esnet
+    restart: always
+    depends_on:
+      - redis
+      - mongodb
+      - yeti
+  yeti-exports:
+    image: aorlikoski/skadi_yeti
+    links:
+      - redis
+      - mongodb
+    command: ['docker-entrypoint.sh', 'exports']
+    networks:
+      - esnet
+    restart: always
+    depends_on:
+      - redis
+      - mongodb
+      - yeti
+  yeti-oneshot:
+    image: aorlikoski/skadi_yeti
+    links:
+      - redis
+      - mongodb
+    command: ['docker-entrypoint.sh', 'oneshot']
+    networks:
+      - esnet
+    restart: always
+    depends_on:
+      - redis
+      - mongodb
+      - yeti
 
 volumes:
   esdata1:
