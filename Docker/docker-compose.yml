@@ -62,7 +62,6 @@ services:
       - esnet
     restart: always
 
-
   neo4j:
     image: neo4j:3.5
     container_name: neo4j
@@ -173,7 +172,7 @@ services:
     restart: always
 
   yeti:
-    image: aorlikoski/skadi_yeti
+    image: aorlikoski/skadi_yeti:20190327
     ports:
       - "8080:8080"
     links:
@@ -187,7 +186,7 @@ services:
       - redis
       - mongodb
   yeti-feeds:
-    image: aorlikoski/skadi_yeti
+    image: aorlikoski/skadi_yeti:20190327
     links:
       - redis
       - mongodb
@@ -202,7 +201,7 @@ services:
     environment:
       - TLDEXTRACT_CACHE=/tmp/tldextract.cache
   yeti-analytics:
-    image: aorlikoski/skadi_yeti
+    image: aorlikoski/skadi_yeti:20190327
     links:
       - redis
       - mongodb
@@ -217,7 +216,7 @@ services:
     environment:
       - TLDEXTRACT_CACHE=/tmp/tldextract.cache
   yeti-beat:
-    image: aorlikoski/skadi_yeti
+    image: aorlikoski/skadi_yeti:20190327
     links:
       - redis
       - mongodb
@@ -230,7 +229,7 @@ services:
       - mongodb
       - yeti
   yeti-exports:
-    image: aorlikoski/skadi_yeti
+    image: aorlikoski/skadi_yeti:20190327
     links:
       - redis
       - mongodb
@@ -243,7 +242,7 @@ services:
       - mongodb
       - yeti
   yeti-oneshot:
-    image: aorlikoski/skadi_yeti
+    image: aorlikoski/skadi_yeti:20190327
     links:
       - redis
       - mongodb
