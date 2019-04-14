@@ -179,7 +179,7 @@ services:
     links:
       - redis
       - mongodb
-    command: ['docker-entrypoint.sh', 'uwsgi-http']
+    command: ['docker-entrypoint.sh', 'uwsgi']
     networks:
       - esnet
     restart: always
