@@ -2,8 +2,8 @@
 
 date > /etc/box_build_time
 
-SSH_USER=$skadi
-SSH_PASS=$skadi
+SSH_USER=skadi
+SSH_PASS=skadi
 SSH_USER_HOME=$/home/$SSH_USER
 
 # Set up sudo
