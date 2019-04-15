@@ -61,7 +61,7 @@
         "SSH_USERNAME=skadi",
         "CDQR_VERSION=4.4.0",
         "DEFAULT_PASSWORDS=true",
-        "INSTALL_BRANCH=threat_intel",
+        "INSTALL_BRANCH=master",
         "SKADI_HOSTNAME=true",
         "MAKE_SKADI_USER=true",
         "UTC_TIME=true"
