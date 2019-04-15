@@ -1,7 +1,6 @@
 
 ![](/objects/images/skadi_header.jpg?)  
-(pronounced “SKAHD-ee”) is a giantess and goddess of hunting in Norse mythology  
-_**Note: Skadi was formerly known as CCF-VM**_  
+(pronounced “SKAH-Dee”: like Scotty but with a `d`) is a giantess and goddess of hunting in Norse mythology  
 
 ## Purpose
 Skadi is a free, open source collection of tools that enables the collection, processing and advanced analysis of forensic artifacts and images. It scales to work effectively on laptops, desktops, servers, the cloud, and can be installed on top of hardened / gold disk images.   
@@ -25,7 +24,7 @@ Access the portal through a web browser at the IP address of the server. In this
 - Example: http://192.168.1.2  
 - Vagrant Example: http://localhost  
 
-![](/objects/images/skadi_portal.jpg?)
+![](/objects/images/skadi_portal.png?)
 
 ## Included Tools
 ![](/objects/images/skadi_tools.jpg?)
@@ -39,8 +38,12 @@ The tools are combined into one platform that all work together to provide the a
  - Glances
  - Grafana
  - Kibana
+ - Yeti
  - Plaso  
  - TimeSketch
+
+### Yeti (Threat Intelligence Tool)
+  ![](/objects/images/yeti_shot01.jpg?)
 
 ### Kibana, TimeSketch, Cerebro Included
   ![](/objects/images/desk_tools.jpg?)  

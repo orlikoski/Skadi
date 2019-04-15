@@ -19,7 +19,7 @@
     },
     {
       "name": "ova",
-      "vm_name": "{{user `vm_name`}}-{{user `version`}}.",
+      "vm_name": "{{user `vm_name`}}-{{user `version`}}",
       "output_directory": "ova",
       "type": "virtualbox-ovf",
       "source_path": "output-skadi_basebox-virtualbox-iso/skadi_basebox.ovf",
