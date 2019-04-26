@@ -28,7 +28,7 @@ GRAFANA_USER=$NGINX_USER
 GRAFANA_PASSWORD=$NGINX_PASSWORD
 
 # Update
-sudo apt-get update && sudo apt-get dist-upgrade -y
+sudo apt-get update && sudo DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" dist-upgrade
 
 # Install deps
 sudo apt-get install -y \
