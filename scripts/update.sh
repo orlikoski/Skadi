@@ -8,7 +8,7 @@ install_branch=${INSTALL_BRANCH:-"master"}
 echo "Updating OS"
 sudo apt-get -y update
 sudo apt-get -y install wget curl
-sudo apt-get -y dist-upgrade
+sudo DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" dist-upgrade
 sudo apt-get -y autoremove
 
 # Installs and Configures CDQR and CyLR
