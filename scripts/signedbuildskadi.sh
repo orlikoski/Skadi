@@ -207,8 +207,13 @@ echo "Setting the ElasticSearch default number of replicas to 0"
 curl -XPUT 'localhost:9200/_template/number_of_replicas' \
     -d '{"template": "*","settings": {"number_of_replicas": 0}}' \
     -H'Content-Type: application/json'
-echo "Waiting 30 seconds for Kibana to start"
-sleep 30
+
+echo "Waiting for Kibana service to respond to requests"
+until $(curl --output /dev/null --silent --head --fail http://localhost:5601); do
+    printf '.'
+    sleep 5
+done
+
 echo "Importing Saved Objects to Kibana and setting default index"
 curl -X POST "http://localhost:5601/api/saved_objects/_bulk_create" -H 'kbn-xsrf: true' -H 'Content-Type: application/json' --data-binary @/opt/Skadi/objects/kibana_6.x_cli_import.json
 curl -X POST "http://localhost:5601/api/kibana/settings/defaultIndex" -H "Content-Type: application/json" -H "kbn-xsrf: true" -d '{"value": "06876cd0-dfc5-11e8-bc06-31e345541948"}'

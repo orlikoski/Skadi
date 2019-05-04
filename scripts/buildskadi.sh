@@ -101,7 +101,7 @@ fi
 # Extract verified installation file and execute it
 tar xzf $buildskadi_tgz -C $tempdir
 chmod +x $buildskadi_sh
-$buildskadi_sh
+DEBIAN_FRONTEND=noninteractive $buildskadi_sh
 
 # Remove all files associated with build
 rm -rf $tempdir
