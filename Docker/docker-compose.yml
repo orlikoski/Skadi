@@ -1,18 +1,36 @@
-version: '2.4'
+version: '3.5'
 services:
+  nginx:
+    image: nginx:1.15
+    container_name: nginx
+    networks:
+      - backend
+      - skadi_dockprom_monitor-net
+    volumes:
+      - ./nginx/certs:/etc/nginx/certs
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/logs:/var/log/nginx
+      - ./nginx/auth/:/etc/nginx/auth
+      - ./nginx/html:/usr/share/nginx/html
+      - tssockets:/var/timesketch/
+    ports:
+      - 80:80
+      #- 443:443
+    restart: always
+
   timesketch:
     image: aorlikoski/skadi_timesketch:20190326
     container_name: timesketch
-    links:
+    depends_on:
+      - redis
       - elasticsearch
       - postgres
-      - redis
       - neo4j
     environment:
       - TIMESKETCH_USER=${TIMESKETCH_USER}
       - TIMESKETCH_PASSWORD=${TIMESKETCH_PASSWORD}
-    cpus: 1
-    mem_reservation: 1gb
+    networks:
+      - backend
     volumes:
       - ./timesketch/timesketch_default.conf:/etc/timesketch.conf
       - tssockets:/var/timesketch/
@@ -21,8 +39,8 @@ services:
   postgres:
     image: postgres:11
     container_name: postgres
-    cpus: .1
-    mem_reservation: 100m
+    networks:
+      - backend
     ports:
       - 127.0.0.1:5432:5432
     environment:
@@ -35,8 +53,8 @@ services:
   redis:
     image: redis:5
     container_name: redis
-    cpus: .1
-    mem_reservation: 100m
+    networks:
+      - backend
     volumes:
       - redisdata:/var/lib/redis
     restart: always
@@ -47,15 +65,15 @@ services:
     environment:
       - MONGO_LOG_DIR=/dev/null
     command: mongod
-    cpus: .1
-    mem_reservation: 100m
+    networks:
+      - backend
     restart: always
 
   neo4j:
     image: neo4j:3.5
     container_name: neo4j
-    cpus: .1
-    mem_reservation: 100m
+    networks:
+      - backend
     environment:
       - NEO4J_AUTH=none
     volumes:
@@ -65,8 +83,8 @@ services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.6.2
     container_name: elasticsearch
-    cpus: 2
-    mem_reservation: 1500m
+    networks:
+      - backend
     ports:
       - 127.0.0.1:9200:9200
     environment:
@@ -84,8 +102,8 @@ services:
   kibana:
     image: docker.elastic.co/kibana/kibana:6.6.2
     container_name: kibana
-    cpus: 1
-    mem_reservation: 1gb
+    networks:
+      - backend
     environment:
       SERVER_BASEPATH: /kibana
     restart: always
@@ -93,40 +111,15 @@ services:
   cerebro:
     image: lmenezes/cerebro:0.8.1
     container_name: cerebro
-    cpus: 1
-    mem_reservation: 500m
-    links:
-      - elasticsearch
+    networks:
+      - backend
     restart: always
 
   cyberchef:
     image: aorlikoski/skadi_cyberchef:20190326
     container_name: cyberchef
-    cpus: .1
-    mem_reservation: 100m
-    restart: always
-
-  nginx:
-    image: nginx:1.15
-    container_name: nginx
-    links:
-      - elasticsearch
-      - kibana
-      - timesketch
-      - yeti
-      - cyberchef
-    volumes:
-      - ./nginx/certs:/etc/nginx/certs
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./nginx/logs:/var/log/nginx
-      - ./nginx/auth/:/etc/nginx/auth
-      - ./nginx/html:/usr/share/nginx/html
-      - tssockets:/var/timesketch/
-    ports:
-      - 80:80
-      #- 443:443
-    cpus: .5
-    mem_reservation: 100m
+    networks:
+      - backend
     restart: always
 
   portainer:
@@ -136,18 +129,17 @@ services:
       - portainerdata:/data portainer/portainer
       - /var/run/docker.sock:/var/run/docker.sock:ro
     command: --no-auth
+    networks:
+      - backend
     pid: host
-    cpus: .2
-    mem_reservation: 200m
     restart: always
 
   yeti:
     image: aorlikoski/skadi_yeti:20190327
     container_name: yeti
-    links:
-      - redis
-      - mongodb
     command: ['docker-entrypoint.sh', 'uwsgi']
+    networks:
+      - backend
     restart: always
     depends_on:
       - redis
@@ -155,10 +147,9 @@ services:
   yeti-feeds:
     image: aorlikoski/skadi_yeti:20190327
     container_name: yeti-feeds
-    links:
-      - redis
-      - mongodb
     command: ['docker-entrypoint.sh', 'feeds']
+    networks:
+      - backend
     restart: always
     depends_on:
       - redis
@@ -169,10 +160,9 @@ services:
   yeti-analytics:
     image: aorlikoski/skadi_yeti:20190327
     container_name: yeti-analytics
-    links:
-      - redis
-      - mongodb
     command: ['docker-entrypoint.sh', 'analytics']
+    networks:
+      - backend
     restart: always
     depends_on:
       - redis
@@ -183,10 +173,9 @@ services:
   yeti-beat:
     image: aorlikoski/skadi_yeti:20190327
     container_name: yeti-beat
-    links:
-      - redis
-      - mongodb
     command: ['docker-entrypoint.sh', 'beat']
+    networks:
+      - backend
     restart: always
     depends_on:
       - redis
@@ -195,10 +184,9 @@ services:
   yeti-exports:
     image: aorlikoski/skadi_yeti:20190327
     container_name: yeti-exports
-    links:
-      - redis
-      - mongodb
     command: ['docker-entrypoint.sh', 'exports']
+    networks:
+      - backend
     restart: always
     depends_on:
       - redis
@@ -207,15 +195,21 @@ services:
   yeti-oneshot:
     image: aorlikoski/skadi_yeti:20190327
     container_name: yeti-oneshot
-    links:
-      - redis
-      - mongodb
     command: ['docker-entrypoint.sh', 'oneshot']
+    networks:
+      - backend
     restart: always
     depends_on:
       - redis
       - mongodb
       - yeti
+
+networks:
+  backend:
+    name: skadi-backend
+  skadi_dockprom_monitor-net:
+    external:
+      name: skadi_dockprom_monitor-net
 
 volumes:
   esdata1:
