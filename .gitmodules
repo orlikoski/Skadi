@@ -1,0 +1,3 @@
+[submodule "Docker/skadi_dockprom"]
+	path = Docker/skadi_dockprom
+	url = https://github.com/orlikoski/skadi_dockprom.git
