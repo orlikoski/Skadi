@@ -275,6 +275,7 @@ grafana_setup () {
   sudo docker-compose up -d
 }
 
+goodbye_message () {
 echo ""
 echo ""
 echo ""
@@ -293,3 +294,18 @@ echo "The following files have credentials used in the build process stored in t
 echo "  - /opt/skadi_credentials (only if run-time generated credentials chosen)"
 echo "  - /opt/Skadi/Docker/.env"
 echo "  - /opt/Skadi/Docker/skadi_dockprom/.env"
+}
+
+############ MAIN PROGRAM #############
+hello_message
+setup_host
+host_default_values
+setup_credentials
+setup_docker
+cdqr_cylr_setup
+timesketch_configs
+clean_APT
+containers_up
+ensure_TS_up
+grafana_setup
+goodbye_message
