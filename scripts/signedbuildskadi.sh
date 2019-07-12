@@ -223,11 +223,11 @@ timesketch_configs () {
 start_docker () {
   echo "Bringing up Skadi_docprom"
   cd /opt/Skadi/Docker/skadi_dockprom
-  docker-compose -d
+  docker-compose up -d
   
   echo "Bringing up Skadi docker"
   cd ..
-  docker-compose -d  
+  docker-compose up -d  
 
   # Create a template in ES that sets the number of replicas for all indexes to 0
   echo "Waiting for ElasticSearch service to respond to requests"
