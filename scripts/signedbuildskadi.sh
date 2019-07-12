@@ -5,7 +5,7 @@ set -e
   default_skadi_passwords=${DEFAULT_PASSWORDS:-false}
 
   # Set the installation branch
-  install_branch=${INSTALL_BRANCH:-"master"}
+  install_branch=${INSTALL_BRANCH:-"just_docker"}
 
   # Set the value for if the hostname should be changed
   hostname_change=${SKADI_HOSTNAME:-true}
@@ -35,6 +35,9 @@ hello_message () {
 }
 
 setup_host () {
+  echo ""
+  echo "Setting up host"
+  echo ""
   # Update
   sudo apt-get update && sudo apt-get dist-upgrade -y
 
@@ -115,6 +118,9 @@ setup_host () {
 }
 
 setup_credentials () {
+  echo ""
+  echo "Setting up credentials"
+  echo ""
   # Set Credentials
   SECRET_KEY=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
   POSTGRES_USER="timesketch"
@@ -147,6 +153,9 @@ setup_credentials () {
 }
 
 setup_docker () {
+  echo ""
+  echo "Setting up docker"
+  echo ""
   # Add Docker gpg key
   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
   sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
@@ -166,6 +175,9 @@ setup_docker () {
 }
 
 download_skadi () {
+  echo ""
+  echo "Downloading Skadi"
+  echo ""
   sudo git clone --recurse-submodules --branch $install_branch https://github.com/orlikoski/Skadi.git /opt/Skadi
 
   # Update permissions on Skadi directory
@@ -173,42 +185,45 @@ download_skadi () {
 }
 
 cdqr_cylr_config () {
+  echo ""
+  echo "Setting up CDQR and CyLR"
+  echo ""
   cd /opt/Skadi
 
   # Copy cdqr script to /usr/local/bin
-  sudo cp /scripts/cdqr /usr/local/bin/cdqr
+  sudo cp scripts/cdqr /usr/local/bin/cdqr
   sudo chmod +x /usr/local/bin/cdqr
 
   # Installs and Configures CDQR and CyLR
-  sudo -E bash /scripts/update.sh
+  sudo -E bash scripts/update.sh
 }
 
 timesketch_configs () {
+  echo ""
+  echo "Setting up Timesketch configs with custom credentials"
+  echo ""
+  cp /opt/Skadi/Docker/timesketch/timesketch_default.conf /opt/Skadi/Docker/timesketch/timesketch_default.conf.bak
   # Write TS and Postgres creds to .env file
-  echo TIMESKETCH_USER=$TIMESKETCH_USER > ./.env
-  echo TIMESKETCH_PASSWORD=$TIMESKETCH_PASSWORD >> ./.env
-  echo POSTGRES_USER=$POSTGRES_USER >> ./.env
-  echo POSTGRES_PASSWORD=$psql_pw >> ./.env
-  echo HEAP_SIZE=1g >> ./.env
+  sudo sed -i -E "s@TIMESKETCH_USER=.*@TIMESKETCH_USER = '$TIMESKETCH_USER'@g" /opt/Skadi/Docker/.env
+  sudo sed -i -E "s@TIMESKETCH_PASSWORD=.*@TIMESKETCH_PASSWORD = '$TIMESKETCH_PASSWORD'@g" /opt/Skadi/Docker/.env
+  sudo sed -i -E "s@POSTGRES_USER=.*@POSTGRES_USER = '$POSTGRES_USER'@g" /opt/Skadi/Docker/.env
+  sudo sed -i -E "s@POSTGRES_PASSWORD=.*@POSTGRES_PASSWORD = '$psql_pw'@g" /opt/Skadi/Docker/.env
 
  # Write TimeSketch config file on host
-  sudo /timesketch/timesketch.conf /etc/
-  sudo sed -i "s@SECRET_KEY = '<KEY_GOES_HERE>'@SECRET_KEY = '$SECRET_KEY'@g" /etc/timesketch.conf
+  sudo sed -i "s@SECRET_KEY = '<KEY_GOES_HERE>'@SECRET_KEY = '$SECRET_KEY'@g" /opt/Skadi/Docker/timesketch/timesketch.conf
   sudo sed -i "s@<USERNAME>\:<PASSWORD>@$POSTGRES_USER\:$psql_pw@g" /etc/timesketch.conf
   sudo sed -i "s@NEO4J_USERNAME = 'neo4j'@NEO4J_USERNAME = '$neo4juser'@g" /etc/timesketch.conf
-  sudo sed -i "s@NEO4J_PASSWORD = '<NEO4J_PASSWORD>'@NEO4J_PASSWORD = ''@g" /etc/timesketch.conf
-  sudo sed -i "s/UPLOAD_ENABLED = False/UPLOAD_ENABLED = True/g" /etc/timesketch.conf
-  sudo sed -i "s/GRAPH_BACKEND_ENABLED = False/GRAPH_BACKEND_ENABLED = True/g" /etc/timesketch.conf
-  sudo sed -i "s#@localhost/timesketch#@postgres/timesketch#g" /etc/timesketch.conf
-  sudo sed -i "s/ELASTIC_HOST = '127.0.0.1'/ELASTIC_HOST = 'elasticsearch'/g" /etc/timesketch.conf
-  sudo sed -i "s@'redis://127.0.0.1:6379'@'redis://redis:6379'@g" /etc/timesketch.conf
-  sudo sed -i "s/NEO4J_HOST = '127.0.0.1'/NEO4J_HOST = 'neo4j'/g" /etc/timesketch.conf
+
 
   # Setup Nginx Auth
-  echo $NGINX_PASSWORD | sudo htpasswd -i -c /etc/nginx/.skadi_auth $NGINX_USER
+  sudo rm /opt/nginx/auth/.skadi_auth
+  echo $NGINX_PASSWORD | sudo htpasswd -i -c /opt/nginx/auth/.skadi_auth $NGINX_USER
 }
 
 containers_up () {
+  echo ""
+  echo "Bringing up containers"
+  echo ""
   # Deploy the Skadi solution defined in ./docker-compose.yml
   sudo docker-compose up -d
 
@@ -240,9 +255,9 @@ ensure_TS_up () {
 # requires the other containers to be up and running too. This can take time
 # so this loop ensures all the parts are running and timesketch is responding
 # to web requets before continuing
-sudo docker restart timesketch
-echo "Waiting 10 seconds for TimeSketch to become available"
-sleep 10
+echo ""
+echo ""
+echo "Ensuring Timesketch is running correctly"
 echo "Press CTRL-C at any time to stop installation"
 until $(curl --output /dev/null --silent --head --fail http://localhost/timesketch); do
     echo "No response, restarting the TimeSketch container and waiting 10 seconds to try again"
@@ -253,9 +268,11 @@ echo "TimeSketch available. Continuing"
 }
 
 grafana_config () {
+  echo ""
+  echo "Starting Grafana"
+  echo ""
   # Change directory to where skadi_docprom docker compose file is located
   cd ./skadi_dockprom
-
   # This uses the docker-compose.yml found in the skadi_dockprom repo
   sudo docker-compose up -d
 }

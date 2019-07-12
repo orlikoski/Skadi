@@ -5,7 +5,7 @@ services:
     container_name: nginx
     networks:
       - backend
-      - skadi_dockprom_monitor-net
+      - monitor-net
     volumes:
       - ./nginx/certs:/etc/nginx/certs
       - ./nginx/conf.d:/etc/nginx/conf.d
@@ -207,9 +207,9 @@ services:
 networks:
   backend:
     name: skadi-backend
-  skadi_dockprom_monitor-net:
+  monitor-net:
     external:
-      name: skadi_dockprom_monitor-net
+      name: monitor-net
 
 volumes:
   esdata1:
