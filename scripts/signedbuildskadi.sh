@@ -1,6 +1,32 @@
 #!/bin/bash
 set -e
 
+  # Choosing to use default passwords or not
+  default_skadi_passwords=${DEFAULT_PASSWORDS:-false}
+
+  # Set the installation branch
+  install_branch=${INSTALL_BRANCH:-"master"}
+
+  # Set the value for if the hostname should be changed
+  hostname_change=${SKADI_HOSTNAME:-true}
+
+  # Set the value for if the skadi user should be created
+  create_skadi_user=${MAKE_SKADI_USER:-true}
+
+  # Set the value for if the server time should be set to UTC
+  set_time_utc=${UTC_TIME:-true}
+
+  # Default Values
+ SKADI_USER="skadi"
+ SKADI_PASS="skadi"
+ SKADI_USER_HOME="/home/$SKADI_USER"
+ TIMESKETCH_USER="skadi"
+ TIMESKETCH_PASSWORD="skadi"
+ NGINX_USER="skadi"
+ NGINX_PASSWORD="skadi"
+ GRAFANA_USER=$NGINX_USER
+ GRAFANA_PASSWORD=$NGINX_PASSWORD
+
 hello_message () {
   echo "Welcome to installing a secure dockerized container setup of Skadi"
   echo "Please ensure you have at least 8 GB RAM and 4 cores allocated to the host"
@@ -26,6 +52,11 @@ setup_host () {
     net-tools \
     software-properties-common \
     apache2-utils
+
+  # Clean APT
+    sudo apt-get -y autoremove --purge
+    sudo apt-get -y clean
+    sudo apt-get -y autoclean
 
   # Set the vm.max_map_count kernel setting needs to be set to at least 262144 for production use
     sudo sysctl -w vm.max_map_count=262144
@@ -83,34 +114,6 @@ setup_host () {
   sudo ufw --force enable
 }
 
-host_default_values () {
-  # Choosing to use default passwords or not
-  default_skadi_passwords=${DEFAULT_PASSWORDS:-false}
-
-  # Set the installation branch
-  install_branch=${INSTALL_BRANCH:-"master"}
-
-  # Set the value for if the hostname should be changed
-  hostname_change=${SKADI_HOSTNAME:-true}
-
-  # Set the value for if the skadi user should be created
-  create_skadi_user=${MAKE_SKADI_USER:-true}
-
-  # Set the value for if the server time should be set to UTC
-  set_time_utc=${UTC_TIME:-true}
-
-  # Default Values
- SKADI_USER="skadi"
- SKADI_PASS="skadi"
- SKADI_USER_HOME="/home/$SKADI_USER"
- TIMESKETCH_USER="skadi"
- TIMESKETCH_PASSWORD="skadi"
- NGINX_USER="skadi"
- NGINX_PASSWORD="skadi"
- GRAFANA_USER=$NGINX_USER
- GRAFANA_PASSWORD=$NGINX_PASSWORD
-}
-
 setup_credentials () {
   # Set Credentials
   SECRET_KEY=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
@@ -162,40 +165,34 @@ setup_docker () {
   sudo usermod -aG docker $SKADI_USER
 }
 
-cdqr_cylr_setup () {
-  # Clone skadi and it's submodules
+download_skadi () {
   sudo git clone --recurse-submodules --branch $install_branch https://github.com/orlikoski/Skadi.git /opt/Skadi
+
+  # Update permissions on Skadi directory
   sudo chown -R $SKADI_USER:$SKADI_USER /opt/Skadi
+}
+
+cdqr_cylr_config () {
+  cd /opt/Skadi
 
   # Copy cdqr script to /usr/local/bin
-  sudo cp /opt/Skadi/scripts/cdqr /usr/local/bin/cdqr
+  sudo cp /scripts/cdqr /usr/local/bin/cdqr
   sudo chmod +x /usr/local/bin/cdqr
 
-  # Create CyLR directory
-  sudo mkdir /opt/CyLR/
-  sudo chmod 777 /opt/CyLR
-
   # Installs and Configures CDQR and CyLR
-  sudo -E bash /opt/Skadi/scripts/update.sh
+  sudo -E bash /scripts/update.sh
 }
 
 timesketch_configs () {
   # Write TS and Postgres creds to .env file
-  cd /opt/Skadi/Docker/
   echo TIMESKETCH_USER=$TIMESKETCH_USER > ./.env
   echo TIMESKETCH_PASSWORD=$TIMESKETCH_PASSWORD >> ./.env
   echo POSTGRES_USER=$POSTGRES_USER >> ./.env
   echo POSTGRES_PASSWORD=$psql_pw >> ./.env
   echo HEAP_SIZE=1g >> ./.env
 
-  # Configure /etc/hosts file so the host can use same names for each service as the TimeSketch Dockers
-  echo 127.0.0.1       elasticsearch |sudo tee -a /etc/hosts
-  echo 127.0.0.1       postgres |sudo tee -a /etc/hosts
-  echo 127.0.0.1       neo4j |sudo tee -a /etc/hosts
-  echo 127.0.0.1       redis |sudo tee -a /etc/hosts
-
-  # Write TimeSketch config file on host
-  sudo cp /opt/Skadi/Docker/timesketch/timesketch.conf /etc/
+ # Write TimeSketch config file on host
+  sudo /timesketch/timesketch.conf /etc/
   sudo sed -i "s@SECRET_KEY = '<KEY_GOES_HERE>'@SECRET_KEY = '$SECRET_KEY'@g" /etc/timesketch.conf
   sudo sed -i "s@<USERNAME>\:<PASSWORD>@$POSTGRES_USER\:$psql_pw@g" /etc/timesketch.conf
   sudo sed -i "s@NEO4J_USERNAME = 'neo4j'@NEO4J_USERNAME = '$neo4juser'@g" /etc/timesketch.conf
@@ -209,13 +206,6 @@ timesketch_configs () {
 
   # Setup Nginx Auth
   echo $NGINX_PASSWORD | sudo htpasswd -i -c /etc/nginx/.skadi_auth $NGINX_USER
-}
-
-clean_APT () {
-  # Clean APT
-  sudo apt-get -y autoremove --purge
-  sudo apt-get -y clean
-  sudo apt-get -y autoclean
 }
 
 containers_up () {
@@ -235,14 +225,14 @@ containers_up () {
       -H'Content-Type: application/json'
 
   echo "Waiting for Kibana service to respond to requests"
-  until $(curl --output /dev/null --silent --head --fail http://localhost:5601); do
+  until $(curl --output /dev/null --silent --head --fail http://localhost:kibana); do
       printf '.'
       sleep 5
   done
 
   echo "Importing Saved Objects to Kibana and setting default index"
-  curl -X POST "http://localhost:5601/api/saved_objects/_bulk_create" -H 'kbn-xsrf: true' -H 'Content-Type: application/json' --data-binary @/opt/Skadi/objects/kibana_6.x_cli_import.json
-  curl -X POST "http://localhost:5601/api/kibana/settings/defaultIndex" -H "Content-Type: application/json" -H "kbn-xsrf: true" -d '{"value": "06876cd0-dfc5-11e8-bc06-31e345541948"}'
+  curl -X POST "http://localhost:kibana/api/saved_objects/_bulk_create" -H 'kbn-xsrf: true' -H 'Content-Type: application/json' --data-binary @/opt/Skadi/objects/kibana_6.x_cli_import.json
+  curl -X POST "http://localhost:kibana/api/kibana/settings/defaultIndex" -H "Content-Type: application/json" -H "kbn-xsrf: true" -d '{"value": "06876cd0-dfc5-11e8-bc06-31e345541948"}'
 }
 
 ensure_TS_up () {
@@ -262,14 +252,9 @@ done
 echo "TimeSketch available. Continuing"
 }
 
-grafana_setup () {
-  # Install Grafana for Monitoring
-  git clone https://github.com/orlikoski/skadi_dockprom.git
-  cd skadi_dockprom
-
-  # Write Grafana login creds to .env file
-  echo ADMIN_USER=$GRAFANA_USER > ./.env
-  echo ADMIN_PASSWORD=$GRAFANA_PASSWORD >> ./.env
+grafana_config () {
+  # Change directory to where skadi_docprom docker compose file is located
+  cd ./skadi_dockprom
 
   # This uses the docker-compose.yml found in the skadi_dockprom repo
   sudo docker-compose up -d
@@ -299,13 +284,12 @@ echo "  - /opt/Skadi/Docker/skadi_dockprom/.env"
 ############ MAIN PROGRAM #############
 hello_message
 setup_host
-host_default_values
 setup_credentials
 setup_docker
-cdqr_cylr_setup
+download_skadi
+cdqr_cylr_config
 timesketch_configs
-clean_APT
 containers_up
 ensure_TS_up
-grafana_setup
+grafana_config
 goodbye_message
