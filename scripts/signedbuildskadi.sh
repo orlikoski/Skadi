@@ -242,21 +242,21 @@ start_docker () {
       -H'Content-Type: application/json'
 
   echo "Waiting for Kibana service to respond to requests"
-  until $(curl --output /dev/null --silent --head --fail http://localhost:kibana); do
+  until $(curl --output /dev/null --silent --head --fail http://localhost/kibana); do
       printf '.'
       sleep 5
   done
 
   echo "Importing Saved Objects to Kibana and setting default index"
-  curl -X POST "http://localhost:kibana/api/saved_objects/_bulk_create" -H 'kbn-xsrf: true' -H 'Content-Type: application/json' --data-binary @/opt/Skadi/objects/kibana_6.x_cli_import.json
-  curl -X POST "http://localhost:kibana/api/kibana/settings/defaultIndex" -H "Content-Type: application/json" -H "kbn-xsrf: true" -d '{"value": "06876cd0-dfc5-11e8-bc06-31e345541948"}'
+  curl -X POST "http://localhost/kibana/api/saved_objects/_bulk_create" -H 'kbn-xsrf: true' -H 'Content-Type: application/json' --data-binary @/opt/Skadi/objects/kibana_6.x_cli_import.json
+  curl -X POST "http://localhost/kibana/api/kibana/settings/defaultIndex" -H "Content-Type: application/json" -H "kbn-xsrf: true" -d '{"value": "06876cd0-dfc5-11e8-bc06-31e345541948"}'
 }
 
 ensure_TS_up () {
 # The TimeSketch container needs to be running before continuing and this
 # requires the other containers to be up and running too. This can take time
 # so this loop ensures all the parts are running and timesketch is responding
-# to web requets before continuing
+# to web requests before continuing
 echo ""
 echo ""
 echo "Ensuring Timesketch is running correctly"
@@ -300,5 +300,4 @@ cdqr_cylr_config
 timesketch_configs
 start_docker
 ensure_TS_up
-grafana_config
 goodbye_message
