@@ -224,6 +224,7 @@ containers_up () {
   echo ""
   echo "Bringing up containers"
   echo ""
+  cd /opt/Skadi/Docker/
   # Deploy the Skadi solution defined in ./docker-compose.yml
   sudo docker-compose up -d
 
