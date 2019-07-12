@@ -216,7 +216,6 @@ timesketch_configs () {
 
 
   # Setup Nginx Auth
-  sudo rm /opt/nginx/auth/.skadi_auth
   echo $NGINX_PASSWORD | sudo htpasswd -i -c /opt/nginx/auth/.skadi_auth $NGINX_USER
 }
 
