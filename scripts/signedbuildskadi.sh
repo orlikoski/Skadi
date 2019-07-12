@@ -210,9 +210,9 @@ timesketch_configs () {
   sudo sed -i -E "s@POSTGRES_PASSWORD=.*@POSTGRES_PASSWORD = '$psql_pw'@g" /opt/Skadi/Docker/.env
 
  # Write TimeSketch config file on host
-  sudo sed -i -E "s@SECRET_KEY = '<KEY_GOES_HERE>'@SECRET_KEY = '$SECRET_KEY'@g" /opt/Skadi/Docker/timesketch/timesketch_default.conf
-  sudo sed -i -E "s@<USERNAME>\:<PASSWORD>@$POSTGRES_USER\:$psql_pw@g" /opt/Skadi/Docker/timesketch/timesketch_default.conf
-  sudo sed -i -E "s@NEO4J_USERNAME = 'neo4j'@NEO4J_USERNAME = '$neo4juser'@g" /opt/Skadi/Docker/timesketch/timesketch_default.conf
+  sudo sed -i "s@timesketch\:d2aea7c843bf6cc049a8199ffaa5d468108878819210990f7f33c424882b52ba@$POSTGRES_USER\:$psql_pw@g" /opt/Skadi/Docker/timesketch/timesketch_default.conf
+  sudo sed -i "s@'b75b9987200f2f1b15c4dbf800214fbc420bf4a0f3f3895dcc40eb5e9ca185c2-'@'$SECRET_KEY'@g" /opt/Skadi/Docker/timesketch/timesketch_default.conf
+
 
 
   # Setup Nginx Auth
@@ -220,13 +220,14 @@ timesketch_configs () {
   echo $NGINX_PASSWORD | sudo htpasswd -i -c /opt/Skadi/Docker/nginx/auth/.skadi_auth $NGINX_USER
 }
 
-containers_up () {
-  echo ""
-  echo "Bringing up containers"
-  echo ""
-  cd /opt/Skadi/Docker/
-  # Deploy the Skadi solution defined in ./docker-compose.yml
-  sudo docker-compose up -d
+start_docker () {
+  echo "Bringing up Skadi_docprom"
+  cd /opt/Skadi/Docker/skadi_dockprom
+  docker-compose -d
+  
+  echo "Bringing up Skadi docker"
+  cd ..
+  docker-compose -d  
 
   # Create a template in ES that sets the number of replicas for all indexes to 0
   echo "Waiting for ElasticSearch service to respond to requests"
@@ -268,16 +269,6 @@ done
 echo "TimeSketch available. Continuing"
 }
 
-grafana_config () {
-  echo ""
-  echo "Starting Grafana"
-  echo ""
-  # Change directory to where skadi_docprom docker compose file is located
-  cd ./skadi_dockprom
-  # This uses the docker-compose.yml found in the skadi_dockprom repo
-  sudo docker-compose up -d
-}
-
 goodbye_message () {
 echo ""
 echo ""
@@ -307,7 +298,7 @@ setup_docker
 download_skadi
 cdqr_cylr_config
 timesketch_configs
-containers_up
+start_docker
 ensure_TS_up
 grafana_config
 goodbye_message
