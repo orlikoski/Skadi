@@ -210,9 +210,9 @@ timesketch_configs () {
   sudo sed -i -E "s@POSTGRES_PASSWORD=.*@POSTGRES_PASSWORD = '$psql_pw'@g" /opt/Skadi/Docker/.env
 
  # Write TimeSketch config file on host
-  sudo sed -i "s@SECRET_KEY = '<KEY_GOES_HERE>'@SECRET_KEY = '$SECRET_KEY'@g" /opt/Skadi/Docker/timesketch/timesketch.conf
-  sudo sed -i "s@<USERNAME>\:<PASSWORD>@$POSTGRES_USER\:$psql_pw@g" /opt/Skadi/Docker/timesketch/timesketch_default.conf
-  sudo sed -i "s@NEO4J_USERNAME = 'neo4j'@NEO4J_USERNAME = '$neo4juser'@g" /opt/Skadi/Docker/timesketch/timesketch_default.conf
+  sudo sed -i -E "s@SECRET_KEY = '<KEY_GOES_HERE>'@SECRET_KEY = '$SECRET_KEY'@g" /opt/Skadi/Docker/timesketch/timesketch_default.conf
+  sudo sed -i -E "s@<USERNAME>\:<PASSWORD>@$POSTGRES_USER\:$psql_pw@g" /opt/Skadi/Docker/timesketch/timesketch_default.conf
+  sudo sed -i -E "s@NEO4J_USERNAME = 'neo4j'@NEO4J_USERNAME = '$neo4juser'@g" /opt/Skadi/Docker/timesketch/timesketch_default.conf
 
 
   # Setup Nginx Auth
