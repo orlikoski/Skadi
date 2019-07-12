@@ -1,11 +1,34 @@
 version: '3.5'
+
+networks:
+  backend:
+    name: skadi-backend
+    driver: bridge
+
+volumes:
+  esdata1:
+    driver: local
+  neo4jdata:
+    driver: local
+  pgdata:
+    driver: local
+  redisdata:
+    driver: local
+  tssockets:
+    driver: local
+  portainerdata:
+    driver: local
+  prometheus_data: {}
+  grafana_data: {}
+
+
 services:
   nginx:
     image: nginx:1.15
     container_name: nginx
     networks:
       - backend
-      - monitor-net
+      - backend
     volumes:
       - ./nginx/certs:/etc/nginx/certs
       - ./nginx/conf.d:/etc/nginx/conf.d
@@ -42,7 +65,7 @@ services:
     networks:
       - backend
     ports:
-      - 127.0.0.1:5432:5432
+      - 5432:5432
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -86,7 +109,7 @@ services:
     networks:
       - backend
     ports:
-      - 127.0.0.1:9200:9200
+      - 9200:9200
     environment:
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
@@ -204,23 +227,105 @@ services:
       - mongodb
       - yeti
 
-networks:
-  backend:
-    name: skadi-backend
-  monitor-net:
-    external:
-      name: monitor-net
+################### GRAFANA ###############
 
-volumes:
-  esdata1:
-    driver: local
-  neo4jdata:
-    driver: local
-  pgdata:
-    driver: local
-  redisdata:
-    driver: local
-  tssockets:
-    driver: local
-  portainerdata:
-    driver: local
+  prometheus:
+    image: prom/prometheus:v2.5.0
+    container_name: prometheus
+    volumes:
+      - ./prometheus/:/etc/prometheus/
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention=200h'
+      - '--web.enable-lifecycle'
+    restart: unless-stopped
+    ports:
+      - 9090:9090
+    networks:
+      - backend
+
+
+
+  alertmanager:
+    image: prom/alertmanager:v0.15.3
+    container_name: alertmanager
+    volumes:
+      - ./alertmanager/:/etc/alertmanager/
+    command:
+      - '--config.file=/etc/alertmanager/config.yml'
+      - '--storage.path=/alertmanager'
+    restart: unless-stopped
+    ports:
+      - 9093:9093
+    networks:
+      - backend
+
+
+
+  nodeexporter:
+    image: prom/node-exporter:v0.17.0
+    container_name: nodeexporter
+    user: root
+    privileged: true
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
+    restart: unless-stopped
+    ports:
+      - 9100:9100
+    networks:
+      - backend
+
+
+
+  cadvisor:
+    image: google/cadvisor:v0.32.0
+    container_name: cadvisor
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      #- /cgroup:/cgroup:ro #doesn't work on MacOS only for Linux
+    restart: unless-stopped
+    ports:
+      - 8080:8080
+    networks:
+      - backend
+
+  grafana:
+    image: grafana/grafana:5.4.2
+    container_name: grafana
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/datasources:/etc/grafana/datasources
+      - ./grafana/dashboards:/etc/grafana/dashboards
+      - ./grafana/setup.sh:/setup.sh
+    entrypoint: /setup.sh
+    environment:
+      - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s/grafana/
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    networks:
+      - backend
+  pushgateway:
+    image: prom/pushgateway:v0.7.0
+    container_name: pushgateway
+    restart: unless-stopped
+    ports:
+      - 9091:9091
+    networks:
+      - backend
