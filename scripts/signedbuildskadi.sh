@@ -216,7 +216,8 @@ timesketch_configs () {
 
 
   # Setup Nginx Auth
-  echo $NGINX_PASSWORD | sudo htpasswd -i -c /opt/nginx/auth/.skadi_auth $NGINX_USER
+  sudo rm /opt/Skadi/Docker/nginx/auth/.skadi_auth
+  echo $NGINX_PASSWORD | sudo htpasswd -i -c /opt/Skadi/Docker/nginx/auth/.skadi_auth $NGINX_USER
 }
 
 containers_up () {
