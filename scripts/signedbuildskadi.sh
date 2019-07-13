@@ -204,10 +204,10 @@ timesketch_configs () {
   echo ""
   cp /opt/Skadi/Docker/timesketch/timesketch_default.conf /opt/Skadi/Docker/timesketch/timesketch_default.conf.bak
   # Write TS and Postgres creds to .env file
-  sudo sed -i -E "s@TIMESKETCH_USER=.*@TIMESKETCH_USER = '$TIMESKETCH_USER'@g" /opt/Skadi/Docker/.env
-  sudo sed -i -E "s@TIMESKETCH_PASSWORD=.*@TIMESKETCH_PASSWORD = '$TIMESKETCH_PASSWORD'@g" /opt/Skadi/Docker/.env
-  sudo sed -i -E "s@POSTGRES_USER=.*@POSTGRES_USER = '$POSTGRES_USER'@g" /opt/Skadi/Docker/.env
-  sudo sed -i -E "s@POSTGRES_PASSWORD=.*@POSTGRES_PASSWORD = '$psql_pw'@g" /opt/Skadi/Docker/.env
+  sudo sed -i -E "s@TIMESKETCH_USER=.*@TIMESKETCH_USER='$TIMESKETCH_USER'@g" /opt/Skadi/Docker/.env
+  sudo sed -i -E "s@TIMESKETCH_PASSWORD=.*@TIMESKETCH_PASSWORD='$TIMESKETCH_PASSWORD'@g" /opt/Skadi/Docker/.env
+  sudo sed -i -E "s@POSTGRES_USER=.*@POSTGRES_USER='$POSTGRES_USER'@g" /opt/Skadi/Docker/.env
+  sudo sed -i -E "s@POSTGRES_PASSWORD=.*@POSTGRES_PASSWORD='$psql_pw'@g" /opt/Skadi/Docker/.env
 
  # Write TimeSketch config file on host
   sudo sed -i "s@timesketch\:d2aea7c843bf6cc049a8199ffaa5d468108878819210990f7f33c424882b52ba@$POSTGRES_USER\:$psql_pw@g" /opt/Skadi/Docker/timesketch/timesketch_default.conf
@@ -224,10 +224,10 @@ start_docker () {
   echo "Bringing up Skadi_docprom"
   cd /opt/Skadi/Docker/skadi_dockprom
   docker-compose up -d
-  
+
   echo "Bringing up Skadi docker"
   cd ..
-  docker-compose up -d  
+  docker-compose up -d
 
   # Create a template in ES that sets the number of replicas for all indexes to 0
   echo "Waiting for ElasticSearch service to respond to requests"
