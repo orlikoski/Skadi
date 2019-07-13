@@ -1,6 +1,9 @@
 #/bin/bash
 set -e
 
+# Set the value for if it should display banner with pause or not
+banner=${BANNER:-true}
+
 hello_message () {
   echo "Starting a secure dockerized container setup of Skadi"
   echo "Please ensure you have at least 8 GB RAM and 4 cores allocated to the host"
@@ -10,10 +13,14 @@ hello_message () {
 
 start_docker () {
   set -x
+  chmod +x grafana/grafana/setup.sh
   docker-compose up -d
 }
 
 
 ############ MAIN PROGRAM #############
-hello_message
+if [ $default_skadi_passwords = "false" ]
+  then
+    hello_message
+fi
 start_docker
