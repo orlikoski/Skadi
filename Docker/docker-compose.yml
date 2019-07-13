@@ -243,8 +243,8 @@ services:
       - '--storage.tsdb.retention=200h'
       - '--web.enable-lifecycle'
     restart: unless-stopped
-    ports:
-      - 9090:9090
+    # ports:
+    #   - 9090:9090
     networks:
       - backend
 
