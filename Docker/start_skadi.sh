@@ -9,9 +9,7 @@ hello_message () {
 }
 
 start_docker () {
-  cd ./skadi_dockprom
-  docker-compose up -d
-  cd ..
+  set -x
   docker-compose up -d
 }
 
