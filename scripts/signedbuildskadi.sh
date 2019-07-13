@@ -1,31 +1,31 @@
 #!/bin/bash
 set -e
 
-  # Choosing to use default passwords or not
-  default_skadi_passwords=${DEFAULT_PASSWORDS:-false}
+# Choosing to use default passwords or not
+default_skadi_passwords=${DEFAULT_PASSWORDS:-false}
 
-  # Set the installation branch
-  install_branch=${INSTALL_BRANCH:-"just_docker"}
+# Set the installation branch
+install_branch=${INSTALL_BRANCH:-"just_docker"}
 
-  # Set the value for if the hostname should be changed
-  hostname_change=${SKADI_HOSTNAME:-true}
+# Set the value for if the hostname should be changed
+hostname_change=${SKADI_HOSTNAME:-true}
 
-  # Set the value for if the skadi user should be created
-  create_skadi_user=${MAKE_SKADI_USER:-true}
+# Set the value for if the skadi user should be created
+create_skadi_user=${MAKE_SKADI_USER:-true}
 
-  # Set the value for if the server time should be set to UTC
-  set_time_utc=${UTC_TIME:-true}
+# Set the value for if the server time should be set to UTC
+set_time_utc=${UTC_TIME:-true}
 
-  # Default Values
- SKADI_USER="skadi"
- SKADI_PASS="skadi"
- SKADI_USER_HOME="/home/$SKADI_USER"
- TIMESKETCH_USER="skadi"
- TIMESKETCH_PASSWORD="skadi"
- NGINX_USER="skadi"
- NGINX_PASSWORD="skadi"
- GRAFANA_USER=$NGINX_USER
- GRAFANA_PASSWORD=$NGINX_PASSWORD
+# Default Values
+SKADI_USER="skadi"
+SKADI_PASS="skadi"
+SKADI_USER_HOME="/home/$SKADI_USER"
+TIMESKETCH_USER="skadi"
+TIMESKETCH_PASSWORD="skadi"
+NGINX_USER="skadi"
+NGINX_PASSWORD="skadi"
+GRAFANA_USER=$NGINX_USER
+GRAFANA_PASSWORD=$NGINX_PASSWORD
 
 hello_message () {
   echo "Welcome to installing a secure dockerized container setup of Skadi"
@@ -223,8 +223,7 @@ start_docker () {
   echo ""
   echo "Bringing up Skadi"
   echo ""
-  cd /opt/Skadi/Docker
-  sudo bash ./start_skadi.sh
+  sudo BANNER=false bash ./start_skadi.sh
 }
 
 configure_elastic_kibana () {
