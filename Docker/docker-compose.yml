@@ -291,8 +291,8 @@ services:
       - /var/lib/docker/:/var/lib/docker:ro
       #- /cgroup:/cgroup:ro #doesn't work on MacOS only for Linux
     restart: unless-stopped
-    ports:
-      - 8080:8080
+    # ports:
+    #   - 8080:8080
     networks:
       - backend
 

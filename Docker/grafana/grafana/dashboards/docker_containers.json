@@ -1,6 +1,6 @@
 {"dashboard": {
   "id": null,
-  "title": "Docker Containers",
+  "title": "Skadi Docker Containers",
   "description": "Containers metrics",
   "tags": [
     "docker"

@@ -1,6 +1,6 @@
 {"dashboard": {
   "id": null,
-  "title": "Docker Host",
+  "title": "Skadi Docker Host",
   "description": "Docker host metrics",
   "tags": [
     "system"
