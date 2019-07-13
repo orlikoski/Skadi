@@ -1,5 +1,5 @@
 #/bin/bash
-set -e
+set -ex
 
 hello_message () {
   echo "Completely resetting Skadi and removing all saved data"
