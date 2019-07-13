@@ -28,7 +28,6 @@ services:
     container_name: nginx
     networks:
       - backend
-      - backend
     volumes:
       - ./nginx/certs:/etc/nginx/certs
       - ./nginx/conf.d:/etc/nginx/conf.d
@@ -247,8 +246,6 @@ services:
       - 9090:9090
     networks:
       - backend
-
-
 
   alertmanager:
     image: prom/alertmanager:v0.15.3
