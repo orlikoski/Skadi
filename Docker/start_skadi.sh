@@ -19,7 +19,7 @@ start_docker () {
 
 
 ############ MAIN PROGRAM #############
-if [ $banner = "false" ]
+if [ $banner = "true" ]
   then
     hello_message
 fi

@@ -295,7 +295,7 @@ echo "  - /opt/Skadi/Docker/skadi_dockprom/.env"
 }
 
 ############ MAIN PROGRAM #############
-if [ $banner = "false" ]
+if [ $banner = "true" ]
   then
     hello_message
 fi
