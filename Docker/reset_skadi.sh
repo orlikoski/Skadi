@@ -1,5 +1,5 @@
 #/bin/bash
-set -ex
+set -e
 
 hello_message () {
   echo "Completely resetting Skadi and removing all saved data"
@@ -8,6 +8,7 @@ hello_message () {
 }
 
 reset_docker () {
+  set -x
   docker-compose down
   docker volume prune --force
   docker system prune --force

@@ -1,5 +1,5 @@
 #/bin/bash
-set -ex
+set -e
 
 hello_message () {
   echo "Starting a secure dockerized container setup of Skadi"
@@ -9,6 +9,7 @@ hello_message () {
 }
 
 start_docker () {
+  set -x
   docker-compose up -d
 }
 
