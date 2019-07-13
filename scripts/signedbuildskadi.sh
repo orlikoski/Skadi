@@ -247,14 +247,14 @@ configure_elastic_kibana () {
       -H'Content-Type: application/json'
 
   echo "Waiting for Kibana service to respond to requests"
-  until $(curl --output /dev/null --silent --head --fail http://localhost/kibana); do
+  until $(curl --output /dev/null -u $NGINX_USER:$NGINX_PASSWORD --silent --head --fail http://localhost/kibana); do
       printf '.'
       sleep 5
   done
 
   echo "Importing Saved Objects to Kibana and setting default index"
-  curl -X POST "http://localhost/kibana/api/saved_objects/_bulk_create" -H 'kbn-xsrf: true' -H 'Content-Type: application/json' --data-binary @/opt/Skadi/objects/kibana_6.x_cli_import.json
-  curl -X POST "http://localhost/kibana/api/kibana/settings/defaultIndex" -H "Content-Type: application/json" -H "kbn-xsrf: true" -d '{"value": "06876cd0-dfc5-11e8-bc06-31e345541948"}'
+  curl -X POST "http://localhost/kibana/api/saved_objects/_bulk_create" -u $NGINX_USER:$NGINX_PASSWORD -H 'kbn-xsrf: true' -H 'Content-Type: application/json' --data-binary @/opt/Skadi/objects/kibana_6.x_cli_import.json
+  curl -X POST "http://localhost/kibana/api/kibana/settings/defaultIndex" -u $NGINX_USER:$NGINX_PASSWORD -H "Content-Type: application/json" -H "kbn-xsrf: true" -d '{"value": "06876cd0-dfc5-11e8-bc06-31e345541948"}'
 }
 
 ensure_TS_up () {
@@ -266,7 +266,7 @@ echo ""
 echo ""
 echo "Ensuring Timesketch is running correctly"
 echo "Press CTRL-C at any time to stop installation"
-until $(curl --output /dev/null --silent --head --fail http://localhost/timesketch); do
+until $(curl --output /dev/null -u $NGINX_USER:$NGINX_PASSWORD --silent --head --fail http://localhost/timesketch); do
     echo "No response, restarting the TimeSketch container and waiting 10 seconds to try again"
     sudo docker restart timesketch
     sleep 10
