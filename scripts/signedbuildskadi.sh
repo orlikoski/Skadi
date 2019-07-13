@@ -117,9 +117,9 @@ setup_host () {
   sudo ufw --force enable
 }
 
-setup_credentials () {
+change_credentials () {
   echo ""
-  echo "Setting up credentials"
+  echo "Using random credentials"
   echo ""
   # Set Credentials
   SECRET_KEY=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
@@ -127,29 +127,23 @@ setup_credentials () {
   psql_pw=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
   neo4juser='neo4j'
 
-  # Use dynamically created passwords with an option to use defaults
-  if [ $default_skadi_passwords = "false" ]
-    then
-      echo "Using random username and passwords for OS Account, TimeSketch, Nginx proxy / Grafana"
-      echo "Writing all credentials to /opt/skadi_credentials"
-      TIMESKETCH_USER="skadi_$(openssl rand -base64 3)"
-      TIMESKETCH_PASSWORD=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
-      NGINX_USER="skadi_$(openssl rand -base64 3)"
-      NGINX_PASSWORD=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
-      GRAFANA_USER=$NGINX_USER
-      GRAFANA_PASSWORD=$NGINX_PASSWORD
-      SKADI_PASS=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
-      SKADI_USER_HOME="/home/$SKADI_USER"
-      echo "  Proxy & Grafana Account:" > /opt/skadi_credentials
-      echo "     - Username: $NGINX_USER" >> /opt/skadi_credentials
-      echo "     - Password: $NGINX_PASSWORD" >> /opt/skadi_credentials
-      echo "" >> /opt/skadi_credentials
-      echo "  TimeSketch Account:" >> /opt/skadi_credentials
-      echo "     - Username: $TIMESKETCH_USER" >> /opt/skadi_credentials
-      echo "     - Password: $TIMESKETCH_PASSWORD" >> /opt/skadi_credentials
-  else
-      echo "Using Skadi default username and password of skadi:skadi for OS Account, TimeSketch, Nginx proxy, and Grafana"
-  fi
+  echo "Using random username and passwords for OS Account, TimeSketch, Nginx proxy / Grafana"
+  echo "Writing all credentials to /opt/skadi_credentials"
+  TIMESKETCH_USER="skadi_$(openssl rand -base64 3)"
+  TIMESKETCH_PASSWORD=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
+  NGINX_USER="skadi_$(openssl rand -base64 3)"
+  NGINX_PASSWORD=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
+  GRAFANA_USER=$NGINX_USER
+  GRAFANA_PASSWORD=$NGINX_PASSWORD
+  SKADI_PASS=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
+  SKADI_USER_HOME="/home/$SKADI_USER"
+  echo "  Proxy & Grafana Account:" > /opt/skadi_credentials
+  echo "     - Username: $NGINX_USER" >> /opt/skadi_credentials
+  echo "     - Password: $NGINX_PASSWORD" >> /opt/skadi_credentials
+  echo "" >> /opt/skadi_credentials
+  echo "  TimeSketch Account:" >> /opt/skadi_credentials
+  echo "     - Username: $TIMESKETCH_USER" >> /opt/skadi_credentials
+  echo "     - Password: $TIMESKETCH_PASSWORD" >> /opt/skadi_credentials
 }
 
 setup_docker () {
@@ -188,14 +182,12 @@ cdqr_cylr_config () {
   echo ""
   echo "Setting up CDQR and CyLR"
   echo ""
-  cd /opt/Skadi
-
   # Copy cdqr script to /usr/local/bin
-  sudo cp scripts/cdqr /usr/local/bin/cdqr
+  sudo cp /opt/Skadi/scripts/cdqr /usr/local/bin/cdqr
   sudo chmod +x /usr/local/bin/cdqr
 
   # Installs and Configures CDQR and CyLR
-  sudo -E bash scripts/update.sh
+  sudo -E bash /opt/Skadi/scripts/update.sh
 }
 
 timesketch_configs () {
@@ -212,23 +204,25 @@ timesketch_configs () {
  # Write TimeSketch config file on host
   sudo sed -i "s@timesketch\:d2aea7c843bf6cc049a8199ffaa5d468108878819210990f7f33c424882b52ba@$POSTGRES_USER\:$psql_pw@g" /opt/Skadi/Docker/timesketch/timesketch_default.conf
   sudo sed -i "s@'b75b9987200f2f1b15c4dbf800214fbc420bf4a0f3f3895dcc40eb5e9ca185c2-'@'$SECRET_KEY'@g" /opt/Skadi/Docker/timesketch/timesketch_default.conf
+}
 
-
+proxy_grafana_auth ()  {
+  echo ""
+  echo "Setting up Proxy and Grafana auth with custom credentials"
+  echo ""
+  # Setup Grafana Auth
+  sudo sed -i -E "s@GRAFANA_USER=.*@GRAFANA_USER='$GRAFANA_USER'@g" /opt/Skadi/Docker/.env
+  sudo sed -i -E "s@GRAFANA_PASSWORD=.*@GRAFANA_PASSWORD='$GRAFANA_PASSWORD'@g" /opt/Skadi/Docker/.env
 
   # Setup Nginx Auth
   sudo rm /opt/Skadi/Docker/nginx/auth/.skadi_auth
   echo $NGINX_PASSWORD | sudo htpasswd -i -c /opt/Skadi/Docker/nginx/auth/.skadi_auth $NGINX_USER
 }
 
-start_docker () {
-  echo "Bringing up Skadi_docprom"
-  cd /opt/Skadi/Docker/skadi_dockprom
-  docker-compose up -d
-
-  echo "Bringing up Skadi docker"
-  cd ..
-  docker-compose up -d
-
+configure_elastic_kibana () {
+  echo ""
+  echo "Setting up ElasticSearch and Kibana"
+  echo ""
   # Create a template in ES that sets the number of replicas for all indexes to 0
   echo "Waiting for ElasticSearch service to respond to requests"
   until $(curl --output /dev/null --silent --head --fail http://localhost:9200); do
@@ -293,11 +287,18 @@ echo "  - /opt/Skadi/Docker/skadi_dockprom/.env"
 ############ MAIN PROGRAM #############
 hello_message
 setup_host
-setup_credentials
-setup_docker
 download_skadi
+setup_docker
+if [ $default_skadi_passwords = "false" ]
+  then
+    change_credentials
+    timesketch_configs
+    proxy_grafana_auth
+else
+    echo "Using Skadi default username and password of skadi:skadi for OS Account, TimeSketch, Nginx proxy, and Grafana"
+fi
 cdqr_cylr_config
-timesketch_configs
 start_docker
+configure_elastic_kibana
 ensure_TS_up
 goodbye_message
