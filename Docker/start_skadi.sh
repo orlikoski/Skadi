@@ -19,7 +19,7 @@ start_docker () {
 
 
 ############ MAIN PROGRAM #############
-if [ $default_skadi_passwords = "false" ]
+if [ $banner = "false" ]
   then
     hello_message
 fi
