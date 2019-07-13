@@ -157,6 +157,8 @@ services:
     pid: host
     restart: unless-stopped
 
+################### YETI ###############
+
   yeti:
     image: aorlikoski/skadi_yeti:20190327
     container_name: yeti
