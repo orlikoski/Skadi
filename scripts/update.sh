@@ -46,7 +46,7 @@ do
       if [ -d "CyLR/" ]; then
         sudo rm -rf CyLR/
       fi
-      echo "$cylrzip downloaded into /opt/CyLR/"
+      echo "$cylrzip downloaded into $cylr_dir/"
   fi
 done
 # If Skadi Desktop exists place link to CyLR folder on it

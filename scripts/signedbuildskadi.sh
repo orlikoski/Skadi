@@ -223,9 +223,8 @@ start_docker () {
   echo ""
   echo "Bringing up Skadi"
   echo ""
-  cp /opt/Skadi/Docker/.env ./.env
-  docker-compose up -d
-  rm -rf ./.env
+  cd /opt/Skadi/Docker
+  sudo bash ./start_skadi.sh
 }
 
 configure_elastic_kibana () {
