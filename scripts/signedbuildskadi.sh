@@ -178,7 +178,7 @@ download_skadi () {
   echo ""
   echo "Downloading Skadi"
   echo ""
-  sudo git clone --recurse-submodules --branch $install_branch https://github.com/orlikoski/Skadi.git /opt/Skadi
+  sudo git clone --branch $install_branch https://github.com/orlikoski/Skadi.git /opt/Skadi
 
   # Update permissions on Skadi directory
   sudo chown -R $SKADI_USER:$SKADI_USER /opt/Skadi
