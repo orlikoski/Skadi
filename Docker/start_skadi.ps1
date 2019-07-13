@@ -2,7 +2,7 @@
 $ErrorActionPreference = "Stop"
 
 # Set the value for if it should display banner with pause or not
-$banner=${BANNER:-true}
+$banner=$env:BANNER
 
 function hello_message {
   echo "Starting a secure dockerized container setup of Skadi"
@@ -18,7 +18,7 @@ function start_docker {
 
 
 ############ MAIN PROGRAM #############
-if ( $banner = "true" ) {
+if ( $banner -ne "false" ) {
   hello_message
 }
 
