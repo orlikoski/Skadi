@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+# Set the value for if it should display banner with pause or not
+banner=${BANNER:-true}
+
 # Choosing to use default passwords or not
 default_skadi_passwords=${DEFAULT_PASSWORDS:-false}
 
@@ -292,7 +295,10 @@ echo "  - /opt/Skadi/Docker/skadi_dockprom/.env"
 }
 
 ############ MAIN PROGRAM #############
-hello_message
+if [ $banner = "false" ]
+  then
+    hello_message
+fi
 setup_host
 download_skadi
 setup_docker
