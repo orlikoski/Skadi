@@ -1,15 +1,12 @@
 #!/bin/bash
 # Set the version of CDQR docker
-cdqr_version=${CDQR_VERSION:-"4.4.0"}
+cdqr_version=${CDQR_VERSION:-"5.0.0"}
 
 # Set the installation branch
 install_branch=${INSTALL_BRANCH:-"master"}
 
-echo "Updating OS"
-sudo apt-get -y update
-sudo apt-get -y install wget curl
-sudo apt-get -y dist-upgrade
-sudo apt-get -y autoremove
+# Set the CylR Download directory
+cylr_dir=${CYLR_DIR:-"/opt/Skadi/Docker/nginx/html/downloads"}
 
 # Installs and Configures CDQR and CyLR
 echo "Updating CDQR"
@@ -36,13 +33,13 @@ fi
 
 for cylrzip in "${cylr_files[@]}"
 do
-  if [ ! -d "/opt/CyLR" ]; then
-    sudo mkdir /opt/CyLR/
-    sudo chmod 777 /opt/CyLR
+  if [ ! -d "$cylr_dir" ]; then
+    sudo mkdir $cylr_dir
+    sudo chmod 777 $cylr_dir
   else
-    sudo rm -rf /opt/CyLR/$cylrzip
+    sudo rm -rf $cylr_dir/$cylrzip
   fi
-  wget -O "/opt/CyLR/$cylrzip" "$ARTIFACT_URL/$cylrzip" > /dev/null 2>&1
+  wget -O "$cylr_dir/$cylrzip" "$ARTIFACT_URL/$cylrzip" > /dev/null 2>&1
   if [ $? -ne 0 ]; then
     echo "CyLR Download of $cylrzip failed"
   else
@@ -58,7 +55,7 @@ if [ -d /home/skadi/Desktop ]; then
     sudo chown -h skadi:skadi /home/skadi/Desktop/CyLR
 fi
 
-unzip -o /opt/CyLR/CyLR_linux-x64.zip -d /tmp/ > /dev/null 2>&1
+unzip -o $cylr_dir/CyLR_linux-x64.zip -d /tmp/ > /dev/null 2>&1
 cylr_version=$(/tmp/CyLR --version |grep Version)
 rm /tmp/CyLR > /dev/null 2>&1
 echo "All CyLR Files Downloaded"
