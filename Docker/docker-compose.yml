@@ -131,7 +131,7 @@ services:
     restart: unless-stopped
 
   cyberchef:
-    image: aorlikoski/skadi_cyberchef:20190713
+    image: aorlikoski/skadi_cyberchef:20190326
     container_name: cyberchef
     networks:
       - backend
