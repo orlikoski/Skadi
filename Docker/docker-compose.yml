@@ -23,7 +23,6 @@ services:
       - yeti
       - timesketch
       - kibana
-      - cerebro
       - cyberchef
       - portainer
       - grafana
