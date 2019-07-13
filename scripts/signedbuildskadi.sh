@@ -199,10 +199,10 @@ timesketch_configs () {
   echo ""
   cp /opt/Skadi/Docker/timesketch/timesketch_default.conf /opt/Skadi/Docker/timesketch/timesketch_default.conf.bak
   # Write TS and Postgres creds to .env file
-  sudo sed -i -E "s@TIMESKETCH_USER=.*@TIMESKETCH_USER='$TIMESKETCH_USER'@g" /opt/Skadi/Docker/.env
-  sudo sed -i -E "s@TIMESKETCH_PASSWORD=.*@TIMESKETCH_PASSWORD='$TIMESKETCH_PASSWORD'@g" /opt/Skadi/Docker/.env
-  sudo sed -i -E "s@POSTGRES_USER=.*@POSTGRES_USER='$POSTGRES_USER'@g" /opt/Skadi/Docker/.env
-  sudo sed -i -E "s@POSTGRES_PASSWORD=.*@POSTGRES_PASSWORD='$psql_pw'@g" /opt/Skadi/Docker/.env
+  sudo sed -i -E "s@TIMESKETCH_USER=.*@TIMESKETCH_USER=$TIMESKETCH_USER@g" /opt/Skadi/Docker/.env
+  sudo sed -i -E "s@TIMESKETCH_PASSWORD=.*@TIMESKETCH_PASSWORD=$TIMESKETCH_PASSWORD@g" /opt/Skadi/Docker/.env
+  sudo sed -i -E "s@POSTGRES_USER=.*@POSTGRES_USER=$POSTGRES_USER@g" /opt/Skadi/Docker/.env
+  sudo sed -i -E "s@POSTGRES_PASSWORD=.*@POSTGRES_PASSWORD=$psql_pw@g" /opt/Skadi/Docker/.env
 
  # Write TimeSketch config file on host
   sudo sed -i "s@timesketch\:d2aea7c843bf6cc049a8199ffaa5d468108878819210990f7f33c424882b52ba@$POSTGRES_USER\:$psql_pw@g" /opt/Skadi/Docker/timesketch/timesketch_default.conf
@@ -214,8 +214,8 @@ proxy_grafana_auth ()  {
   echo "Setting up Proxy and Grafana auth with custom credentials"
   echo ""
   # Setup Grafana Auth
-  sudo sed -i -E "s@GRAFANA_USER=.*@GRAFANA_USER='$GRAFANA_USER'@g" /opt/Skadi/Docker/.env
-  sudo sed -i -E "s@GRAFANA_PASSWORD=.*@GRAFANA_PASSWORD='$GRAFANA_PASSWORD'@g" /opt/Skadi/Docker/.env
+  sudo sed -i -E "s@GRAFANA_USER=.*@GRAFANA_USER=$GRAFANA_USER@g" /opt/Skadi/Docker/.env
+  sudo sed -i -E "s@GRAFANA_PASSWORD=.*@GRAFANA_PASSWORD=$GRAFANA_PASSWORD@g" /opt/Skadi/Docker/.env
 
   # Setup Nginx Auth
   sudo rm /opt/Skadi/Docker/nginx/auth/.skadi_auth
