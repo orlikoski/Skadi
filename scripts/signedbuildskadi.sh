@@ -219,7 +219,7 @@ proxy_grafana_auth ()  {
   echo $NGINX_PASSWORD | sudo htpasswd -i -c /opt/Skadi/Docker/nginx/auth/.skadi_auth $NGINX_USER
 }
 
-start_docker () {	configure_elastic_kibana () {
+start_docker () {
   echo ""
   echo "Bringing up Skadi"
   echo ""
