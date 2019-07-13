@@ -227,6 +227,7 @@ start_docker () {
   echo "Bringing up Skadi"
   echo ""
   cd /opt/Skadi/Docker
+  sudo BANNER=false bash ./reset_skadi.sh
   sudo BANNER=false bash ./start_skadi.sh
 }
 
