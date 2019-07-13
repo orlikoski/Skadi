@@ -125,20 +125,20 @@ change_credentials () {
   echo "Using random credentials"
   echo ""
   # Set Credentials
-  SECRET_KEY=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
+  SECRET_KEY=$(openssl rand -hex 32)
   POSTGRES_USER="timesketch"
-  psql_pw=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
+  psql_pw=$(openssl rand -hex 32)
   neo4juser='neo4j'
 
   echo "Using random username and passwords for OS Account, TimeSketch, Nginx proxy / Grafana"
   echo "Writing all credentials to /opt/skadi_credentials"
-  TIMESKETCH_USER="skadi_$(openssl rand -base64 3)"
-  TIMESKETCH_PASSWORD=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
-  NGINX_USER="skadi_$(openssl rand -base64 3)"
-  NGINX_PASSWORD=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
+  TIMESKETCH_USER="skadi_$(openssl rand -hex 3)"
+  TIMESKETCH_PASSWORD=$(openssl rand -hex 32)
+  NGINX_USER="skadi_$(openssl rand -hex 3)"
+  NGINX_PASSWORD=$(openssl rand -hex 32)
   GRAFANA_USER=$NGINX_USER
   GRAFANA_PASSWORD=$NGINX_PASSWORD
-  SKADI_PASS=$(openssl rand -base64 32 |sha256sum | sed 's/ //g')
+  SKADI_PASS=$(openssl rand -hex 32)
   SKADI_USER_HOME="/home/$SKADI_USER"
   echo "  Proxy & Grafana Account:" > /opt/skadi_credentials
   echo "     - Username: $NGINX_USER" >> /opt/skadi_credentials
