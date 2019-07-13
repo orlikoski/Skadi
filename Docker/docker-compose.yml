@@ -131,13 +131,6 @@ services:
       SERVER_BASEPATH: /kibana
     restart: unless-stopped
 
-  cerebro:
-    image: lmenezes/cerebro:0.8.1
-    container_name: cerebro
-    networks:
-      - backend
-    restart: unless-stopped
-
   cyberchef:
     image: aorlikoski/skadi_cyberchef:20190326
     container_name: cyberchef
@@ -146,7 +139,7 @@ services:
     restart: unless-stopped
 
   portainer:
-    image: portainer/portainer:1.20.2
+    image: portainer/portainer:1.21.0
     container_name: portainer
     volumes:
       - portainerdata:/data portainer/portainer
