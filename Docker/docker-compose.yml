@@ -3,21 +3,14 @@ version: '3.5'
 networks:
   backend:
     name: skadi-backend
-    driver: bridge
 
 volumes:
-  esdata1:
-    driver: local
-  neo4jdata:
-    driver: local
-  pgdata:
-    driver: local
-  redisdata:
-    driver: local
-  tssockets:
-    driver: local
-  portainerdata:
-    driver: local
+  esdata1: {}
+  neo4jdata: {}
+  pgdata: {}
+  redisdata: {}
+  tssockets: {}
+  portainerdata: {}
   prometheus_data: {}
   grafana_data: {}
 
@@ -38,7 +31,7 @@ services:
     ports:
       - 80:80
       #- 443:443
-    restart: always
+    restart: unless-stopped
 
   timesketch:
     image: aorlikoski/skadi_timesketch:20190326
@@ -56,7 +49,7 @@ services:
     volumes:
       - ./timesketch/timesketch_default.conf:/etc/timesketch.conf
       - tssockets:/var/timesketch/
-    restart: always
+    restart: unless-stopped
 
   postgres:
     image: postgres:11
@@ -70,7 +63,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
       - pgdata:/var/lib/postgresql/data
-    restart: always
+    restart: unless-stopped
 
   redis:
     image: redis:5
@@ -79,7 +72,7 @@ services:
       - backend
     volumes:
       - redisdata:/var/lib/redis
-    restart: always
+    restart: unless-stopped
 
   mongodb:
     image: mongo:4.0
@@ -89,7 +82,7 @@ services:
     command: mongod
     networks:
       - backend
-    restart: always
+    restart: unless-stopped
 
   neo4j:
     image: neo4j:3.5
@@ -100,7 +93,7 @@ services:
       - NEO4J_AUTH=none
     volumes:
       - neo4jdata:/var/lib/neo4j/data
-    restart: always
+    restart: unless-stopped
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.6.2
@@ -119,7 +112,7 @@ services:
         hard: -1
     volumes:
       - esdata1:/usr/share/elasticsearch/data
-    restart: always
+    restart: unless-stopped
 
   kibana:
     image: docker.elastic.co/kibana/kibana:6.6.2
@@ -128,21 +121,21 @@ services:
       - backend
     environment:
       SERVER_BASEPATH: /kibana
-    restart: always
+    restart: unless-stopped
 
   cerebro:
     image: lmenezes/cerebro:0.8.1
     container_name: cerebro
     networks:
       - backend
-    restart: always
+    restart: unless-stopped
 
   cyberchef:
     image: aorlikoski/skadi_cyberchef:20190326
     container_name: cyberchef
     networks:
       - backend
-    restart: always
+    restart: unless-stopped
 
   portainer:
     image: portainer/portainer:1.20.2
@@ -154,7 +147,7 @@ services:
     networks:
       - backend
     pid: host
-    restart: always
+    restart: unless-stopped
 
   yeti:
     image: aorlikoski/skadi_yeti:20190327
@@ -162,7 +155,7 @@ services:
     command: ['docker-entrypoint.sh', 'uwsgi']
     networks:
       - backend
-    restart: always
+    restart: unless-stopped
     depends_on:
       - redis
       - mongodb
@@ -172,7 +165,7 @@ services:
     command: ['docker-entrypoint.sh', 'feeds']
     networks:
       - backend
-    restart: always
+    restart: unless-stopped
     depends_on:
       - redis
       - mongodb
@@ -185,7 +178,7 @@ services:
     command: ['docker-entrypoint.sh', 'analytics']
     networks:
       - backend
-    restart: always
+    restart: unless-stopped
     depends_on:
       - redis
       - mongodb
@@ -198,7 +191,7 @@ services:
     command: ['docker-entrypoint.sh', 'beat']
     networks:
       - backend
-    restart: always
+    restart: unless-stopped
     depends_on:
       - redis
       - mongodb
@@ -209,7 +202,7 @@ services:
     command: ['docker-entrypoint.sh', 'exports']
     networks:
       - backend
-    restart: always
+    restart: unless-stopped
     depends_on:
       - redis
       - mongodb
@@ -220,7 +213,7 @@ services:
     command: ['docker-entrypoint.sh', 'oneshot']
     networks:
       - backend
-    restart: always
+    restart: unless-stopped
     depends_on:
       - redis
       - mongodb
@@ -232,7 +225,7 @@ services:
     image: prom/prometheus:v2.5.0
     container_name: prometheus
     volumes:
-      - ./prometheus/:/etc/prometheus/
+      - ./grafana/prometheus/:/etc/prometheus/
       - prometheus_data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
@@ -251,7 +244,7 @@ services:
     image: prom/alertmanager:v0.15.3
     container_name: alertmanager
     volumes:
-      - ./alertmanager/:/etc/alertmanager/
+      - ./grafana/alertmanager/:/etc/alertmanager/
     command:
       - '--config.file=/etc/alertmanager/config.yml'
       - '--storage.path=/alertmanager'
@@ -260,8 +253,6 @@ services:
       - 9093:9093
     networks:
       - backend
-
-
 
   nodeexporter:
     image: prom/node-exporter:v0.17.0
@@ -281,8 +272,6 @@ services:
       - 9100:9100
     networks:
       - backend
-
-
 
   cadvisor:
     image: google/cadvisor:v0.32.0
@@ -304,9 +293,9 @@ services:
     container_name: grafana
     volumes:
       - grafana_data:/var/lib/grafana
-      - ./grafana/datasources:/etc/grafana/datasources
-      - ./grafana/dashboards:/etc/grafana/dashboards
-      - ./grafana/setup.sh:/setup.sh
+      - ./grafana/grafana/datasources:/etc/grafana/datasources
+      - ./grafana/grafana/dashboards:/etc/grafana/dashboards
+      - ./grafana/grafana/setup.sh:/setup.sh
     entrypoint: /setup.sh
     environment:
       - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
