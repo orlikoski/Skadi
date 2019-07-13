@@ -19,6 +19,14 @@ services:
   nginx:
     image: nginx:1.15
     container_name: nginx
+    depends_on:
+      - yeti
+      - timesketch
+      - kibana
+      - cerebro
+      - cyberchef
+      - portainer
+      - grafana
     networks:
       - backend
     volumes:
