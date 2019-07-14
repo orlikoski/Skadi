@@ -21,7 +21,6 @@ volumes:
   yetiexport_data: {}
   yetioneshot_data: {}
 
-
 services:
   nginx:
     image: nginx:1.15
