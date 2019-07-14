@@ -74,7 +74,7 @@ mkcert_setup () {
 
   echo "Creating Self Signed Certificates for 127.0.0.1 localhost $hostinfo ::1"
   echo ""
-  sudo mkcert -install -cert-file /opt/Skadi/Docker/nginx/certs/$hostinfo.pem -key-file /etc/nginx/certs/$hostinfo.key.pem 127.0.0.1 localhost $hostinfo ::1
+  sudo mkcert -install -cert-file /opt/Skadi/Docker/nginx/certs/$hostinfo.pem -key-file /opt/Skadi/Docker/nginx/certs/$hostinfo.key.pem 127.0.0.1 localhost $hostinfo ::1
   echo ""
   echo "Certificates were written to /etc/nginx/certs"
   echo ""
