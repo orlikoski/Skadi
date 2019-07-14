@@ -341,8 +341,6 @@ services:
       - '--storage.tsdb.retention=200h'
       - '--web.enable-lifecycle'
     restart: unless-stopped
-    # ports:
-    #   - 9090:9090
     networks:
       - backend
 
@@ -355,8 +353,6 @@ services:
       - '--config.file=/etc/alertmanager/config.yml'
       - '--storage.path=/alertmanager'
     restart: unless-stopped
-    # ports:
-    #   - 9093:9093
     networks:
       - backend
 
@@ -374,8 +370,6 @@ services:
       - '--path.sysfs=/host/sys'
       - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
     restart: unless-stopped
-    # ports:
-    #   - 9100:9100
     networks:
       - backend
 
@@ -389,8 +383,6 @@ services:
       - /var/lib/docker/:/var/lib/docker:ro
       #- /cgroup:/cgroup:ro #doesn't work on MacOS only for Linux
     restart: unless-stopped
-    # ports:
-    #   - 8080:8080
     networks:
       - backend
 
@@ -410,15 +402,11 @@ services:
       - GF_USERS_ALLOW_SIGN_UP=false
       - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s/grafana/
     restart: unless-stopped
-    # ports:
-    #   - 3000:3000
     networks:
       - backend
   pushgateway:
     image: prom/pushgateway:v0.7.0
     container_name: pushgateway
     restart: unless-stopped
-    # ports:
-    #   - 9091:9091
     networks:
       - backend
