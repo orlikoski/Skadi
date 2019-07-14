@@ -13,6 +13,8 @@ echo "Updating CDQR"
 echo "Downloading cdqr docker script into /usr/local/bin/cdqr"
 sudo curl -o /usr/local/bin/cdqr "https://raw.githubusercontent.com/orlikoski/Skadi/$install_branch/scripts/cdqr"
 sudo chmod +x /usr/local/bin/cdqr
+sudo curl -o /usr/local/bin/cdqr.d "https://raw.githubusercontent.com/orlikoski/Skadi/$install_branch/scripts/cdqr.d"
+sudo chmod +x /usr/local/bin/cdqr.d
 echo "Downloading aorlikoski/CDQR:$cdqr_version "
 sudo docker pull "aorlikoski/cdqr:$cdqr_version"
 
