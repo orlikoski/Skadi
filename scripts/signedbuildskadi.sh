@@ -8,7 +8,7 @@ banner=${BANNER:-true}
 default_skadi_passwords=${DEFAULT_PASSWORDS:-false}
 
 # Set the installation branch
-install_branch=${INSTALL_BRANCH:-"just_docker"}
+install_branch=${INSTALL_BRANCH:-"master"}
 
 # Set the value for if the hostname should be changed
 hostname_change=${SKADI_HOSTNAME:-true}
