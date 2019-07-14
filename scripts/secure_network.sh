@@ -48,6 +48,9 @@ nginx_setup () {
   sudo cp /opt/Skadi/Docker/nginx/ssl.conf /opt/Skadi/Docker/nginx/conf.d/ssl.conf
   #sudo chown root:root /etc/nginx/conf.d/ssl.conf
   sudo chmod 644 /opt/Skadi/Docker/nginx/conf.d/ssl.conf
+
+  echo "Enabling port 443"
+  sudo sed -i "s/#- 443:443/- 443:443/g" /opt/Skadi/Docker/docker-compose.yml
 }
 
 dhparam_setup () {

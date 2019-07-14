@@ -55,7 +55,7 @@ sudo chmod 644 /opt/Skadi/Docker/nginx/conf.d/skadi_TLS.conf
 
 enable_ocsp () {
 sudo rm -rf /tmp/ssl.conf
-echo "Updating the /etc/nginx/conf.d/ssl.conf to enable OCSP protection"
+echo "Updating the /opt/Skadi/Docker/nginx/conf.d/ssl.conf to enable OCSP protection"
 cp /opt/Skadi/Docker/nginx/conf.d/ssl.conf /tmp/ssl.conf
 sudo sed -i "s@# ssl_stapling on;@ssl_stapling on;@g" /tmp/ssl.conf
 sudo sed -i "s@# ssl_stapling_verify on;@ssl_stapling_verify on;@g" /tmp/ssl.conf
