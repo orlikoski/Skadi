@@ -11,7 +11,6 @@ hello_message () {
 }
 
 reset_docker () {
-  set -x
   docker-compose down
   docker volume prune --force
   docker system prune --force
