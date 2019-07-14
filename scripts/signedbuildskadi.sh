@@ -294,7 +294,6 @@ echo ""
 echo "The following files have credentials used in the build process stored in them:"
 echo "  - /opt/skadi_credentials (only if run-time generated credentials chosen)"
 echo "  - /opt/Skadi/Docker/.env"
-echo "  - /opt/Skadi/Docker/skadi_dockprom/.env"
 }
 
 ############ MAIN PROGRAM #############
