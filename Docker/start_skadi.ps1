@@ -1,5 +1,5 @@
 #! /usr/bin/pwsh
-#$ErrorActionPreference = "Stop"
+$ErrorActionPreference = "Stop"
 
 # Set the value for if it should display banner with pause or not
 $banner=$env:BANNER
@@ -22,15 +22,16 @@ function configure_elastic_kibana {
   echo ""
   # Create a template in ES that sets the number of replicas for all indexes to 0
   echo "Waiting for ElasticSearch service to respond to requests"
+  $ErrorActionPreference = "SilentlyContinue"
   do {
 
     $KB_test_Params = @{
         URI = 'http://localhost:9200'
-        ErrorAction = 'Continue'
     }
     $response = Invoke-WebRequest @KB_test_Params
     Start-Sleep -s 5
   } until ( $response.StatusCode -eq [System.Net.HttpStatusCode]::OK )
+  $ErrorActionPreference = "Stop"
 
   echo "Setting the ElasticSearch default number of replicas to 0"
   $ES_Params = @{
@@ -40,11 +41,12 @@ function configure_elastic_kibana {
       Headers = @{'content-type'='application/json'}
   }
 
-  Invoke-RestMethod @ES_Params
+  Invoke-RestMethod @ES_Params 2>&1>$null
 
   echo "Waiting for Kibana service to respond to requests"
   $username = "$env:GRAFANA_USER"
   $password = "$env:GRAFANA_PASSWORD"
+  $ErrorActionPreference = "SilentlyContinue"
   do {
 
     $KB_test_Params = @{
@@ -54,6 +56,7 @@ function configure_elastic_kibana {
     $response = Invoke-WebRequest @KB_test_Params
     Start-Sleep -s 5
   } until ( $response.StatusCode -eq [System.Net.HttpStatusCode]::OK )
+  $ErrorActionPreference = "Stop"
 
   echo "Importing Saved Objects to Kibana and setting default index"
   $KB1_Params = @{
@@ -62,7 +65,7 @@ function configure_elastic_kibana {
       Headers = @{'Authorization'='Basic ' + [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes("$($username):$($password)"));'kbn-xsrf'='true';'content-type'='application/json'}
       InFile = "../objects/kibana_6.x_cli_import.json"
   }
-  Invoke-RestMethod @KB1_Params
+  Invoke-RestMethod @KB1_Params 2>&1>$null
 
 
   $KB2_Params = @{
@@ -72,7 +75,7 @@ function configure_elastic_kibana {
       Body = '{"value": "06876cd0-dfc5-11e8-bc06-31e345541948"}'
   }
 
-  Invoke-RestMethod @KB2_Params
+  Invoke-RestMethod @KB2_Params 2>&1>$null
 }
 
 <#

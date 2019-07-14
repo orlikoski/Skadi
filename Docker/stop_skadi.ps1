@@ -6,7 +6,7 @@ $banner=$env:BANNER
 
 function hello_message {
   echo "Stopping Skadi"
-    echo "If you want to stop the container, and preserve the data, press any key to continue... or CTRL+C to exit"
+  echo "If you want to stop the containers, and preserve the data, press any key to continue... or CTRL+C to exit"
   $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown');
   echo ""
 }
