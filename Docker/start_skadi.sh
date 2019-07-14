@@ -17,6 +17,7 @@ os_setup () {
       echo ""
       echo "Detected Linux operating system"
       echo "Setting the vm.max_map_count kernel to 262144 for elasticsearch to start"
+      echo "WARNING!!! This requires sudo to make this change."
       sudo sysctl -w vm.max_map_count=262144
       echo vm.max_map_count=262144 | sudo tee -a /etc/sysctl.conf
       echo ""

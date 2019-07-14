@@ -6,7 +6,7 @@ banner=${BANNER:-true}
 
 hello_message () {
   echo "Stopping Skadi"
-  read -n 1 -r -s -p "If you want to stop the container, and preserve the data, press any key to continue... or CTRL+C to exit"
+  read -n 1 -r -s -p "If you want to stop the containers, and preserve the data, press any key to continue... or CTRL+C to exit"
   echo ""
 }
 
