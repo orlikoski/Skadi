@@ -197,7 +197,6 @@ timesketch_configs () {
   echo ""
   echo "Setting up Timesketch configs with custom credentials"
   echo ""
-  sudo rm -rf /opt/Skadi/Docker/timesketch/timesketch.conf
   cp /opt/Skadi/Docker/timesketch/timesketch_default.conf /opt/Skadi/Docker/timesketch/timesketch_default.conf.bak
   # Write TS and Postgres creds to .env file
   sudo sed -i -E "s@TIMESKETCH_USER=.*@TIMESKETCH_USER=$TIMESKETCH_USER@g" /opt/Skadi/Docker/.env
