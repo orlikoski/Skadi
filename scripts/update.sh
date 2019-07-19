@@ -10,10 +10,12 @@ cylr_dir=${CYLR_DIR:-"/opt/Skadi/Docker/nginx/html/downloads"}
 
 # Installs and Configures CDQR and CyLR
 echo "Updating CDQR"
-echo "Downloading cdqr docker script into /usr/local/bin/cdqr"
-sudo curl -o /usr/local/bin/cdqr "https://raw.githubusercontent.com/orlikoski/Skadi/$install_branch/scripts/cdqr"
+echo "Downloading cdqr docker scripts into:"
+echo "  /usr/local/bin/cdqr"
+echo "  /usr/local/bin/cdqr.d"
+sudo curl -o /usr/local/bin/cdqr "https://raw.githubusercontent.com/orlikoski/CDQR/master/Docker/cdqr"
 sudo chmod +x /usr/local/bin/cdqr
-sudo curl -o /usr/local/bin/cdqr.d "https://raw.githubusercontent.com/orlikoski/Skadi/$install_branch/scripts/cdqr.d"
+sudo curl -o /usr/local/bin/cdqr.d "https://raw.githubusercontent.com/orlikoski/CDQR/master/Docker/cdqr.d"
 sudo chmod +x /usr/local/bin/cdqr.d
 echo "Downloading aorlikoski/CDQR:$cdqr_version "
 sudo docker pull "aorlikoski/cdqr:$cdqr_version"
