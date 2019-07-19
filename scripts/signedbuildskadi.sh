@@ -98,14 +98,14 @@ setup_host () {
         echo "  Created OS Account:" >> /opt/skadi_credentials
         echo "     - Username: $SKADI_USER" >> /opt/skadi_credentials
         echo "     - Password: $SKADI_PASS" >> /opt/skadi_credentials
-        /usr/sbin/groupadd $SKADI_USER
-        /usr/sbin/useradd $SKADI_USER -g $SKADI_USER -G sudo -d $SKADI_USER_HOME --create-home -s "/bin/bash"
-        echo "$SKADI_USER:$SKADI_PASS" | chpasswd
+        sudo /usr/sbin/groupadd $SKADI_USER
+        sudo /usr/sbin/useradd $SKADI_USER -g $SKADI_USER -G sudo -d $SKADI_USER_HOME --create-home -s "/bin/bash"
+        echo "$SKADI_USER:$SKADI_PASS" | sudo chpasswd
 
         # Set up sudo
         echo "==> Giving $SKADI_USER sudo powers"
-        echo "$SKADI_USER        ALL=(ALL)       NOPASSWD: ALL" > /etc/sudoers.d/$SKADI_USER
-        chmod 440 /etc/sudoers.d/$SKADI_USER
+        echo "$SKADI_USER        ALL=(ALL)       NOPASSWD: ALL" | sudo tee /etc/sudoers.d/$SKADI_USER
+        sudo chmod 440 /etc/sudoers.d/$SKADI_USER
     fi
   else
     echo "Not creating skadi user"
@@ -185,9 +185,6 @@ cdqr_cylr_config () {
   echo ""
   echo "Setting up CDQR and CyLR"
   echo ""
-  # Copy cdqr script to /usr/local/bin
-  sudo cp /opt/Skadi/scripts/cdqr /usr/local/bin/cdqr
-  sudo chmod +x /usr/local/bin/cdqr
 
   # Installs and Configures CDQR and CyLR
   sudo -E bash /opt/Skadi/scripts/update.sh
