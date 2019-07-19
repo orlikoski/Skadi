@@ -45,6 +45,10 @@ setup_host () {
   # Install sudo
   tdnf install git sudo -y
 
+  # setup /opt
+  sudo mkdir /opt
+  sudo chmod 766 /opt
+
   # Set the vm.max_map_count kernel setting needs to be set to at least 262144 for production use
     sudo sysctl -w vm.max_map_count=262144
     echo vm.max_map_count=262144 | sudo tee -a /etc/sysctl.conf
