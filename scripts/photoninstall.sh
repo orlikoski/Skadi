@@ -43,7 +43,7 @@ setup_host () {
   echo ""
 
   # Install sudo
-  tdnf install git sudo -y
+  tdnf install git sudo wget -y
 
   # setup /opt
   sudo mkdir /opt
@@ -161,6 +161,7 @@ cdqr_cylr_config () {
 
   # Installs and Configures CDQR and CyLR
   sudo -E bash /opt/Skadi/scripts/update.sh
+  sudo chmod -R 777 /opt/Skadi/Docker/nginx/
 }
 
 timesketch_configs () {
