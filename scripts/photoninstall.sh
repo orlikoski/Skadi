@@ -98,6 +98,35 @@ setup_host () {
   fi
 }
 
+change_credentials () {
+  echo ""
+  echo "Using random credentials"
+  echo ""
+  # Set Credentials
+  SECRET_KEY=$(openssl rand -hex 32)
+  POSTGRES_USER="timesketch"
+  psql_pw=$(openssl rand -hex 32)
+  neo4juser='neo4j'
+
+  echo "Using random username and passwords for OS Account, TimeSketch, Nginx proxy / Grafana"
+  echo "Writing all credentials to /opt/skadi_credentials"
+  TIMESKETCH_USER="skadi_$(openssl rand -hex 3)"
+  TIMESKETCH_PASSWORD=$(openssl rand -hex 32)
+  NGINX_USER="skadi_$(openssl rand -hex 3)"
+  NGINX_PASSWORD=$(openssl rand -hex 32)
+  GRAFANA_USER=$NGINX_USER
+  GRAFANA_PASSWORD=$NGINX_PASSWORD
+  SKADI_PASS=$(openssl rand -hex 32)
+  SKADI_USER_HOME="/home/$SKADI_USER"
+  echo "  Proxy & Grafana Account:" > /opt/skadi_credentials
+  echo "     - Username: $NGINX_USER" >> /opt/skadi_credentials
+  echo "     - Password: $NGINX_PASSWORD" >> /opt/skadi_credentials
+  echo "" >> /opt/skadi_credentials
+  echo "  TimeSketch Account:" >> /opt/skadi_credentials
+  echo "     - Username: $TIMESKETCH_USER" >> /opt/skadi_credentials
+  echo "     - Password: $TIMESKETCH_PASSWORD" >> /opt/skadi_credentials
+}
+
 setup_docker () {
   # Install Docker-Compose
   sudo curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
