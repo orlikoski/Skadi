@@ -1,0 +1,162 @@
+{
+  "variables": {
+    "iso_file": "http://dl.bintray.com/vmware/photon/3.0/GA/iso/photon-3.0-26156e2.iso",
+    "iso_sha1sum": "1c38dd6d00e11d3cbf7768ce93fc3eb8913a9673",
+    "product_version": "3.0GA",
+    "root_password": "skadiskadi",
+    "vm_name": "skadi_server",
+    "version": "2019.4",
+    "headless": "false",
+    "cpus": "4",
+    "memory": "8196",
+    "desktop": "false",
+    "disk_size": "102400",
+    "hostname": "skadi",
+    "ssh_fullname": "skadi",
+    "ssh_password": "skadi",
+    "ssh_username": "skadi",
+    "scripts": "../script",
+    "preseed": "photon-kickstart.json"
+  },
+  "builders": [
+    {
+      "name": "vmware",
+      "vm_name":  "{{user `vm_name`}}",
+      "type": "vmware-iso",
+      "headless": "{{user `headless`}}",
+      "disk_size": "{{user `disk_size`}}",
+      "disk_type_id": 0,
+      "guest_os_type": "other3xlinux-64",
+      "iso_url": "{{user `iso_file`}}",
+      "iso_checksum": "{{user `iso_sha1sum`}}",
+      "iso_checksum_type": "sha1",
+      "ssh_username": "root",
+      "ssh_password": "{{user `root_password`}}",
+      "output_directory": "output-{{ user `vm_name` }}-vmware-iso",
+      "ssh_wait_timeout": "60m",
+      "boot_wait": "5s",
+      "shutdown_command": "shutdown -h now",
+      "http_directory": "{{ user `scripts` }}",
+      "version": 11,
+      "vmx_data": {
+        "scsi0.virtualDev": "pvscsi",
+        "ethernet0.virtualDev": "vmxnet3",
+        "memsize": "{{ user `memory` }}",
+        "numvcpus": "{{ user `cpus` }}"
+        },
+      "vmx_data_post": {
+        "displayname": "Skadi Server",
+        "usb.present": "false"
+        },
+        "boot_command": [
+          "<esc><wait>",
+          "vmlinuz initrd=initrd.img root=/dev/ram0 loglevel=3 file=/floppy/{{ user `preseed` }}",
+          "<enter>"
+        ],
+        "floppy_files": [
+          "http/{{ user `preseed` }}"
+        ]
+    },
+    {
+      "name": "virtualbox",
+      "vm_name":  "{{user `vm_name`}}",
+      "type": "virtualbox-iso",
+      "headless": false,
+      "hard_drive_interface": "scsi",
+      "disk_size": "{{user `disk_size`}}",
+      "guest_os_type": "Linux_64",
+      "iso_url": "{{user `iso_file`}}",
+      "iso_checksum": "{{user `iso_sha1sum`}}",
+      "iso_checksum_type": "sha1",
+      "ssh_username": "root",
+      "ssh_password": "{{user `root_password`}}",
+      "ssh_wait_timeout": "60m",
+      "boot_wait": "5s",
+      "http_directory": "{{ user `scripts` }}",
+      "output_directory": "output-{{ user `vm_name` }}-virtualbox-iso",
+      "shutdown_command": "shutdown -h now",
+      "boot_command": [
+        "<esc><wait>",
+        "vmlinuz initrd=initrd.img root=/dev/ram0 loglevel=3 ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/photon-kickstart.json photon.media=cdrom",
+        "<enter>"
+      ]
+    }
+  ],
+    "provisioners": [
+    {
+      "type": "shell",
+      "script": "../script/photon-package_provisioning.sh"
+    },
+    {
+      "type": "shell",
+      "only": ["vmware", "virtualbox"],
+      "script": "../script/photon-vagrant-user_provisioning.sh"
+    },
+    {
+      "type": "shell",
+      "only": ["vmware"],
+      "script": "../script/photon-sharedfolders_prep.sh"
+    },
+    {
+      "type": "shell",
+      "only": ["virtualbox"],
+      "script": "../script/photon-vagrant-vbox_additions.sh"
+    },
+    {
+      "type": "file",
+      "only": ["virtualbox"],
+      "source": "../script/photon-virtualbox-load-module.conf",
+      "destination": "/etc/modules-load.d/virtualbox.conf"
+    },
+    {
+      "type": "shell",
+      "inline": ["sed -i '/linux/ s/$/ net.ifnames=0/' /boot/grub2/grub.cfg"]
+    },
+    {
+      "type": "shell",
+      "inline": ["echo 'GRUB_CMDLINE_LINUX=\"net.ifnames=0\"' >> /etc/default/grub"]
+    },
+    {
+      "type": "shell",
+      "script": "../script/photon-security_check.sh"
+    },
+    {
+      "type": "shell",
+      "inline": ["sed -i 's/OS/Linux/' /etc/photon-release"]
+    },
+    {
+      "environment_vars": [
+      "DEBIAN_FRONTEND=noninteractive",
+      "SSH_USERNAME=skadi",
+      "CDQR_VERSION=5.0.0",
+      "DEFAULT_PASSWORDS=true",
+      "INSTALL_BRANCH=Dev",
+      "SKADI_HOSTNAME=true",
+      "MAKE_SKADI_USER=true",
+      "UTC_TIME=true"
+    ],
+      "execute_command": "echo '{{ user `ssh_password` }}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
+      "scripts": [
+        "../../scripts/photoninstall.sh"
+      ],
+      "type": "shell",
+      "expect_disconnect": "true"
+    }
+  ],
+  "post-processors": [
+    {
+      "keep_input_artifact": false,
+      "output": "box/{{.Provider}}/{{user `vm_name`}}-{{user `version`}}.box",
+      "type": "vagrant",
+      "vagrantfile_template": "../../Vagrant/skadi_server/vmware/Vagrantfile",
+      "only": ["vmware"]
+    },
+    {
+      "keep_input_artifact": false,
+      "output": "box/{{.Provider}}/{{user `vm_name`}}-{{user `version`}}.box",
+      "type": "vagrant",
+      "vagrantfile_template": "../../Vagrant/skadi_server/virtualbox/Vagrantfile",
+      "only": ["virtualbox"]
+    }
+  ]
+  }
