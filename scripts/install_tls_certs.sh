@@ -39,31 +39,31 @@ nginx_enable () {
 nginx_update_hostname () {
   sudo rm -rf /tmp/skadi_TLS.conf
   echo "Updating the /etc/nginx/conf.d/skadi_TLS.conf to use $hostinfo"
-  cp /etc/nginx/conf.d/skadi_TLS.conf /tmp/skadi_TLS.conf
+  cp /opt/Skadi/Docker/nginx/conf.d/skadi_TLS.conf /tmp/skadi_TLS.conf
   sudo sed -i -E "s@server_name .*;@server_name  $hostinfo;@g" /tmp/skadi_TLS.conf
-  sudo cp /tmp/skadi_TLS.conf /etc/nginx/conf.d/skadi_TLS.conf
-  sudo chmod 644 /etc/nginx/conf.d/skadi_TLS.conf
+  sudo cp /tmp/skadi_TLS.conf /opt/Skadi/Docker/nginx/conf.d/skadi_TLS.conf
+  sudo chmod 644 /opt/Skadi/Docker/nginx/conf.d/skadi_TLS.conf
 }
 
 nginx_update_certs () {
 echo "Updating the /etc/nginx/conf.d/skadi_TLS.conf to use letsencrypt certificates"
 sudo sed -i "s@ssl_certificate       /etc/nginx/certs/.*.pem@ssl_certificate       /etc/nginx/certs/letsencrypt/live/$hostinfo/fullchain.pem@g" /tmp/skadi_TLS.conf
 sudo sed -i "s@ssl_certificate_key   /etc/nginx/certs/.*.key.pem@ssl_certificate_key   /etc/nginx/certs/letsencrypt/live/$hostinfo/privkey.pem@g" /tmp/skadi_TLS.conf
-sudo cp /tmp/skadi_TLS.conf /etc/nginx/conf.d/skadi_TLS.conf
-sudo chmod 644 /etc/nginx/conf.d/skadi_TLS.conf
+sudo cp /tmp/skadi_TLS.conf /opt/Skadi/Docker/nginx/conf.d/skadi_TLS.conf
+sudo chmod 644 /opt/Skadi/Docker/nginx/conf.d/skadi_TLS.conf
 }
 
 enable_ocsp () {
 sudo rm -rf /tmp/ssl.conf
-echo "Updating the /etc/nginx/conf.d/ssl.conf to enable OCSP protection"
-cp /etc/nginx/conf.d/ssl.conf /tmp/ssl.conf
+echo "Updating the /opt/Skadi/Docker/nginx/conf.d/ssl.conf to enable OCSP protection"
+cp /opt/Skadi/Docker/nginx/conf.d/ssl.conf /tmp/ssl.conf
 sudo sed -i "s@# ssl_stapling on;@ssl_stapling on;@g" /tmp/ssl.conf
 sudo sed -i "s@# ssl_stapling_verify on;@ssl_stapling_verify on;@g" /tmp/ssl.conf
 sudo sed -i "s@# ssl_trusted_certificate /etc/nginx/certs/letsencrypt/live/localhost/chain.pem;@ssl_trusted_certificate /etc/nginx/certs/letsencrypt/live/$hostinfo/chain.pem;@g" /tmp/ssl.conf
 sudo sed -i "s@# resolver 8.8.8.8 8.8.4.4 valid=300s;@resolver 8.8.8.8 8.8.4.4 valid=300s;@g" /tmp/ssl.conf
 sudo sed -i "s@# resolver_timeout 5s;@resolver_timeout 5s;@g" /tmp/ssl.conf
-sudo cp /tmp/ssl.conf /etc/nginx/conf.d/ssl.conf
-sudo chmod 644 /etc/nginx/conf.d/ssl.conf
+sudo cp /tmp/ssl.conf /opt/Skadi/Docker/nginx/conf.d/ssl.conf
+sudo chmod 644 /opt/Skadi/Docker/nginx/conf.d/ssl.conf
 }
 
 execute_certbot () {

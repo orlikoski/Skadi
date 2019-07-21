@@ -144,7 +144,7 @@
     "ssh_username": "skadi",
     "update": "true",
     "vagrantfile_template": "../../Vagrant/skadi_server/vmware/Vagrantfile",
-    "version": "2019.2",
+    "version": "2019.4",
     "virtualbox_guest_os_type": "Ubuntu_64",
     "vm_name": "skadi_basebox",
     "vmware_guest_os_type": "ubuntu-64"

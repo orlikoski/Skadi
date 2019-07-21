@@ -1,0 +1,110 @@
+<html>
+<head>
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
+  <link rel="manifest" href="icons/site.webmanifest">
+  <link rel="mask-icon" href="icons/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#2b5797">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>Skadi Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    a:link {
+      color: #0374c2;
+    }
+    body {
+      font-family: 'Russo One', sans-serif;
+      background-image: url(pics/Background.jpg);
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      max-width: 100%
+    }
+
+    /* Style the header */
+    header {
+      font-size: 60px;
+      height: 40%;
+      width: 100%
+    }
+    /* Create two columns/boxes that floats next to each other */
+    nav {
+      font-family: 'Russo One', sans-serif;
+      font-size: 25px;
+      float: left;
+      width:50%;
+      padding: 20px;
+    }
+    downloads {
+      font-family: 'Russo One', sans-serif;
+      font-size: 25px;
+      float: right;
+      width:50%;
+      padding: 20px;
+    }
+
+    /* Clear floats after the columns */
+    section:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+
+    /* Style the footer */
+    footer {
+      font-family: 'Russo One', sans-serif;
+      font-size: 25px;
+      padding: 10px;
+      text-align: left;
+      #color: white;
+    }
+
+    /* Responsive layout - makes the two columns/boxes stack on top of each other instead of next to each other, on small screens */
+    @media (max-width: 600px) {
+      nav, article {
+        width: 100%;
+        height: auto;
+      }
+    }
+  </style>
+</head>
+<header>
+    <p> </p>
+</header>
+<section>
+  <nav>
+    <ul>
+      <h1>DFIR Tools</h1>
+      <a href="/timesketch/login/?next=%2Ftimesketch%2F">TimeSketch</a> <br>
+      <a href="/kibana/">Kibana</a> <br>
+      <a href="/cyberchef/">CyberChef</a>  Encryption, Encoding, and data analysis <br>
+      <a href="/yeti/">Yeti</a> Threat Intelligence  <br>
+      <br>
+      <h1>Management Tools</h1>
+      <a href="/grafana/">Grafana</a> Docker and Host Monitoring <br>
+      <a href="/portainer/">Portainer</a> Docker Management <br>
+      <a href="/kibana/app/kibana#/management?_g=()">Kibana Management</a> ElasticSearch Management
+    </ul>
+  </nav>
+  <downloads>
+    <ul>
+      <h1>Downloads</h1>
+      <a href="/downloads/CyLR_win-x86.zip">CyLR_win-x86.zip</a> <br>
+      <a href="/downloads/CyLR_win-x64.zip">CyLR_win-x64.zip</a> <br>
+      <a href="/downloads/CyLR_linux-x64.zip">CyLR_linux-x64.zip</a> <br>
+      <a href="/downloads/CyLR_osx-x64.zip">CyLR_osx-x64.zip</a>
+    </ul>
+  </downloads>
+</section>
+<footer>
+<p> To Learn More about Skadi Visit:<br>
+ - <a href="https://skadivm.com">Official Skadi Website</a> for source code and general information<br>
+ - <a href="https://github.com/orlikoski/skadi/wiki">Skadi Wiki</a> for information about how to use the tools</p>
+</footer>
+<!-- And add a copyright notice.-->
+<p>&#169; Alan Orlikoski, 2018</p>
+</html>

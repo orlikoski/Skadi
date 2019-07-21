@@ -31,8 +31,8 @@ update_repo () {
 nginx_setup () {
   echo "Setting Up Nginx using '$hostinfo'"
   echo "Make the required directories and clean out existing nginx config files"
-  sudo mkdir -p /etc/nginx/certs/letsencrypt
-  sudo rm -rf /etc/nginx/conf.d/*
+  sudo mkdir -p /opt/Skadi/Docker/nginx/certs/letsencrypt
+  sudo rm -rf /opt/Skadi/Docker/nginx/conf.d/*
 
   echo "Customizing /etc/nginx/conf.d/skadi_TLS.conf"
   cat /opt/Skadi/Docker/nginx/skadi_TLS.conf | \
@@ -40,14 +40,17 @@ nginx_setup () {
     ::1/g" > /tmp/skadi_TLS.conf
   sudo sed -i "s/localhost.pem/$hostinfo.pem/g" /tmp/skadi_TLS.conf
   sudo sed -i "s/localhost.key.pem/$hostinfo.key.pem/g" /tmp/skadi_TLS.conf
-  sudo mv /tmp/skadi_TLS.conf /etc/nginx/conf.d/
-  sudo chown root:root /etc/nginx/conf.d/skadi_TLS.conf
-  sudo chmod 644 /etc/nginx/conf.d/skadi_TLS.conf
+  sudo mv /tmp/skadi_TLS.conf /opt/Skadi/Docker/nginx/conf.d
+  #sudo chown root:root /opt/Skadi/Docker/nginx/conf.d/skadi_TLS.conf
+  sudo chmod 644 /opt/Skadi/Docker/nginx/conf.d/skadi_TLS.conf
 
   echo "Adding /etc/nginx/conf.d/ssl.conf"
-  sudo cp /opt/Skadi/Docker/nginx/ssl.conf /etc/nginx/conf.d/ssl.conf
-  sudo chown root:root /etc/nginx/conf.d/ssl.conf
-  sudo chmod 644 /etc/nginx/conf.d/ssl.conf
+  sudo cp /opt/Skadi/Docker/nginx/ssl.conf /opt/Skadi/Docker/nginx/conf.d/ssl.conf
+  #sudo chown root:root /etc/nginx/conf.d/ssl.conf
+  sudo chmod 644 /opt/Skadi/Docker/nginx/conf.d/ssl.conf
+
+  echo "Enabling port 443"
+  sudo sed -i "s/#- 443:443/- 443:443/g" /opt/Skadi/Docker/docker-compose.yml
 }
 
 dhparam_setup () {
@@ -55,7 +58,7 @@ dhparam_setup () {
   echo "This will take a while, the dots are the progress meter. If they are still being added, it's working"
   # Use the DHPARAM key and ECDH curve >= 256bit
   # Use this command to generate the key ''
-  sudo openssl dhparam -out /etc/nginx/certs/dhparam.pem 4096
+  sudo openssl dhparam -out /opt/Skadi/Docker/nginx/certs/dhparam.pem 4096
   echo "Nginx configuration for enabling TLS is complete"
   echo ""
 }
@@ -74,7 +77,7 @@ mkcert_setup () {
 
   echo "Creating Self Signed Certificates for 127.0.0.1 localhost $hostinfo ::1"
   echo ""
-  sudo mkcert -install -cert-file /etc/nginx/certs/$hostinfo.pem -key-file /etc/nginx/certs/$hostinfo.key.pem 127.0.0.1 localhost $hostinfo ::1
+  sudo mkcert -install -cert-file /opt/Skadi/Docker/nginx/certs/$hostinfo.pem -key-file /opt/Skadi/Docker/nginx/certs/$hostinfo.key.pem 127.0.0.1 localhost $hostinfo ::1
   echo ""
   echo "Certificates were written to /etc/nginx/certs"
   echo ""

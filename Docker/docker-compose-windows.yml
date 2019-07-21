@@ -1,0 +1,328 @@
+version: '3.5'
+
+networks:
+  backend:
+    name: skadi-backend
+
+volumes:
+  elasticsearchdata: {}
+  neo4jdata: {}
+  pgdata: {}
+  redisdata: {}
+  mongodata: {}
+  tssockets: {}
+  portainerdata: {}
+  prometheus_data: {}
+  grafana_data: {}
+  yeti_data: {}
+  yetifeeds_data: {}
+  yetianalytics_data: {}
+  yetibeat_data: {}
+  yetiexport_data: {}
+  yetioneshot_data: {}
+
+services:
+  nginx:
+    image: nginx:1.15
+    container_name: nginx
+    depends_on:
+      - yeti
+      - timesketch
+      - kibana
+      - cyberchef
+      - portainer
+      - grafana
+    networks:
+      - backend
+    volumes:
+      - ./nginx/certs:/etc/nginx/certs
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/logs:/var/log/nginx
+      - ./nginx/auth/:/etc/nginx/auth
+      - ./nginx/html:/usr/share/nginx/html
+      - tssockets:/var/timesketch/
+    ports:
+      - 80:80
+      #- 443:443
+    restart: unless-stopped
+
+  timesketch:
+    image: aorlikoski/skadi_timesketch:20190326
+    container_name: timesketch
+    depends_on:
+      - redis
+      - elasticsearch
+      - postgres
+      - neo4j
+    environment:
+      - TIMESKETCH_USER=${TIMESKETCH_USER}
+      - TIMESKETCH_PASSWORD=${TIMESKETCH_PASSWORD}
+    networks:
+      - backend
+    volumes:
+      - ./timesketch/timesketch_default.conf:/etc/timesketch.conf
+      - tssockets:/var/timesketch/
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:11
+    container_name: postgres
+    networks:
+      - backend
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis:
+    image: redis:5
+    container_name: redis
+    networks:
+      - backend
+    volumes:
+      - redisdata:/var/lib/redis
+    restart: unless-stopped
+
+  mongodb:
+    image: mongo:4.0
+    container_name: mongodb
+    environment:
+      - MONGO_LOG_DIR=/dev/null
+    command: mongod
+    networks:
+      - backend
+    volumes:
+      - mongodata:/data/db
+    restart: unless-stopped
+
+  neo4j:
+    image: neo4j:3.5
+    container_name: neo4j
+    networks:
+      - backend
+    environment:
+      - NEO4J_AUTH=none
+    volumes:
+      - neo4jdata:/var/lib/neo4j/data
+    restart: unless-stopped
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.6.2
+    container_name: elasticsearch
+    networks:
+      - backend
+    ports:
+      - 9200:9200
+    environment:
+      - cluster.name=skadi
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms${HEAP_SIZE} -Xmx${HEAP_SIZE}"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - elasticsearchdata:/usr/share/elasticsearch/data
+    restart: unless-stopped
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.6.2
+    container_name: kibana
+    networks:
+      - backend
+    environment:
+      SERVER_BASEPATH: /kibana
+    restart: unless-stopped
+
+  cyberchef:
+    image: aorlikoski/skadi_cyberchef:20190326
+    container_name: cyberchef
+    networks:
+      - backend
+    restart: unless-stopped
+
+  portainer:
+    image: portainer/portainer:1.21.0
+    container_name: portainer
+    volumes:
+      - portainerdata:/data portainer/portainer
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    command: --no-auth
+    networks:
+      - backend
+    pid: host
+    restart: unless-stopped
+
+################### YETI ###############
+
+  yeti:
+    image: aorlikoski/skadi_yeti:20190327
+    container_name: yeti
+    command: ['docker-entrypoint.sh', 'uwsgi']
+    networks:
+      - backend
+    volumes:
+      - yeti_data:/opt/yeti
+    restart: unless-stopped
+    depends_on:
+      - redis
+      - mongodb
+  yeti-feeds:
+    image: aorlikoski/skadi_yeti:20190327
+    container_name: yeti-feeds
+    command: ['docker-entrypoint.sh', 'feeds']
+    networks:
+      - backend
+    volumes:
+      - yetifeeds_data:/opt/yeti
+    restart: unless-stopped
+    depends_on:
+      - redis
+      - mongodb
+      - yeti
+    environment:
+      - TLDEXTRACT_CACHE=/tmp/tldextract.cache
+  yeti-analytics:
+    image: aorlikoski/skadi_yeti:20190327
+    container_name: yeti-analytics
+    command: ['docker-entrypoint.sh', 'analytics']
+    networks:
+      - backend
+    volumes:
+      - yetianalytics_data:/opt/yeti
+    restart: unless-stopped
+    depends_on:
+      - redis
+      - mongodb
+      - yeti
+    environment:
+      - TLDEXTRACT_CACHE=/tmp/tldextract.cache
+  yeti-beat:
+    image: aorlikoski/skadi_yeti:20190327
+    container_name: yeti-beat
+    command: ['docker-entrypoint.sh', 'beat']
+    networks:
+      - backend
+    volumes:
+      - yetibeat_data:/opt/yeti
+    restart: unless-stopped
+    depends_on:
+      - redis
+      - mongodb
+      - yeti
+  yeti-exports:
+    image: aorlikoski/skadi_yeti:20190327
+    container_name: yeti-exports
+    command: ['docker-entrypoint.sh', 'exports']
+    networks:
+      - backend
+    volumes:
+      - yetiexport_data:/opt/yeti
+    restart: unless-stopped
+    depends_on:
+      - redis
+      - mongodb
+      - yeti
+  yeti-oneshot:
+    image: aorlikoski/skadi_yeti:20190327
+    container_name: yeti-oneshot
+    command: ['docker-entrypoint.sh', 'oneshot']
+    networks:
+      - backend
+    volumes:
+      - yetioneshot_data:/opt/yeti
+    restart: unless-stopped
+    depends_on:
+      - redis
+      - mongodb
+      - yeti
+
+################### GRAFANA ###############
+
+  prometheus:
+    image: prom/prometheus:v2.5.0
+    container_name: prometheus
+    volumes:
+      - ./grafana/prometheus/:/etc/prometheus/
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention=200h'
+      - '--web.enable-lifecycle'
+    restart: unless-stopped
+    networks:
+      - backend
+
+  alertmanager:
+    image: prom/alertmanager:v0.15.3
+    container_name: alertmanager
+    volumes:
+      - ./grafana/alertmanager/:/etc/alertmanager/
+    command:
+      - '--config.file=/etc/alertmanager/config.yml'
+      - '--storage.path=/alertmanager'
+    restart: unless-stopped
+    networks:
+      - backend
+
+  nodeexporter:
+    image: prom/node-exporter:v0.17.0
+    container_name: nodeexporter
+    user: root
+    privileged: true
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - c:\:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
+    restart: unless-stopped
+    networks:
+      - backend
+
+  cadvisor:
+    image: google/cadvisor:v0.32.0
+    container_name: cadvisor
+    volumes:
+      - c:\:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      #- /cgroup:/cgroup:ro #doesn't work on MacOS only for Linux
+    restart: unless-stopped
+    networks:
+      - backend
+
+  grafana:
+    image: grafana/grafana:5.4.2
+    container_name: grafana
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/grafana/datasources:/etc/grafana/datasources
+      - ./grafana/grafana/dashboards:/etc/grafana/dashboards
+      - ./grafana/grafana/setup.sh:/setup.sh
+    entrypoint: /setup.sh
+    environment:
+      - GF_AUTH_PROXY_ENABLED=true
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s/grafana/
+    restart: unless-stopped
+    networks:
+      - backend
+  pushgateway:
+    image: prom/pushgateway:v0.7.0
+    container_name: pushgateway
+    restart: unless-stopped
+    networks:
+      - backend
