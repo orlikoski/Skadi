@@ -3,13 +3,14 @@
 (pronounced “SKAH-Dee”: similar to Scotty but with a `d` sound) is a giantess and goddess of hunting in Norse mythology  
 
 ## Purpose
-Skadi is a free, open source collection of tools that enables the collection, processing and advanced analysis of forensic artifacts and images. It scales to work effectively on laptops, desktops, servers, the cloud, and can be installed on top of hardened / gold disk images.   
+Skadi is a free, open source collection of tools that enables the collection, processing and advanced analysis of forensic artifacts and images. It works on MacOS, Windows, and Linux machines. It scales to work effectively on laptops, desktops, servers, the cloud, and can be installed on top of hardened / gold disk images.   
 
 # How to Get Started and Support
 ## Download Latest Release
 Available in OVA, Vagrant and Signed Installer formats  
 [Download the Latest Release](https://github.com/orlikoski/Skadi/releases/latest)  
 ## Installation Instructions
+[Starting Skadi on Docker Instructions](https://github.com/orlikoski/Skadi/wiki/Docker-Skadi-Starting)
 [Vagrant Installation Instructions](https://github.com/orlikoski/Skadi/wiki/Installation-with-Vagrant-Instructions)  
 [OVA Installation Instructions](https://github.com/orlikoski/Skadi/wiki/Installation:-Importing-OVA)  
 [Signed Installer Instructions](https://github.com/orlikoski/Skadi/wiki/Installation:-OpenSSL-Signed-Installation-Guide)  
@@ -20,7 +21,7 @@ The default credentials are:
 - Username: `skadi`  
 - Password: `skadi`  
 
-Access the portal through a web browser at the IP address of the server. In this example the server is `192.168.1.2` and Vagrant will create a link to `localhost`  
+Access the portal through a web browser at the IP address of the server. In this example the server is `192.168.1.2` while Vagrant and Docker will create a link to `localhost`  
 - Example: http://192.168.1.2  
 - Vagrant Example: http://localhost  
 
@@ -30,13 +31,13 @@ Access the portal through a web browser at the IP address of the server. In this
 ![](/objects/images/skadi_tools.jpg?)
 The tools are combined into one platform that all work together to provide the ability to collect data, convert the bits and bytes to words and numbers, and analyze the results quickly and easily. This enables the ability to rapidly hunt for host based evidence of a malicious activities quickly and accurately.  
  - CDQR  
- - Cerebro  
  - CyberChef
  - CyLR  
  - Docker  
  - ElasticSearch
  - Glances
  - Grafana
+ - Portainer
  - Kibana
  - Yeti
  - Plaso  
@@ -45,7 +46,7 @@ The tools are combined into one platform that all work together to provide the a
 ### Yeti (Threat Intelligence Tool)
   ![](/objects/images/yeti_shot01.jpg?)
 
-### Kibana, TimeSketch, Cerebro Included
+### Kibana and TimeSketch Included
   ![](/objects/images/desk_tools.jpg?)  
 
 ### 11 Kibana Dashboards  
