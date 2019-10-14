@@ -2,6 +2,9 @@
 ![](/objects/images/skadi_header.jpg?)  
 (pronounced “SKAH-Dee”: similar to Scotty but with a `d` sound) is a giantess and goddess of hunting in Norse mythology  
 
+## Please Read
+[Open Letter to the users of Skadi, CyLR, and CDQR](https://docs.google.com/document/d/1L6CBvFd7d1Qf4IxSJSdkKMTdbBuWzSzUM3u_h5ZCegY/edit?usp=sharing)
+
 ## Purpose
 Skadi is a free, open source collection of tools that enables the collection, processing and advanced analysis of forensic artifacts and images. It works on MacOS, Windows, and Linux machines. It scales to work effectively on laptops, desktops, servers, the cloud, and can be installed on top of hardened / gold disk images.   
 
