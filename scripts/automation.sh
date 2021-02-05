@@ -57,7 +57,7 @@ sudo chmod 644 "$logging_file"
 # Download and install GRPC files
 for i in "${grpc_files[@]}"
 do
-    wget -O "/tmp/$i" "https://raw.githubusercontent.com/orlikoski/Skadi/master/scripts/grpc/$i"
+    wget -O "/tmp/$i" "https://raw.githubusercontent.com/orlikoski/Skadi/main/scripts/grpc/$i"
     sudo mv "/tmp/$i" "$automation_dir/"
     sudo chown root:root "$automation_dir/$i"
     sudo chmod 644 "$automation_dir/$i"
@@ -73,7 +73,7 @@ sudo chown ottomate:ottomate "$logging_file" # change ownershipt to ottomate use
 # Download and install Automation files
 for i in "${automation_files[@]}"
 do
-    wget -O "/tmp/$i" "https://raw.githubusercontent.com/orlikoski/Skadi/master/scripts/$i"
+    wget -O "/tmp/$i" "https://raw.githubusercontent.com/orlikoski/Skadi/main/scripts/$i"
     sudo mv "/tmp/$i" "$automation_dir/"
     sudo chown root:root "$automation_dir/$i"
     sudo chmod 644 "$automation_dir/$i"
