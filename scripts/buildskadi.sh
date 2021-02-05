@@ -57,7 +57,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # Download install file and verify it was successful
-wget -O $buildskadi_tgz --quiet https://raw.githubusercontent.com/orlikoski/skadi/master/scripts/buildskadi.tgz
+wget -O $buildskadi_tgz --quiet https://raw.githubusercontent.com/orlikoski/skadi/main/scripts/buildskadi.tgz
 if [ $? -ne 0 ]; then
   echo "ERROR: Download was not successful. Exiting"
   rm -rf $tempdir
@@ -65,7 +65,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # Download signature file and verify it was successful
-wget -O $buildskadi_sig --quiet https://raw.githubusercontent.com/orlikoski/skadi/master/scripts/buildskadi.sig
+wget -O $buildskadi_sig --quiet https://raw.githubusercontent.com/orlikoski/skadi/main/scripts/buildskadi.sig
 if [ $? -ne 0 ]; then
   echo "ERROR: Download was not successful. Exiting"
   rm -rf $tempdir
