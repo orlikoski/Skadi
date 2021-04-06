@@ -151,7 +151,7 @@ services:
     volumes:
       - portainerdata:/data portainer/portainer
       - /var/run/docker.sock:/var/run/docker.sock:ro
-    command: --no-auth
+    command: --no-auth -H unix:///var/run/docker.sock
     networks:
       - backend
     pid: host
